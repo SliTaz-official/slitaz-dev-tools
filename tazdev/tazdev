@@ -2,19 +2,21 @@
 # Tazdev - SliTaz developers and build host tool.
 # System wide config file: /etc/slitaz/tazdev.conf
 #
-# (c) 2009 SliTaz GNU/Linux - GNU gpl v3
+# (c) 2011 SliTaz GNU/Linux - GNU gpl v3
 #
 # Authors : Christophe Lincoln (Pankso) <pankso@slitaz.org>
 #
 
 if [ -f /etc/slitaz/tazdev.conf ]; then
-	. /etc/slitaz/tazdev.conf
-	if [ -f $PWD/tazdev.conf ]; then
-		. $PWD/tazdev.conf
-	fi
-else
+	CONFIG=/etc/slitaz/tazdev.conf
+else [ -f $PWD/tazdev.conf ]
+	CONFIG=$PWD/tazdev.conf
+fi
+if ! [ "$CONFIG" ]; then
 	echo -e "\nNo config file found in /etc/slitaz or the current dir...\n"
 	exit 0
+else
+	. $CONFIG
 fi
 
 usage()
