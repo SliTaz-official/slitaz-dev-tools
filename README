@@ -2,10 +2,18 @@ SliTaz developers tools                                  http://www.slitaz.org/
 ===============================================================================
 
 
-SliTaz developers and build host tools. This package provides the tazdev utility 
-and tinyutils to help maintain the distribution and automate packages compilation.
-The package provides 'tazdev' and its default config file: /etc/slitaz/tazdev.conf
+SliTaz developers and services tools. This package provides the tazdev tool, 
+Shell or Python scripts and tinyutils to help maintain the distribution and
+automate packages compilation. The package provides 'tazdev' and its default
+config file who goes in: /etc/slitaz/tazdev.conf
 
+The scripts folder provide small script for special tasks and some code
+used by some contributors. Feel free to put your script in here, but with
+some comment to quickly know what they do. 
+
+
+On the web
+----------
 
 Website Devel corner:   http://www.slitaz.org/en/devel/
 Mercurial repositories: http://hg.slitaz.org/
