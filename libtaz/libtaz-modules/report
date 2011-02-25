@@ -224,7 +224,6 @@ report()
 			report_listen
 		;;
 		end-step)
-			[ -s $(dirname $log_opt)/step ] && rm -f $(dirname $log_opt)/step
 			if ! [ "$step_running" ]; then
 				report_return_code=$check_status
 			else
