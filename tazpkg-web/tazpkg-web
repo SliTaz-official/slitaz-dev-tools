@@ -261,8 +261,8 @@ _EOT_
 		done && echo "" ;;
 	stable)
 		PACKAGES_REPOSITORY=$STABLE/packages
-		if [ -d $STABLE/chroot/home/slitaz/hg/wok ]; then
-			WOK=$STABLE/chroot/home/slitaz/hg/wok
+		if [ -d $STABLE/clean-wok ]; then
+			WOK=$STABLE/clean-wok
 		else
 			WOK=$STABLE/wok
 		fi
@@ -270,8 +270,8 @@ _EOT_
 		gen_all_pages ;;
 	cooking)
 		PACKAGES_REPOSITORY=$COOKING/packages
-		if [ -d $COOKING/chroot/home/slitaz/hg/wok ]; then
-			WOK=$COOKING/chroot/home/slitaz/hg/wok
+		if [ -d $COOKING/clean-wok ]; then
+			WOK=$COOKING/clean-wok
 		else
 			WOK=$COOKING/wok
 		fi

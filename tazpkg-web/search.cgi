@@ -178,7 +178,7 @@ cn)	package="软件包："
 
 esac
 
-WOK=/home/slitaz/$SLITAZ_VERSION/wok
+WOK=/home/slitaz/$SLITAZ_VERSION/clean-wok
 PACKAGES_REPOSITORY=/home/slitaz/$SLITAZ_VERSION/packages
 
 echo Content-type: text/html
