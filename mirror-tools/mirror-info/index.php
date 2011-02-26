@@ -4,86 +4,75 @@
 <head>
 	<title>SliTaz Mirror</title>
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-	<meta name="description" content="slitaz mirror server" />
+	<meta name="description" content="slitaz tank server" />
 	<meta name="robots" content="index, nofollow" />
 	<meta name="author" content="SliTaz Contributors" />
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="slitaz.css" />
 </head>
+<body>
 
-<body bgcolor="#ffffff">
 <!-- Header -->
 <div id="header">
-    <a name="top"></a>
-	<a href="http://mirror-info.slitaz.org/"><img id="logo"
-	src="pics/website/logo.png" title="mirror-info.slitaz.org" alt="mirror-info.slitaz.org"
-	style="border: 0px solid ; width: 200px; height: 74px;" /></a>
-	<p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
-</div>
-
-<!-- Navigation menu -->
-<div id="nav">
-
-<div class="nav_box">
-<h4>About Mirror</h4>
-<p>
-This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
-(stable) in an lguest virtual machine provided by 
-<a href="http://www.ads-lu.com/">Allied Data Sys. (ADS)</a>.
-</p>
-
-</div>
-
-<div class="nav_box">
-<h4>SliTaz Network</h4>
-<ul>
-	<li><a href="http://www.slitaz.org/">Main Website</a></li>
-	<li><a href="http://doc.slitaz.org/">Documentation</a></li>
-	<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
-	<li><a href="http://scn.slitaz.org/">Community Platform</a></li>
-	<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
-	<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
-	<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
-	<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
-	<li><a href="http://bb.slitaz.org/">SliTaz Build Bot</a></li>
-	<li><a href="http://hg.slitaz.org/">SliTaz Repositories</a></li>
-	<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
-	<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
-</ul>
-</div>
-
-<!-- End navigation menu -->
-</div>
-
-<!-- Content top. -->
-<div id="content_top">
-<div class="top_left"></div>
-<div class="top_right"></div>
+    <a href="http://mirror.slitaz.org/info/"><img id="logo"
+		src="pics/website/logo.png" 
+		title="tank.slitaz.org" alt="mirror.slitaz.org/info/" /></a>
+    <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
 </div>
 
 <!-- Content -->
-<div id="content">
+<div id="content-full">
 
-<h1><font color="#3E1220">Server</font></h1>
-<h2><font color="#DF8F06">Codename:
-<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></font></h2>
+<!-- Block begin -->
+<div class="block">
+	<!-- Nav block begin -->
+	<div id="block_nav">
+		<h4>SliTaz Network</h4>
+		<ul>
+			<li><a href="http://www.slitaz.org/">Main Website</a></li>
+			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
+			<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
+			<li><a href="http://scn.slitaz.org/">Community Platform</a></li>
+			<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
+			<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
+			<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
+			<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
+			<li><a href="http://bb.slitaz.org/">SliTaz Build Bot</a></li>
+			<li><a href="http://hg.slitaz.org/">SliTaz Repositories</a></li>
+			<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
+			<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
+		</ul>
+	<!-- Nav block end -->
+	</div>
+	<!-- Top block begin -->
+	<div id="block_top">
+		<h1>About Mirror</h1>
+		<p>
+			This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
+			(stable) in an lguest virtual machine provided by 
+			<a href="http://www.ads-lu.com/">Allied Data Sys. (ADS)</a>.
+		</p>
+		<p>
+			Mirror CPU is a <?php system("sed -e '/^model name/!d;s/.*Intel(R) //;" .         
+			"s/@//;s/(.*)//;s/CPU //;s/.*AMD //;s/.*: //;s/Processor //' </proc/cpuinfo |" .
+			" awk '{ s=$0; n++ } END { if (n == 2) printf \"dual \";" .
+			"if (n == 4) printf \"quad \"; print s }' ")?> -
+			<?php system("free | awk '/Mem:/ { x=2*$2-1; while (x >= 1024) { x /= 1024; ".
+			"n++ }; y=1; while (x > 2) { x /= 2; y *= 2}; ".
+			"printf \"%d%cB RAM\",y,substr(\"MG\",n,1) }' ")?> - Located in France next to 
+			Roubaix. This page has real time statistics provided by PHP 
+			<code>system()</code> Mirror is also monitored by RRDtool which provides 
+			<a href="graphs.php">graphical stats</a>.
+		</p>
+	<!-- Top block end -->
+	</div>
+<!-- Block end -->
+</div>
 
-<p>
-Mirror CPU is a <?php system("sed -e '/^model name/!d;s/.*Intel(R) //;" .         
-"s/@//;s/(.*)//;s/CPU //;s/.*AMD //;s/.*: //;s/Processor //' </proc/cpuinfo |" .
-" awk '{ s=$0; n++ } END { if (n == 2) printf \"dual \";" .
-"if (n == 4) printf \"quad \"; print s }' ")?> -
-<?php system("free | awk '/Mem:/ { x=2*$2-1; while (x >= 1024) { x /= 1024; ".
-"n++ }; y=1; while (x > 2) { x /= 2; y *= 2}; ".
-"printf \"%d%cB RAM\",y,substr(\"MG\",n,1) }' ")?> -
-Located in France next to Roubaix. This page has real time statistics 
-provided by PHP <code>system()</code>. Mirror is also monitored by RRDtool 
-which provides <a href="graphs.php">graphical stats</a>.
-</p>
-
-<h3><a href="graphs.php">
-	<img title="Mirror RRDtool graphs" src="pics/website/monitor.png" alt="graphs" />
-    </a>System stats</h3>
+<h2><a href="graphs.php"><img 
+	style="vertical-align: middle; padding: 0 4px 0 0;"
+	title="Mirror RRDtool graphs" alt="graphs"
+    src="pics/website/monitor.png" /></a>System stats</h2>
 
 <h4>Uptime</h4>
 
@@ -94,6 +83,7 @@ system("uptime | sed 's/^\s*//'");
 </pre>
 
 <h4>Disk usage</h4>
+
 <pre class="package">
 <?php
 system("df -h | sed '/^rootfs/d' | grep  '\(^/dev\|Filesystem\)'");
@@ -106,6 +96,7 @@ system("df -h | sed '/^rootfs/d' | grep  '\(^/dev\|Filesystem\)'");
 system("ifconfig eth0 | awk '{ if (/X packet/ || /X byte/) print }' | sed 's/^\s*//'");
 ?>
 </pre>
+
 
 <?php if (isset($_GET["all"])) { ?>
 <h4>Logins</h4>
@@ -254,7 +245,10 @@ echo "</pre>";
 display_log("/var/log/packages-stable.log", "buildstable", "/iso/stable/packages-3.0.iso");
 display_log("/var/log/packages-cooking.log","buildcooking","/iso/cooking/packages-cooking.iso");
 ?>
-<!-- End of content with round corner -->
+
+<!-- End of content -->
+</div>
+
 </div>
 <div id="content_bottom">
 <div class="bottom_left"></div>
