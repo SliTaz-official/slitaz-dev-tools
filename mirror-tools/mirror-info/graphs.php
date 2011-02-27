@@ -10,58 +10,91 @@
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="slitaz.css" />
 </head>
+<body>
 
-<body bgcolor="#ffffff">
 <!-- Header -->
 <div id="header">
-    <a name="top"></a>
-	<a href="http://mirror.slitaz.org/"><img id="logo"
-	src="pics/website/logo.png" title="mirror.slitaz.org" alt="mirror.slitaz.org"
-	style="border: 0px solid ; width: 200px; height: 74px;" /></a>
-	<p id="titre">#!/project/mirror</p>
-</div>
-<!-- Navigation menu -->
-<div id="nav">
-
-<div class="nav_box">
-<h4>About Mirror</h4>
-<p>
-This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
-(stable) in an lguest virtual machine provided by 
-<a href="http://www.ads-lu.com/">ADS</a>.
-</p>
-
-</div>
-
-<div class="nav_box">
-<h4>SliTaz Network</h4>
-<ul>
-	<li><a href="http://www.slitaz.org/">Main Website</a></li>
-	<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
-	<li><a href="http://community.slitaz.org/">Community Platform</a></li>
-	<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
-	<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
-	<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
-	<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
-	<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
-	<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
-</ul>
-</div>
-
-<!-- End navigation menu -->
-</div>
-
-<!-- Content top. -->
-<div id="content_top">
-<div class="top_left"></div>
-<div class="top_right"></div>
+    <a href="http://mirror.slitaz.org/info/"><img id="logo"
+		src="pics/website/logo.png" 
+		title="mirror.slitaz.org/info/" alt="mirror.slitaz.org/info/" /></a>
+    <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
 </div>
 
 <!-- Content -->
-<div id="content">
+<div id="content-full">
 
-<h1><font color="#3E1220">Mirror RRD stats</font></h1>
-<h2><font color="#DF8F06">/usr/bin/rrdtool</font></h2>
+<!-- Block begin -->
+<div class="block">
+	<!-- Nav block begin -->
+	<div id="block_nav">
+		<h4>SliTaz Network</h4>
+		<ul>
+			<li><a href="http://www.slitaz.org/">Main Website</a></li>
+			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
+			<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
+			<li><a href="http://scn.slitaz.org/">Community Platform</a></li>
+			<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
+			<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
+			<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
+			<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
+			<li><a href="http://bb.slitaz.org/">SliTaz Build Bot</a></li>
+			<li><a href="http://hg.slitaz.org/">SliTaz Repositories</a></li>
+			<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
+			<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
+		</ul>
+	<!-- Nav block end -->
+	</div>
+	<!-- Top block begin -->
+	<div id="block_top">
+		<h1>Mirror RRD stats</h1>
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+		<meta name="description" content="slitaz mirror rrdtool graphs" />
+		<meta name="robots" content="noindex" />
+		<meta name="author" content="SliTaz Contributors" />
+		<link rel="shortcut icon" href="/css/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
+		<style type="text/css">
+#nav {
+	right: 4%;
+}
+
+#content {
+	padding: 0px 40px 60px 4%;
+}
+
+#copy {
+	text-align: center;
+}
+
+#bottom {
+	text-align: center;
+}
+
+	</style>
+
+		<p>
+			This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
+			(stable) in an lguest virtual machine provided by 
+			<a href="http://www.ads-lu.com/">Allied Data Sys. (ADS)</a>.
+		</p>
+		<p>
+			Mirror CPU is a <?php system("sed -e '/^model name/!d;s/.*Intel(R) //;" .         
+			"s/@//;s/(.*)//;s/CPU //;s/.*AMD //;s/.*: //;s/Processor //' </proc/cpuinfo |" .
+			" awk '{ s=$0; n++ } END { if (n == 2) printf \"dual \";" .
+			"if (n == 4) printf \"quad \"; print s }' ")?> -
+			<?php system("free | awk '/Mem:/ { x=2*$2-1; while (x >= 1024) { x /= 1024; ".
+			"n++ }; y=1; while (x > 2) { x /= 2; y *= 2}; ".
+			"printf \"%d%cB RAM\",y,substr(\"MG\",n,1) }' ")?> - Located in France next to 
+			Roubaix. This page has real time statistics provided by PHP 
+			<code>system()</code> Mirror is also monitored by RRDtool which provides 
+			<a href="graphs.php">graphical stats</a>.
+		</p>
+	<!-- Top block end -->
+	</div>
+<!-- Block end -->
+</div>
+
+
 
 <?php
 
@@ -81,29 +114,27 @@ function graphic($res, $img='')
 	echo "<a href=\"".$myurl."?stats=".$res."#".$res."\">\n";
 	one_graphic($img."-day.png",$res." daily");
 	echo "</a>";
-	if (isset($_GET['stats']) && $_GET['stats'] == $res) {
+	if ($_GET['stats'] == $res) {
 		one_graphic($img."-week.png",$res." weekly");
 		one_graphic($img."-month.png",$res." monthly");
 		one_graphic($img."-year.png",$res." yearly");
 	}
 }
 
-echo "<h3>CPU</h3>\n";
+echo "<h2>CPU</h2>\n";
 graphic("cpu");
-echo "<h3>Memory</h3>\n";
+echo "<h2>Memory</h2>\n";
 graphic("memory");
-echo "<h3>Disk</h3>\n";
+echo "<h2>Disk</h2>\n";
 graphic("disk");
-echo "<h3>Network</h3>\n";
-graphic("net","eth0");
+echo "<h2>Network</h2>\n";
+$eth = array();
+exec("/sbin/route -n | awk '{ if (/^0.0.0.0/) print $8 }'", $eth);
+graphic("net",$eth[0]);
 
 ?>
 
-<!-- End of content with round corner -->
-</div>
-<div id="content_bottom">
-<div class="bottom_left"></div>
-<div class="bottom_right"></div>
+<!-- End of content -->
 </div>
 
 <!-- Start of footer and copy notice -->
