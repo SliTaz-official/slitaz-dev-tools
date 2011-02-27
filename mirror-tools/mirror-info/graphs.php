@@ -7,16 +7,16 @@
 	<meta name="description" content="slitaz mirror rrdtool graphs" />
 	<meta name="robots" content="noindex" />
 	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="slitaz.css" />
+	<link rel="shortcut icon" href="/css/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
 </head>
 <body>
 
 <!-- Header -->
 <div id="header">
-    <a href="http://mirror.slitaz.org/info/"><img id="logo"
-		src="pics/website/logo.png" 
-		title="mirror.slitaz.org/info/" alt="mirror.slitaz.org/info/" /></a>
+    <a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/info/"><img id="logo"
+		src="/css/pics/website/logo.png" 
+		title="<?php echo $_SERVER["HTTP_HOST"]; ?>/info/" alt="<?php echo $_SERVER["HTTP_HOST"]; ?>/info/" /></a>
     <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
 </div>
 
@@ -153,7 +153,7 @@ Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.slitaz.org/">SliTa
 <div id="bottom">
 <p>
 <a href="http://validator.w3.org/check?uri=referer"><img
-   src="pics/website/xhtml10.png" alt="Valid XHTML 1.0"
+   src="/css/pics/website/xhtml10.png" alt="Valid XHTML 1.0"
    title="Code validé XHTML 1.0"
    style="width: 80px; height: 15px;" /></a>
 </p>
