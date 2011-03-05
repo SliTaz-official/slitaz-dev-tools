@@ -4,12 +4,12 @@ SliTaz developers tools                                  http://www.slitaz.org/
 
 SliTaz developers and services tools. This package provides the tazdev tool, 
 Shell or Python scripts and tinyutils to help maintain the distribution and
-automate packages compilation. The package provides 'tazdev' and its default
-config file who goes in: /etc/slitaz/tazdev.conf
+automate the packages compilation. The package provides 'tazdev' and its 
+default config file which goes in: /etc/slitaz/tazdev.conf
 
-The scripts folder provide small script for special tasks and some code
-used by some contributors. Feel free to put your script in here, but with
-some comment to quickly know what they do. 
+The scripts folder provides small scripts for special tasks and some code
+used by some of the contributors. Feel free to put your own scripts in here, 
+but add some comments to let people quickly know what they do. 
 
 
 On the web
