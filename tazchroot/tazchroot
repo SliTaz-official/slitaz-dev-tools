@@ -1,5 +1,5 @@
 #!/bin/sh
-# Tazchroot - SliTaz chroot managing tool.
+# Tazchroot - SliTaz chroot manager tool.
 #
 # System wide config file for tazhack : /etc/slitaz/tazchroot.conf
 # Expected system wide config (for Slitaz) : /etc/slitaz/slitaz.conf
@@ -54,7 +54,7 @@ echo -n "Mounting chroot directories..."
 mount_chroot
 status
 echo "Command : $command"
-echo "Entering in chroot..."
+echo "Entering chroot..."
 chroot $chroot_dir $command
 echo -n "Leaving chroot..."
 umount_chroot

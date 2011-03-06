@@ -39,11 +39,11 @@ getlong()
 fixmbr()
 {
 	if [ $(getlong 0x1ea $1) -ne 0 -a $(getlong 0x1fa $1) -ne 0 ]; then
-		echo "Parttion 3 & 4 non empty. Abort"
+		echo "Partition 3 & 4 non empty. Abort"
 		exit 1
 	fi
 	if [ $(getlong 0x1da $1) -eq 0 ]; then
-		echo "Parttion 2 empty. Abort"
+		echo "Partition 2 empty. Abort"
 		exit 1
 	fi
 	size=$(stat -c %s $1)

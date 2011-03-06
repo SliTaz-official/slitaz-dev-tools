@@ -196,7 +196,7 @@ case " $OPTIONS " in
 			$f*) continue 2;;
 			esac
 		done < packages.list
-		echo -n "Filter out $i ($(du -hs $(readlink $i) | awk '{ print $1 }'))..."
+		echo -n "Filtering out $i ($(du -hs $(readlink $i) | awk '{ print $1 }'))..."
 		SIZE=$(( $SIZE + $(stat -c %s $(readlink $i)) ))
 		rm $i
 		status
@@ -319,7 +319,7 @@ case " $OPTIONS " in
 -c boot/isolinux/boot.cat  -no-emul-boot -boot-load-size 4 -boot-info-table"
 	case " $OPTIONS " in
 	*\ --auto-install\ *)
-		echo -n "Enable auto install"
+		echo -n "Enabling auto install"
 		sed -i "s/rw root/rw config=LABEL=packages-$PKG_VER,install.sh root/" \
 			$TEMP_DIR/boot/isolinux/*.cfg
 		status
@@ -327,7 +327,7 @@ case " $OPTIONS " in
 	esac
 	case " $OPTIONS " in
 	*\ --loram-detect\ *)
-		echo -n "Enable loram autodetection"
+		echo -n "Enabling loram autodetection"
 		need $IFMEM_C32 $isoloram
 		which isoinfo > /dev/null || need /usr/bin/isoinfo
 		cp $IFMEM_C32 "$TEMP_DIR/boot/isolinux"
@@ -413,11 +413,11 @@ status
 echo "$(du -hs $OUTPUT | awk '{ print $1 }') used by iso image."
 
 cd ${ROOT}
-echo -n "Create hybrid DVD/CDROM"
+echo -n "Creating hybrid DVD/CDROM"
 which isohybrid > /dev/null && isohybrid $IMAGE 2> /dev/null
 status
 
-echo -n "Calculate md5sum"
+echo -n "Calculating md5sum"
 md5sum $IMAGE > $(basename $IMAGE .iso).md5
 status
 

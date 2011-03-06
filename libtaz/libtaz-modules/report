@@ -1,7 +1,7 @@
 
 # Usage : use_report functions/commands
 # 'use_report' execute functions/commands and redirect the output.
-# You can use 'report' function to display message, steps, blocs and
+# You can use 'report' function to display messages, steps, blocs and
 # status in the terminal and organize the display of the log.
 
 report_verbosity_opt=all
@@ -66,7 +66,7 @@ report_start()
 		report_pid=$$
 	fi
 	
-	# Use the default logfile if there's no logfile was specified by the main script.
+	# Use the default logfile if no logfile was specified by the main script.
 	[ ! "$log_opt" ] && [ "$report_log_all" = yes ] && \
 		log_opt="$SLITAZ_LOG/`basename $0`/$(date -Iseconds).html"
 	export report_pid log_opt
@@ -88,7 +88,7 @@ report_start()
 		echo "[--------------------------/!\ DEBUG MODE ENABLED /!\--------------------------]"
 	fi
 	
-	# Theses variable are used to configure the display of steps in terminal.
+	# Theses variable are used to configure the display of steps in a terminal.
 	bloc1_delimiter="================================================================================"
 	bloc1_display="  "
 	bloc2_delimiter="----------------------------------------------------------------------------"
@@ -99,7 +99,7 @@ report_start()
 	# Use a trap to exit cleanly if app is killed.
 	trap "report_exit $(basename $0) killed by user" SIGINT SIGTERM
 	
-	# Use another display function if quiet is enable.
+	# Use another display function if quiet is enabled.
 	[ "$report_verbosity_opt" = "none" ] && report_display()
 {
 	while read out; do
@@ -165,7 +165,7 @@ report_stop()
 	fi
 }
 
-# Use this to stop a program with error.
+# Use this to stop a program with an error.
 report_exit()
 {
 	# Log&display error message.
@@ -187,12 +187,12 @@ report_exit()
 
 # Usage :	report [command] [message]
 #
-# type :message 	- simply display the message.
-#				step	 		-	name the step and display status when ended.
-#				end-step	-	display status of the step, it's done automaticaly when
-#										starting a new step, closing a bloc or stop report.
-#				open-bloc -	open the list of steps in the operation;
-#				close-bloc-	close the current bloc.
+# type :message 	simply display the message.
+#	step	 	name the step and display status when ended.
+#	end-step	display status of the step, it's done automatically when
+#			starting a new step, closing a bloc or stopping a report.
+#	open-bloc	open the list of steps in the operation.
+#	close-bloc	close the current bloc.
 report()
 {
 	# First : get status before it is changed by other commands.
@@ -289,7 +289,7 @@ report()
 	return $report_return_code
 }
 
-# Open a bloc of substeps in terminal and log.
+# Open a bloc of substeps in a terminal and log.
 report_open_bloc()
 {
 	unset open_bloc
@@ -317,17 +317,17 @@ report_open_bloc()
 	unset step_running
 }
 
-# This is the two new status function used by the report tool.
+# These are the two new status functions used by the report tool.
 # States are :	ok - no error since the start of the step
-#				warning - there was error(s) since the start of the step
-#				failed - the last executed command has exiting anormally
+#		warning - there was an error(s) since the start of the step
+#		failed - the last executed command has exited abnormally
 report_step_status()
 {
 	unset report_return_code
 	if [ -p $log_tmp.stdout ]; then
 		report_stop_listen
 
-		#Close message bloc if opened.
+		# Close message bloc if opened.
 		if [ -s $log_tmp -a "$report_verbosity_opt" = all ] || \
 			[ -s $log_tmp.error -a "$report_verbosity_opt" != none ]; then
 			echo "               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~               " >&3
@@ -397,10 +397,10 @@ report_rec_log()
 	! [ "$prebloc" ] && echo "</div>" >> "$log_opt"
 }
 
-# Theses variables keep the status of the blocs.
-# A bloc is reported as ok if all child steps are ok and as failed
+# These variables keep the status of the blocs.
+# A bloc is reported as ok if all child steps are ok and has failed
 # if all child steps are failed (or if a fatal error occurs).
-# In other cases the bloc is reported as warning.
+# In other cases the bloc is reported as a warning.
 report_set_bloc_status()
 {
 	bloc_status=$(eval echo \$bloc${bloc_level}_status)

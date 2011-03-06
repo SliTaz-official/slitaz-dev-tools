@@ -23,7 +23,7 @@ get_config()
 	fi
 }
 
-# The classic SliTaz check_root function used in near all SliTaz tools.
+# The classic SliTaz check_root function used in nearly all SliTaz tools.
 check_root()
 {
 	[ $(id -u) = 0 ] && return
@@ -32,8 +32,7 @@ check_root()
    exit 1
 }
 
-# A classic check_dir function :
-#	- create directory if needed and echo about it.
+# A classic check_dir function: - create directory if needed and echo about it.
 # Return error if directory is created (to chain other commands with ||)
 check_dir()
 {
@@ -55,7 +54,7 @@ check_pkg()
 	fi
 }
 
-# Display an horizontal line, can be used to have clearest script.
+# Display a horizontal line, can be used for a clearer script.
 horizontal_line()
 {
 	echo "================================================================================"
@@ -63,12 +62,12 @@ horizontal_line()
 
 # Store -- options in a variable.
 # Test phase.
-# Need to add something to filter options and report error in case option is not
-# listed a used by the command.
+# Need to add something to filter options and report errors in case option is not
+# listed and used by the command.
 get_options()
 {
 	if echo "$log_command" | fgrep -q ' '--help; then
-		echo "Avaible options for $(echo `basename "$log_command"` | cut -d ' ' -f 1,2) : $get_options_list"
+		echo "Available options for $(echo `basename "$log_command"` | cut -d ' ' -f 1,2) : $get_options_list"
 		exit 0
 	fi
 	for get_option in $(echo "$log_command" | tr ' ' '\n' | grep ^-- | sed 's/^--//'); do

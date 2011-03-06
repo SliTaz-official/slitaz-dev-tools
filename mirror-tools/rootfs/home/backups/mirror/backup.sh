@@ -9,11 +9,11 @@ backup_data()
 {
 GZIP=rgzip
 which $GZIP > /dev/null || GZIP=gzip
-echo "Sync doc.slitaz.org ..."
+echo "Syncing doc.slitaz.org ..."
 rsync -aH -e "$SSH" --bwlimit=50 \
   $REMOTE_USER@tank.slitaz.org:/home/slitaz/www/doc/data/. /var/www/doc/data/.
 while read file dirs; do
-	echo "Create $file.cpio.gz ..."
+	echo "Creating $file.cpio.gz ..."
 	( cd / ; find $dirs  | cpio -o -H newc ) | \
 		$GZIP -9 > $file.cpio.gz 2> /dev/null
 done <<EOT

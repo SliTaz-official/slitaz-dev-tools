@@ -1,13 +1,13 @@
 ########################################################################
 # This is the SliTaz main library (/usr/lib/slitaz/libtaz).
-# libtaz is modular : see explanation of the function source_lib bellow.
+# libtaz is modular : see explanation of the function source_lib below.
 #
 # Author :	Antoine Bodin <gokhlayeh@mailoo.org>
 #
 # Version : 0.0.1 (alpha1)
 #
-# Documentation : none (will be avaible with beta version)
-# The documentation will include an explanation of all fonction, how to 
+# Documentation : none (will be available with beta version)
+# The documentation will include an explanation of all functions, how to 
 # use them and how to improve this library.
 #
 # Devnotes (suppress while beta is released) :
@@ -15,22 +15,22 @@
 # Add a generic create/cleanup script for tmp files ?
 # check_for (pkg on cmd line, pkg, receipt, etc.) -> tazwok,tazpkg,list
 #
-# Note : as the work is progress some part are dirty code or some other
-# are note finish. I update this because we need the libdep
+# Note: as the work is in progress some parts are dirty code or others
+# are not finished. I will update this because we need the libdep.
 #
 ########################################################################
 # INITIALIZATION
 ########################
 # Load the Slitaz main configuration file : /etc/slitaz/slitaz.conf.
-# Don't load it if application is called by one having already loaded it, 
+# Don't load it if an application is called by one already, 
 # to avoid options overwrite.
 
 . /etc/slitaz/slitaz.conf
 
-# Load the command as some module use it.
+# Load the command as some modules use it.
 log_command="$0 $@"
 
-# Define & create temporary directory as it's used by report.
+# Define & create a temporary directory as it's used by report.
 tmp=/tmp/$(basename $0)-$$
 mkdir -p $tmp
 
@@ -38,7 +38,7 @@ mkdir -p $tmp
 # EXIT FUNCTIONS
 ########################
 # run_on_exit commands are executed when apps exit (whatever the reason)
-# run_on_kill commands are executed only when apps is killed (or Ctrl+C)
+# run_on_kill commands are executed only when apps are killed (or Ctrl+C)
 # Note : one command per line in the variable.
 run_on_exit="rm -rf $tmp"
 run_on_kill=""
@@ -66,23 +66,23 @@ run_on_kill()
 
 ########################################################################
 # This function should be used after sourcing libtaz to source modular
-# libraries. Libtaz only source main configuration file and contain only
-# this function. The modular libraries should be put in slitaz lib
+# libraries. Libtaz only sources main configuration files and contains only
+# this function. The modular libraries should be put in the slitaz lib
 # directory (/usr/lib/slitaz/libtaz-modules).
 #
 # Usage : source_lib lib [lib2] [lib3] ...
 #
-# Description of libraries including with libtaz :
+# Description of libraries included with libtaz :
 #	commons		: functions used by most SliTaz scripts
 #	get_option*	: function to check & parse arguments of a command line
-#	report		: display and log script in a configurable way
+#	report		: display and log scripts in a configurable way
 #
-# * need a code rewiew, please don't use them for production : code can
+# * needs a code review, please don't use them for production : code can
 # be hardly modified.
 #
-# All theses libraries contains additionnal functions. Check them to
-# if you want to know wich ones and how to use them.
-# More information will be avaible at beta release.
+# All these libraries contains additional functions. Check them to
+# know which ones and how to use them.
+# More information will be available at beta release.
 
 sourced_lib=""
 source_lib()
