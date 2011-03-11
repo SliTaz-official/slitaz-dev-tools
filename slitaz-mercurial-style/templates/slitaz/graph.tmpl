@@ -112,7 +112,7 @@ graph.vertex = function(x, y, color, parity, cur) \{
 	var tagspan = '';
 	if (cur[7].length || (cur[6][0] != 'default' || cur[6][1])) \{
 		tagspan = '<span class="logtags">';
-		if (cur[6][1]) {
+		if (cur[6][1]) \{
 			tagspan += '<span class="branchhead" title="' + cur[6][0] + '">';
 			tagspan += cur[6][0] + '</span> ';
 		} else if (!cur[6][1] && cur[6][0] != 'default') \{
