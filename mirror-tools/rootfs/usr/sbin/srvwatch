@@ -1,0 +1,179 @@
+#!/bin/sh
+
+# Check daemon with pidfile: usage check_pidfile $PIDFILE $DAEMON
+active_pidfile()
+{
+	if [ ! -e $1 ]; then
+		return 1
+	elif grep -qs "Name:.$(basename $2)$" \
+			/proc/$(cat $1 | sed 's/[^0-9]//g')/status ; then
+		return 0
+	else
+		rm -f $1
+		return 2
+	fi
+}
+
+log()
+{
+	cat > /var/log/svrwatch.log.$$ <<EOT
+$(tail -n 50 /var/log/svrwatch.log 2> /dev/null)
+$(date) $@
+EOT
+	mv -f /var/log/svrwatch.log.$$ /var/log/svrwatch.log
+}
+
+cron_leak()
+{
+	mem=$(top -b -n1 | grep cron | grep -v grep | awk '{ print $5 }')
+	case "$mem" in
+	*m) 	[ ${mem%m} -gt 500 ] && {
+			log "restart crond (use $mem)"
+			/etc/init.d/crond restart > /dev/null 2>&1
+		}
+		;;
+	esac
+}
+
+make_pem()
+{
+names="DNS:*.$1, DNS:$1"
+if grep -q '# req_extensions' /etc/ssl/openssl.cnf; then
+	sed -i 's/^# req_extensions.*/req_extensions = multiname/' \
+		/etc/ssl/openssl.cnf
+	cat >> /etc/ssl/openssl.cnf << EOT
+
+[ multiname ]
+subjectAltName = $names
+EOT
+else
+	sed -i "s/^subjectAltName.*/subjectAltName = $names/" /etc/ssl/openssl.cnf
+fi
+false && cat > multiname.ext <<EOT
+[ multiname ]
+subjectAltName = $names
+EOT
+
+#	-extfile multiname.ext -extensions multiname
+openssl req -new -x509 -keyout $2 -extensions multiname \
+	-out $2 -days 3650 -nodes <<EOT
+$(. /etc/locale.conf ; echo ${LANG#*_})
+$(cat /etc/TZ)
+
+*.$1
+
+
+
+EOT
+}
+
+check_pem()
+{
+grep SSLCertificat /etc/apache/conf.d/* | awk '{ print $3 }' | uniq | \
+while read file; do
+	[ -s $file ] && continue
+	make_pem $(basename $file .pem) $file
+done
+}
+
+check_certificates()
+{
+	if [ -n "$(check_pem)" ]; then
+		/etc/init.d/apache stop
+		/etc/init.d/apache start
+	fi
+}
+
+daemon_crash()
+{
+	if [ -f /etc/aliases -a /etc/aliases -nt /etc/aliases.db ]; then
+		log "/etc/aliases"
+		postalias /etc/aliases
+	fi
+	eval $(grep ^RUN_DAEMONS= /etc/rcS.conf)
+	checked=""
+	while read command pidfile daemon; do
+		case "$command" in
+		\#*) continue
+		esac
+		checked="$checked $command"
+		case " $RUN_DAEMONS " in
+		*\ $command\ *)
+			case "$command" in
+			apache)
+				check_certificates ;;
+			esac
+			active_pidfile $pidfile $daemon || {
+				log "start daemon $command"
+				/etc/init.d/$command start
+			}
+			if [ $command == mysql -a ! -e /var/run/mysqld/mysqld.sock ]; then
+				log "mysql socket"
+				killall mysqld
+				killall -9 mysqld
+				/etc/init.d/mysql start
+			fi
+			;;
+		esac
+	done <<EOT
+rsyncd		/var/run/rsyncd.pid				rsync
+openssh		/var/run/sshd.pid				sshd
+lighttpd	/var/run/lighttpd.pid				lighttpd
+hald		/var/run/hald/pid				hald
+ajaxterm	/var/run/ajaxterm.pid				python
+apache		/var/run/apache/httpd.pid			httpd
+crond		/var/run/crond.pid				crond
+dbus		/var/run/dbus/pid				dbus-daemon
+dropbear	/var/run/dropbear.pid				dropbear
+hald		/var/run/hald/pid				hald
+mysql		/var/run/mysqld/mysql.pid			mysqld
+ntp		/var/run/ntpd.pid				ntpd
+postfix		/var/spool/postfix/pid/master.pid		master
+pure-ftpd	/var/run/pure-ftpd.pid				pure-ftpd
+slim		/var/lock/slim.lock				slim
+knock		/var/run/knockd.pid				knockd
+udhcpd		/var/run/udhcpd.pid				udhcpd
+dhcpd		/var/run/dhcpd.pid				dhcpd
+EOT
+	rm -f /var/log/srvwatch.log
+	for i in $RUN_DAEMONS ; do
+		case " $checked " in
+		*\ $i\ *) ;;
+		*) echo "Not checked: $i" >> /var/log/srvwatch.log ;;
+		esac
+	done
+}
+
+swap_full()
+{
+	if [ -n "$(free | awk '/Swap/ { if ($2/$4 > 10) print }')" ]; then
+		log "$(free | grep Swap)"
+		top -b -n1 > /var/log/top.log
+		sync
+		reboot
+	fi
+}
+
+case "$1" in
+install)
+	[ $0 == $2/usr/sbin/srvwatch ] || mv $0 $2/usr/sbin/srvwatch
+	if [ -x $2/usr/sbin/srvwatch ] && ! grep -q /usr/sbin/srvwatch $2/etc/inittab; then
+		sed -i 's|^::sysinit.*|&\n::respawn:/usr/sbin/srvwatch loop|' \
+			$2/etc/inittab
+		[ -n "$2" ] || kill -1 1
+	fi
+	;;
+once)
+	daemon_crash
+	cron_leak
+	swap_full ;;
+loop)
+	while true; do
+		daemon_crash
+		cron_leak
+		swap_full
+		sleep 15m
+	done > /dev/null 2>&1 ;;
+*)
+	echo "Usage: $0 install" ;;
+esac
