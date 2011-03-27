@@ -1,5 +1,9 @@
 {header}
-<title>{repo|escape}: {file|escape} diff</title>
+<title>{repo|escape}: Summary</title>
+<link rel="alternate" type="application/atom+xml"
+   href="{url}atom-log" title="Atom feed for {repo|escape}"/>
+<link rel="alternate" type="application/rss+xml"
+   href="{url}rss-log" title="RSS feed for {repo|escape}"/>
 </head>
 <body>
 
@@ -25,22 +29,17 @@
 		<h4>Navigation</h4>
 		<div class="right_box">
 			<ul>
+				<li><a href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
 				<li><a href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
-				<li><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">File</a></li>
-				<li>Diff</li>
-				<li><a href="{url}annotate/{node|short}/{file|urlescape}{sessionvars%urlparameter}">Annotate</a></li>
-				<li><a href="{url}log/{node|short}/{file|urlescape}{sessionvars%urlparameter}">File log</a></li>
-				<li><a href="{url}raw-file/{node|short}/{file|urlescape}">Raw</a></li>
 			</ul>
 		</div>
 		<div class="left_box">
 			<ul>
-				<li><a href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
+				<li>Summary</li>
 				<li><a href="{url}log{sessionvars%urlparameter}">Changelog</a></li>
 				<li><a href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
 				<li><a href="{url}tags{sessionvars%urlparameter}">Tags</a></li>
 				<li><a href="{url}branches{sessionvars%urlparameter}">Branches</a></li>
-				<li><a href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
 			</ul>
 		</div>
 	</div>
@@ -50,9 +49,12 @@
 		<p>
 			Clone project: hg clone http://hg.slitaz.org/{repo|escape}
 		</p>
-		<p>
-			Differences between modified files
-		</p>
+		<div id="tarball">
+			<ul>
+				<li>Download tarball:</li>
+				{archives%archiveentry}
+			</ul>
+		</div>
 		<h4>Search</h4>
 		<form class="search" action="{url}log">
 			{sessionvars%hiddenformentry}
@@ -63,39 +65,41 @@
 	</div>
 </div>
 
-<!-- Content -->
+
 <div id="content">
 
-<h2><a href="{url}{sessionvars%urlparameter}">{repo|escape}</a>
-	diff {file|escape} @ {rev}:{node|short}</h2>
+<h2>Repository Overview</h2>
 
-<div class="description">{desc|strip|escape|addbreaks|nonempty}</div>
+<ul style="list-style-type: square;">
+	<li>Repo: {repo|escape} - {desc}</li>
+	<li>Owner: {owner|obfuscate}</li>
+	<li>Last change: {lastchange|rfc822date}</li>
+</ul>
 
-<table id="changesetEntry">
-<tr>
- <th>author</th>
- <td>{author|obfuscate}</td>
-</tr>
-<tr>
- <th>date</th>
- <td>{date|date} ({date|age} ago)</td>
-</tr>
-<tr>
- <th>parents</th>
- <td>{parent%filerevparent}</td>
-</tr>
-<tr>
- <th>children</th>
- <td>{child%filerevchild}</td>
-</tr>
-{changesettag}
+<h2>Changes</h2>
+<table style="margin-top: 10px;">
+{shortlog}
+	<tr class="light">
+		<td colspan="4">
+			<a class="list" href="{url}shortlog{sessionvars%urlparameter}">More changes...</a>
+		</td>
+	</tr>
 </table>
 
-<div class="overflow">
-<div class="sourcefirst">   line diff</div>
+<h2>Tags</h2>
+<table style="margin-top: 10px;">
+{tags}
+	<tr class="light">
+		<td colspan="3">
+			<a class="list" href="{url}tags{sessionvars%urlparameter}">More tags...</a>
+		</td>
+	</tr>
+</table>
 
-{diff}
-</div>
+<h2>Branches</h2>
+<table style="margin-top: 10px;">
+{branches%branchentry}
+</table>
 
 <!-- End of content -->
 </div>

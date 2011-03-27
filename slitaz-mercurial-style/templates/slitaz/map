@@ -5,6 +5,7 @@ header = header.tmpl
 footer = footer.tmpl
 search = search.tmpl
 
+summary = summary.tmpl
 changelog = shortlog.tmpl
 shortlog = shortlog.tmpl
 shortlogentry = shortlogentry.tmpl

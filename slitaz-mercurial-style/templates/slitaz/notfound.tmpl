@@ -5,42 +5,64 @@
 
 <!-- Header -->
 <div id="header">
-    <a href="http://hg.slitaz.org/"><img id="logo"
-		src="{staticurl}logo.png" 
-		title="hg.slitaz.org" alt="hg.slitaz.org" /></a>
-    <p id="titre">#!/Hg/repos</p>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+			<img src="{staticurl}/images/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/">Doc</a>
+		<a href="http://forum.slitaz.org/">Forum</a>
+		<a href="http://labs.slitaz.org/issues">Bugs</a>
+		<a href="http://hg.slitaz.org/">Hg</a>
+	</div>
+	<h1><a href="http://hg.slitaz.org/">SliTaz Repositories</a></h1>
 </div>
 
-<!-- Content -->
-<div id="content-full">
-
-<!-- Block begin -->
-<div class="block">
-	<!-- Nav block begin -->
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
 	<div id="block_nav">
-		<h3><img src="{staticurl}development.png" alt="png" />Devel corner</h3>
-		<ul>
-			<li><a href="http://www.slitaz.org/en/devel/">Website/devel</a></li>
-			<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
-			<li><a href="http://bb.slitaz.org/">Build Bot</a></li>
-			<li><a href="http://scn.slitaz.org/">Community</a></li>
-			<li><a href="http://pkgs.slitaz.org/">Packages</a></li>
-			<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
-		</ul>
-	<!-- Nav block end -->
+		<h4>Developers corner</h4>
+		<div class="right_box">
+			<ul>
+				<li><a href="http://bb.slitaz.org/">Build Bot</a></li>
+				<li><a href="http://pkgs.slitaz.org/">Packages</a></li>
+				<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
+			</ul>
+		</div>
+		<div class="left_box">
+			<ul>
+				<li><a href="http://www.slitaz.org/en/devel/">Website Devel</a></li>
+				<li><a href="http://scn.slitaz.org/groups/devel/">Community Group</a></li>
+				<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
+				<li><a href="http://doc.slitaz.org/en:cookbook:start">Cookbook</a></li>
+			</ul>
+		</div>
 	</div>
-	<!-- Top block begin -->
-	<div id="block_top">
-		<h1>Repository not found</h1>
+	<!-- Information/image -->
+	<div id="block_info">
+		<h4>Repository not found</h4>
 		<p>
 			The specified repository "{repo|escape}" is unknown, sorry.
+		</p>
+		<p>
 			Please go back to the 
 			<a href="http://hg.slitaz.org/">main repository list page</a>.
 		</p>
-	<!-- Top block end -->
+		<h4>Search</h4>
+		<form class="search" action="{url}log">
+			{sessionvars%hiddenformentry}
+			<p><input name="rev" id="search1" type="text" /></p>
+			<!-- <div id="hint">find changesets by author, revision,
+			files, or words in the commit message</div> -->
+		</form>
 	</div>
-<!-- Block end -->
 </div>
+
+<!-- Content -->
+<div id="content">
+
+
 
 <!-- End of content -->
 </div>
