@@ -1,44 +1,48 @@
-<!-- Block begin -->
-<div class="block">
-	<!-- Nav block begin -->
-	<div id="block_nav" style="height: 220px;">
-		<h3><img src="/pics/website/network.png" alt=".png" />Tools</h3>
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
+	<div id="block_nav" style="padding: 10px;">
+		<h4><img src="images/tazpkg.png" alt="tazpkg.png" />Tools &amp; Doc</h4>
+		<div class="right_box">
+			<ul>
+				<li><a href="http://doc.slitaz.org/en:cookbook:wok">Wok &amp; Tools</a></li>
+				<li><a href="http://doc.slitaz.org/en:cookbook:receipt">Receipts</a></li>
+			</ul>
+		</div>
 		<ul>
 			<li><a href="http://hg.slitaz.org/wok">Hg Repos</a></li>
 			<li><a href="http://bb.slitaz.org/">Build Bot</a></li>
 			<li><a href="http://labs.slitaz.org/issues">Bug Tracker</a></li>
 		</ul>
-		<h3><img src="/pics/website/text.png" alt=".png" />Documentation</h3>
-		<ul>
-			<li><a href="http://doc.slitaz.org/en:cookbook:wok">Wok &amp; Tools</a></li>
-			<li><a href="http://doc.slitaz.org/en:cookbook:receipt">Receipts</a></li>
-		</ul>
-	<!-- Nav block end -->
 	</div>
-	<!-- Top block begin -->
-	<div id="block_top" style="height: 220px;">
-		<h1>Packages</h1>
+	<!-- Information/image -->
+	<div id="block_info">
+		<h4>Packages Web interface</h4>
 		<p>
 			Welcome to the SliTaz packages web interface. The site allows
 			you to search and view all of the software packages available
-			on the SliTaz mirror. The pages are automatically updated daily
-			via a cron job.
+			on the SliTaz mirror. The pages are automatically updated
+			daily via a cron job.
 		</p>
 		<p>
-			Browse the packages web interface: <a href="stable/">Stable packages</a>
-			| <a href="cooking/">Cooking packages</a>
+			Packages web interface: <a href="stable/">Stable</a>
+			| <a href="cooking/">Cooking</a>
 		</p>
-	<!-- Top block end -->
 	</div>
-<!-- Block end -->
 </div>
 
-<div class="pkgs-search">
+<!-- Content -->
+<div id="content">
+
+<div style="text-align: center; margin-bottom: 40px;">
 	<form method="post" action="http://pkgs.slitaz.org/search.cgi">
-		<p>
-			<input type="text" name="query" size="30" />
-			<input type="submit" name="search" value="Search" />
-		</p>
+		<div class="searchbox">
+			<p>
+				<input type="text" name="query" size="24" style="width: 80%;" />
+				<input type="submit" name="search" value="Search" />
+			</p>
+		</div>
+		Search for:
 		<select name="object">
 			<option>Package</option>
 			<option>Desc</option>
@@ -50,6 +54,7 @@
 			<option>File_list</option>
 			<option>FileOverlap</option>
 		</select>
+		in
 		<select name="version">
 			<option>stable</option>
 			<option>cooking</option>

@@ -66,13 +66,15 @@ xhtml_footer()
 gen_index_content()
 {
 	cat >> $PAGES_DIR/$page.html << _EOT_
-
-<div class="pkgs-search">
+<div style="text-align: center; margin-bottom: 40px;">
 	<form method="post" action="http://pkgs.slitaz.org/search.cgi">
-		<p>
-			<input type="text" name="query" size="32" />
-			<input type="submit" name="search" value="Search" />
-		</p>
+		<div class="searchbox">
+			<p>
+				<input type="text" name="query" size="24" style="width: 80%;" />
+				<input type="submit" name="search" value="Search" />
+			</p>
+		</div>
+		Search for:
 		<select name="object">
 			<option>Package</option>
 			<option>Desc</option>
@@ -84,12 +86,13 @@ gen_index_content()
 			<option>File_list</option>
 			<option>FileOverlap</option>
 		</select>
+		in
 		<select name="version">
 `search_form_option`
 		</select>
 	</form>
-	<p>
-		$packages packages - Database generated on: $DATE
+	<p style="margin: 40px 0;">
+		$packages packages in _RELEASE_ - Database generated on: $DATE
 	</p>
 </div>
 _EOT_
