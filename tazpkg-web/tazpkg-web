@@ -113,13 +113,10 @@ pkgs_pages_content()
 		cat >> $PAGES_DIR/$CATEGORY.html << _EOT_
 
 <a name="$PACKAGE"></a>
-<h3>
-<a href="tazpkg://mirror.slitaz.org/packages/$RELEASE/$PACKAGE-${VERSION}$EXTRAVERSION.tazpkg">
-<img src="/pics/tazpkg.png" 
-	title="install" alt="install" 
-	style="vertical-align: middle; width: 24px; height: 24px;" /></a>
-$PACKAGE</h3>
-<pre class="package">
+<h3><img src="/images/tazpkg.png" 
+	style="vertical-align: middle; 
+	width: 24px; height: 24px;" />$PACKAGE</h3>
+<pre>
 Version    : $VERSION
 Short desc : $SHORT_DESC
 Web site   : <a href="$WEB_SITE">$WEB_SITE</a>
