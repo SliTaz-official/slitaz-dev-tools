@@ -194,7 +194,8 @@ search_form()
 		<div class="searchbox">
 			<p>
 				<input type="hidden" name="lang" value="$LANG" />
-				<input type="text" name="query" size="20" value="$SEARCH" />
+				<input type="text" name="query" 
+					size="20" value="$SEARCH" style="width: 80%;" />
 				<input type="submit" name="search" value="$search" />
 			</p>
 		</div>
