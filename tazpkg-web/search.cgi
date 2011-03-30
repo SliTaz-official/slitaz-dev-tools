@@ -453,7 +453,6 @@ if [ "$REQUEST_METHOD" != "POST" ]; then
 <!-- Content -->
 <div id="content">
 
-<h2>$search</h2>
 _EOT_
 	search_form
 	xhtml_footer
@@ -464,7 +463,6 @@ else
 <!-- Content -->
 <div id="content">
 
-<h2>$search</h2>
 _EOT_
 	search_form
 	if [ "$OBJECT" = "Depends" ]; then
