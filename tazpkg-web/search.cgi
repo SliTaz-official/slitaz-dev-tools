@@ -190,34 +190,34 @@ search_form()
 	cat << _EOT_
 
 <div style="text-align: center; margin-bottom: 20px;">
-<form method="post" action="search.cgi">
-	<div class="searchbox">
-		<p>
-			<input type="hidden" name="lang" value="$LANG" />
-		</p>
-	</div>
-	Search for:
-	<select name="object">
-		<option value="Package">$package</option>
-		<option $selected_desc value="Desc">$desc</option>
-		<option $selected_tags value="Tags">$tags</option>
-		<option $selected_receipt value="Receipt">$receipt</option>
-		<option $selected_depends value="Depends">$depends</option>
-		<option $selected_build_depends value="BuildDepends">$bdepends</option>
-		<option $selected_file value="File">$file</option>
-		<option $selected_file_list value="File_list">$file_list</option>
-		<option $selected_overlap value="FileOverlap">$overlap</option>
-	</select>
-	in
-	<input type="text" name="query" size="20" value="$SEARCH" />
-	<select name="version">
-		<option value="cooking">$cooking</option>
-		<option $selected_stable value="stable">$stable</option>
-		<option $selected_1 value="1.0">1.0</option>
-		<option $selected_2 value="2.0">2.0</option>
-	</select>
-	<input type="submit" name="search" value="$search" />
-</form>
+	<form method="post" action="search.cgi">
+		<div class="searchbox">
+			<p>
+				<input type="hidden" name="lang" value="$LANG" />
+				<input type="text" name="query" size="20" value="$SEARCH" />
+				<input type="submit" name="search" value="$search" />
+			</p>
+		</div>
+		Search for:
+		<select name="object">
+			<option value="Package">$package</option>
+			<option $selected_desc value="Desc">$desc</option>
+			<option $selected_tags value="Tags">$tags</option>
+			<option $selected_receipt value="Receipt">$receipt</option>
+			<option $selected_depends value="Depends">$depends</option>
+			<option $selected_build_depends value="BuildDepends">$bdepends</option>
+			<option $selected_file value="File">$file</option>
+			<option $selected_file_list value="File_list">$file_list</option>
+			<option $selected_overlap value="FileOverlap">$overlap</option>
+		</select>
+		in
+		<select name="version">
+			<option value="cooking">$cooking</option>
+			<option $selected_stable value="stable">$stable</option>
+			<option $selected_1 value="1.0">1.0</option>
+			<option $selected_2 value="2.0">2.0</option>
+		</select>
+	</form>
 </div>
 _EOT_
 }
