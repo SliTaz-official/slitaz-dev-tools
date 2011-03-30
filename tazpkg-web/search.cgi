@@ -463,7 +463,6 @@ else
 <!-- Content -->
 <div id="content">
 
-<h1>$package</h1>
 <h2>$search</h2>
 _EOT_
 	search_form
