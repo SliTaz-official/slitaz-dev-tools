@@ -189,7 +189,7 @@ search_form()
 {
 	cat << _EOT_
 
-<div style="text-align: center; margin-bottom: 20px;">
+<div style="text-align: center; margin-bottom: 30px;">
 	<form method="post" action="search.cgi">
 		<div class="searchbox">
 			<p>
@@ -276,10 +276,13 @@ xhtml_header()
 	</div>
 	<!-- Information/image -->
 	<div id="block_info">
-		<h4>Packages Search</h4>
+		<h4>$package</h4>
 		<p>
-			Search for SliTaz packages! Any result ? Make a package
-			request on the <a href="http://forum.slitaz.org/">forum</a>
+			Search for SliTaz packages! 
+		</p>
+		<p>
+			Any results ? Make a package request on the official
+			<a href="http://forum.slitaz.org/">forum</a>
 		</p>
 	</div>
 </div>
@@ -449,7 +452,6 @@ if [ "$REQUEST_METHOD" != "POST" ]; then
 <!-- Content -->
 <div id="content">
 
-<h1>$package</h1>
 <h2>$search</h2>
 _EOT_
 	search_form
