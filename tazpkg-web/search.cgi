@@ -189,9 +189,14 @@ search_form()
 {
 	cat << _EOT_
 
-<div style="text-align: center; padding: 20px;">
+<div style="text-align: center; margin-bottom: 20px;">
 <form method="post" action="search.cgi">
-	<input type="hidden" name="lang" value="$LANG" />
+	<div class="searchbox">
+		<p>
+			<input type="hidden" name="lang" value="$LANG" />
+		</p>
+	</div>
+	Search for:
 	<select name="object">
 		<option value="Package">$package</option>
 		<option $selected_desc value="Desc">$desc</option>
@@ -203,7 +208,7 @@ search_form()
 		<option $selected_file_list value="File_list">$file_list</option>
 		<option $selected_overlap value="FileOverlap">$overlap</option>
 	</select>
-	<strong>:</strong>
+	in
 	<input type="text" name="query" size="20" value="$SEARCH" />
 	<select name="version">
 		<option value="cooking">$cooking</option>
@@ -227,27 +232,58 @@ xhtml_header()
 <head>
 	<title>SliTaz Packages - Search $SEARCH</title>
 	<meta http-equiv="content-type" content="text/html; charset=$charset" />
-	<meta name="description" content="Au sujet de SliTaz GNU/Linux mini système d'exploitation" />
-	<meta name="keywords" lang="fr" content="Système, libre, gnu, linux, opensource, livecd" />
+	<meta name="description" content="SliTaz packages" />
+	<meta name="keywords" lang="en" content="tazpkg" />
 	<meta name="robots" content="index, follow, all" />
-	<meta name="revisit-after" content="7 days" />
-	<meta name="expires" content="never" />
 	<meta name="modified" content="$DATE" />
-	<meta name="author" content="ash, awk, grep, sed and cat"/>
-	<meta name="publisher" content="www.slitaz.org" />
-	<link rel="shortcut icon" href="/favicon.ico" />
-	<link rel="stylesheet"  type="text/css" href="/slitaz.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="stylesheet"  type="text/css" href="slitaz.css" />
 </head>
 <body>
 
 <!-- Header -->
 <div id="header">
-    <!-- Logo -->
-	<a href="http://pkgs.slitaz.org/"><img id="logo"
-		src="/pics/website/logo.png" 
-		title="pkgs.slitaz.org" alt="pkgs.slitaz.org" /></a>
-	<p id="titre">#!/Packages</p>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+			<img src="images/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/">Doc</a>
+		<a href="http://forum.slitaz.org/">Forum</a>
+		<a href="http://labs.slitaz.org/issues">Bugs</a>
+		<a href="http://hg.slitaz.org/">Hg</a>
+	</div>
+	<h1><a href="http://pkgs.slitaz.org/">SliTaz Packages</a></h1>
 </div>
+
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
+	<div id="block_nav" style="padding: 10px;">
+		<h4><img src="images/tazpkg.png" alt="tazpkg.png" />Tools &amp; Doc</h4>
+		<div class="right_box">
+			<ul>
+				<li><a href="http://doc.slitaz.org/en:cookbook:wok">Wok &amp; Tools</a></li>
+				<li><a href="http://doc.slitaz.org/en:cookbook:receipt">Receipts</a></li>
+			</ul>
+		</div>
+		<ul>
+			<li><a href="http://hg.slitaz.org/wok">Hg Repos</a></li>
+			<li><a href="http://bb.slitaz.org/">Build Bot</a></li>
+			<li><a href="http://labs.slitaz.org/issues">Bug Tracker</a></li>
+			<li><a href="http://forum.slitaz.org/">Get Support</a></li>
+		</ul>
+	</div>
+	<!-- Information/image -->
+	<div id="block_info">
+		<h4>Packages Search</h4>
+		<p>
+			Search for SliTaz packages! Any result ? Make a package
+			request on the <a href="http://forum.slitaz.org/">forum</a>
+		</p>
+	</div>
+</div>
+
 _EOF_
 }
 
@@ -264,30 +300,22 @@ xhtml_footer()
 
 <!-- Footer -->
 <div id="footer">
-	<div class="right_box">
-	<h4>SliTaz Network</h4>
-		<ul>
-			<li><a href="http://www.slitaz.org/">Main Website</a></li>
-			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
-			<li><a href="http://forum.slitaz.org/">Support Forum</a></li>
-			<li><a href="http://scn.slitaz.org/">Community Network</a></li>
-			<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
-			<li><a href="http://distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
-		</ul>
-	</div>
-	<h4>SliTaz Packages</h4>
-	<ul>
-		<li><a href="#header">Top of the page</a></li>
-		<li>Copyright &copy; <span class="year"></span>
-			<a href="http://www.slitaz.org/">SliTaz</a></li>
-		<li><a href="http://www.slitaz.org/en/about/">About the project</a></li>
-		<li><a href="http://pkgs.slitaz.org/search.cgi">Search packages</a></li>
-		<li>Page modified the _DATE_</li>
-		<li><a href="http://validator.w3.org/check?uri=referer"><img
-		src="http://pkgs.slitaz.org/pics/website/xhtml10.png" 
-		title="Code validé XHTML 1.0" alt="Valid XHTML 1.0"
-		style="width: 80px; height: 15px; vertical-align: middle;" /></a></li>
-	</ul>
+	Copyright &copy; <span class="year"></span>
+	<a href="http://www.slitaz.org/">SliTaz</a> - Network:
+	<a href="http://scn.slitaz.org/">Community</a>
+	<a href="http://doc.slitaz.org/">Doc</a>
+	<a href="http://forum.slitaz.org/">Forum</a>
+	<a href="http://pkgs.slitaz.org/">Packages</a>
+	<a href="http://labs.slitaz.org/issues">Bugs</a>
+	<a href="http://hg.slitaz.org/">Hg</a>
+	<p>
+		SliTaz @
+		<a href="http://twitter.com/slitaz">Twitter</a>
+		<a href="http://www.facebook.com/slitaz">Facebook</a>
+		<a href="http://distrowatch.com/slitaz">Distrowatch</a>
+		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a>
+		<a href="http://flattr.com/profile/slitaz">Flattr</a>
+	</p>
 </div>
 
 </body>
@@ -387,7 +415,7 @@ package_exist()
 	cat << _EOT_
 
 <h3>$noresult</h3>
-<pre class="package">
+<pre>
 _EOT_
 	return 1
 }
@@ -442,7 +470,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$deptree</h3>
-<pre class="package">
+<pre>
 _EOT_
 			ALL_DEPS=""
 			dep_scan $SEARCH ""
@@ -453,7 +481,7 @@ _EOT_
 </pre>
 
 <h3>$deptree (SUGGESTED)</h3>
-<pre class="package">
+<pre>
 _EOT_
 				ALL_DEPS=""
 				dep_scan "$SUGGESTED" "    "
@@ -462,7 +490,7 @@ _EOT_
 </pre>
 
 <h3>$rdeptree</h3>
-<pre class="package">
+<pre>
 _EOT_
 			ALL_DEPS=""
 			rdep_scan $SEARCH
@@ -475,7 +503,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$bdeplist</h3>
-<pre class="package">
+<pre>
 _EOT_
 			BUILD_DEPENDS=""
 			. $WOK/$SEARCH/receipt
@@ -493,7 +521,7 @@ _EOT_
 </pre>
 
 <h3>$rbdeplist</h3>
-<pre class="package">
+<pre>
 _EOT_
 			for dep in $(grep -l $SEARCH $WOK/*/receipt); do
 				BUILD_DEPENDS=""
@@ -510,7 +538,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$overloading $SEARCH</h3>
-<pre class="package">
+<pre>
 _EOT_
 			( unlzma -c $PACKAGES_REPOSITORY/files.list.lzma | grep ^$SEARCH: ;
 			  unlzma -c $PACKAGES_REPOSITORY/files.list.lzma | grep -v ^$SEARCH: ) | awk '
@@ -533,7 +561,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 _EOT_
 		last=""
 		unlzma -c $PACKAGES_REPOSITORY/files.list.lzma \
@@ -555,7 +583,7 @@ _EOT_
 		package_exist $SEARCH && cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 _EOT_
 		last=""
 		unlzma -c $PACKAGES_REPOSITORY/files.list.lzma \
@@ -565,7 +593,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 <pre>
 $(htmlize < $WOK/$SEARCH/description.txt)
 </pre>
@@ -574,7 +602,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 _EOT_
 			last=""
 			grep -i $SEARCH $PACKAGES_REPOSITORY/packages.desc | \
@@ -587,7 +615,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 _EOT_
 		last=""
 		grep ^TAGS= $WOK/*/receipt |  grep -i $SEARCH | \
@@ -599,7 +627,7 @@ _EOT_
 		package_exist $SEARCH && cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 <pre>
 $(if [ -f  $WOK/$SEARCH/taz/*/receipt ]; then
 	cat $WOK/$SEARCH/taz/*/receipt
@@ -612,7 +640,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre class="package">
+<pre>
 _EOT_
 		for pkg in `ls $WOK/ | grep $SEARCH`
 		do
@@ -630,7 +658,7 @@ _EOT_
 </pre>
 
 <h3>$result (package providing $vpkg)</h3>
-<pre class="package">
+<pre>
 _EOT_
 			for pkg in $(grep $vpkg= $equiv | sed "s/$vpkg=//"); do
 				. $WOK/${pkg#*:}/receipt
