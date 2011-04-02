@@ -108,7 +108,7 @@ pkgs_pages_content()
 		DEPENDS=""
 		DEPENDS_LINKS=""
 		EXTRAVERSION=""
-		. $pkg/receipt
+		[ -f $pkg/receipt ] && . $pkg/receipt
 		packages=$(($packages+1))
 		cat >> $PAGES_DIR/$CATEGORY.html << _EOT_
 
