@@ -16,9 +16,10 @@ Content-Disposition: attachment; filename=wiki-$(date '+%Y%m%d%H%M').cpio.gz
 
 EOT
 			cat $file
-		elif [ -n "$(POST restore)" ]; then
+		else
 			file=$(FILE file tmpname)
 			zcat $file | cpio -idmu
+			return 1
 		fi
 		rm -f $file
 		exit 0
@@ -60,7 +61,7 @@ $i</b></td></tr>
 	done
 	CONTENT="$CONTENT
 <tr><td><br /><h2>Data</h2></td>
-<td><form method=\"post\" action=\"?action=backup\">
+<td><form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=backup\">
 <input type=\"submit\" name=\"save\" value=\"save\" />"
 	[ "$ALLOW_UPLOAD" == "yes" ] && CONTENT="$CONTENT
 <input type=\"file\" name=\"file\" value=\"file\" />
