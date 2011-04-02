@@ -4,7 +4,27 @@ description="List plugins"
       
 action()
 {
-	[ "$1" == "list" -o "$1" == "config" ] || return 1
+	case "$1" in
+	list|config);;
+	backup)	if [ -n "$(POST save)" ]; then
+			file=$(mktemp -p /tmp)
+			find */ | cpio -o -H newc | gzip -9 > $file
+			cat <<EOT
+Content-Type: application/octet-stream
+Content-Length: $(stat -c %s $file)
+Content-Disposition: attachment; filename=wiki-$(date '+%Y%m%d%H%M').cpio.gz
+
+EOT
+			cat $file
+		elif [ -n "$(POST restore)" ]; then
+			file=$(FILE file tmpname)
+			zcat $file | cpio -idmu
+		fi
+		rm -f $file
+		exit 0
+		;;
+	*) return 1
+	esac
 	CONTENT='
 <table width="100%">
 <tr><td span=2><h2>Plugins</h2></td></tr>
@@ -40,10 +60,12 @@ $i</b></td></tr>
 	done
 	CONTENT="$CONTENT
 <tr><td><br /><h2>Data</h2></td>
-<td><form method=\"get\" action=\"?action=saveconf\">
-<input disabled type=\"submit\" name=\"save\" value=\"save\" />
-<input disabled type=\"file\" name=\"file\" value=\"file\" />
-<input disabled type=\"submit\" name=\"restore\" value=\"restore\" />
+<td><form method=\"post\" action=\"?action=backup\">
+<input type=\"submit\" name=\"save\" value=\"save\" />"
+	[ "$ALLOW_UPLOAD" == "yes" ] && CONTENT="$CONTENT
+<input type=\"file\" name=\"file\" value=\"file\" />
+<input type=\"submit\" name=\"restore\" value=\"restore\" />"
+	CONTENT="$CONTENT
 </form></td></tr>
 $(du -hs */ | awk '{ printf "<tr><td><b>%s</b></td><td><i>%s</i></td></tr>\n",$1,$2 }')
 </table>
