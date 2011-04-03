@@ -62,10 +62,10 @@ $i</b></td></tr>
 	CONTENT="$CONTENT
 <tr><td><br /><h2>Data</h2></td>
 <td><form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=backup\">
-<input type=\"submit\" name=\"save\" value=\"save\" />"
+<input type=\"submit\" name=\"save\" value=\"$DONE_BUTTON\" />"
 	[ "$ALLOW_UPLOAD" == "yes" ] && CONTENT="$CONTENT
 <input type=\"file\" name=\"file\" value=\"file\" />
-<input type=\"submit\" name=\"restore\" value=\"restore\" />"
+<input type=\"submit\" name=\"restore\" value=\"$RESTORE\" />"
 	CONTENT="$CONTENT
 </form></td></tr>
 $(du -hs */ | awk '{ printf "<tr><td><b>%s</b></td><td><i>%s</i></td></tr>\n",$1,$2 }')
