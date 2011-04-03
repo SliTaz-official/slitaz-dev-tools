@@ -18,7 +18,7 @@ EOT
 			cat $file
 		else
 			file=$(FILE file tmpname)
-			zcat $file | cpio -idmu
+			zcat $file | cpio -idmu $(echo */ | sed 's|/||g')
 			return 1
 		fi
 		rm -f $file
