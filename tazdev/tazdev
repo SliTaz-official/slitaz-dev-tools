@@ -28,7 +28,6 @@ usage()
  projects-stats Display statistics about your projects (-ps).
  cmplog         Log 'tazwok cmp' result (or use tazbb).
  update-wok     Update Hg wok and copy it to the chroot wok.
- update-www     Update SliTaz Website repo from Hg.
  chroot         Mount virtual fs if needed and chroot into the build env.
  gen-chroot     Generate a chroot using the last cooking base rootfs.
  clean-chroot   Clean a chroot environment (skip root/ and home/).
@@ -249,11 +248,6 @@ case "$1" in
 		cp -a $HG_WOK/* $BUILD_WOK
 		cp -a $HG_WOK/.hg $BUILD_WOK
 		status && echo "" ;;
-	update-www)
-		# Update website from repo.
-		echo ""
-		cd $WEBSITE && hg pull && hg update
-		echo "" ;;
 	chroot)
 		# Chroot into a build env. Default to cooking configured in
 		# tazdev.conf
