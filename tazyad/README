@@ -1,0 +1,47 @@
+Yad on SliTaz
+================================================================================
+
+
+Yad is the new prefered way to create GUI boxes for SliTaz desktop. We use
+Yad GTK boxes for all user and administrator interfaces that can't be handled
+by TazPanel (admin panel) or TazDE (desktop environment). Both are powered
+by CGI scripts and use xHTML 5 and CSS 3 for the UI. Yad is a powerfull tool
+witch support latest GTK actions and goodies. With our original GTKdialog
+scripts some nice features was missing like for example --notification or
+ENTER for event (with gtkdialog one must press a button).
+
+If you motivated to code, please have a look at the TODO file and continue
+reading :-)
+
+
+Coding guidlines
+----------------
+Use a function and a function_main for main= variable to keep datas,
+that way we can have yad boxes commands separated from shell script.
+Here is a structure example:
+
+# function_main
+# function_other
+# function
+
+Use gettext to have a translated application and forget echo. Use 'case'
+as most as possible, it is the faster way to handle or parse commands
+and options. Use fgrep when possible.
+
+To start you will find a template script called tazyad, copy it and start
+coding from that :-). Tazyad is commented to help you getting started.
+You can also have a look to tazpkg-notify who was the first official Yad
+script for SliTaz.
+
+
+Missing stuff
+-------------
+I'm member og Yad Google group and will mail them about SliTaz using Yad
+and these missing features. Yad is a small projetc but the maintainer seems
+a very nice guy who listen th his users :-)
+
+	* It would be nice to have an --exit or --kill option for notification
+	* Not way to have a custom icon for custom button
+
+
+================================================================================

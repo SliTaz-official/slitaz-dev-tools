@@ -1,0 +1,10 @@
+
+
+	* desktopbox will be splitted into TazDE (planned for 5.0) for autostart
+	  and Yad for logoutbox to replace 'desktopbox --logout' other function
+	  are no more needed since user can add icon on desktop via LXpanel menu.
+	  
+	* subox to repplace existing GTKdialog subox
+
+	* Improve tazpkg-notify
+	

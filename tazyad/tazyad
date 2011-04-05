@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+# Yad on SliTaz - Create simple GUI boxes using Ash shell scripts.
+#
+# Copyright (C) 2011 SliTaz GNU/Linux - GNU gpl v2
+#
+# Authors : Name Firstname <mail@example.com>
+#
+
+# Main GUI box function with pure Yad spec
+skel_main() {
+	yad --entry $opts \
+		--width=400 \
+		--image="slitaz-menu" \
+		--image-on-top \
+		--button="Button:2" \
+		--button="gtk-ok:0" \
+		--button="gtk-close:1" \
+		--text="Choose action:" \
+		--entry-text="install" "remove" "list" "upgrade"
+}
+
+# This is a function, usually the same name than the command if script
+# have multiple commands an options.
+skel() {
+	# Store box results
+	main=`skel_main`
+	ret=$?
+	# Deal with --button values
+	case $ret in
+		1) exit 0 ;;
+		2) echo "Additonal button action" && exit 0 ;;
+		*) continue ;;
+	esac
+	# Deal with $main values
+	case $main in
+		install) echo "Main var: $main" ;;
+		remove) echo "Main var: $main" ;;
+		*) echo "Main var: $main" ;;
+	esac
+}
+
+#
+# Script commands
+#
+
+case "$1" in
+	usage)
+		echo "Usage: `basename $0` [command]" ;;
+	*) 
+		skel ;;
+esac
+
+exit 0
+
