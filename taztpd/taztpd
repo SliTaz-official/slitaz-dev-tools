@@ -170,14 +170,14 @@ case $1 in
 		echo "Starting Web Server on port: $SERVER_PORT (dev mode)"
 		while true
 		do 
-			nc -l -p $SERVER_PORT -e /home/pankso/Public/taztpd/taztpd
+			nc -l -p $SERVER_PORT -e /usr/bin/taztpd
 		done ;;
 	nc|-n)
 		# Use nc to listen on a port and execute TazTPD on a request
 		echo "Starting Web Server on port: $SERVER_PORT"
 		(while true
 		do 
-			nc -l -p $SERVER_PORT -e /home/pankso/Public/taztpd/taztpd
+			nc -l -p $SERVER_PORT -e /usr/bin/taztpd
 		done) & ;;
 	usage|*help|-u|*-h)
 		# Display a short usage
