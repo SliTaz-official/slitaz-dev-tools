@@ -52,6 +52,7 @@ run_on_exit()
 		$c
 	done
 	trap - EXIT
+	exit
 }
 
 run_on_kill()
