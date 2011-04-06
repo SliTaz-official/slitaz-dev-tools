@@ -20,8 +20,8 @@ skel_main() {
 		--entry-text="install" "remove" "list" "upgrade"
 }
 
-# This is a function, usually the same name than the command if script
-# have multiple commands an options.
+# This is a function, usually the same name as the command if scripts
+# have multiple commands and options.
 skel() {
 	# Store box results
 	main=`skel_main`
@@ -29,7 +29,7 @@ skel() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		2) echo "Additonal button action" && exit 0 ;;
+		2) echo "Additional button action" && exit 0 ;;
 		*) continue ;;
 	esac
 	# Deal with $main values
