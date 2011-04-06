@@ -2,26 +2,26 @@ TazTPD - SliTaz micro HTTP Web Server
 ================================================================================
 
 
-TazTPD is a very small Web Server all in Shell script who can be run in user
-space and so without root access. TazTPD is not designed to be used in a 
-production envirinment but for fun, for testing, to easily and on demand serve
-static files or dynamic content with CGI scripts.
+TazTPD is a very small Web Server written in Shell script which can be run in 
+user space and so without root access. TazTPD is not designed to be used in a 
+production environment but for fun, for testing, to easily serve static files or 
+dynamic content on demand with CGI scripts.
 
-The goal is to keep TazTPD core as small and response as possible. Everything
-is possible, we may have better directory listing and several plugins depending
-on users feedbacks, requests and our free time.
+The goal is to keep the TazTPD core as small and responsive as possible. Anything
+is possible, we may have better directory listings and several plugins depending
+on user feedback, requests and our free time.
 
 TazTPD is also a nice base to create small or custom servers dedicated to
-a special task such as streaming audio and with a very small footprint. By
-the way, TazTPD output some valid xHTML 5 documents with a clean generated
+special tasks such as streaming audio with a very small footprint. By
+the way, TazTPD outputs valid xHTML 5 documents with clean generated
 code.
 
-Under the hood... This small (actuall 3Kb) Web Server will be part of all
-SliTaz installation and dedicated to the the user! Yes it can do many
-things with it CGI capacity and the so famous QUERY_STRING without talking
-about it is all SHell, Ash compatible, like all other SliTaz tools and utility.
-So the idea is here now the code must follow, but we will have a full Tazpkg
-web based graphical interface.
+Under the hood... This small (actual 3Kb) Web Server will be part of all
+SliTaz installations and dedicated to the the user! Yes it can do many
+things with its CGI capacity like the famous QUERY_STRING. Without talking
+about it, it's all SHell, Ash compatible, like all other SliTaz tools and 
+utilities. So the idea is here, now the code must follow, but we will have a 
+full Tazpkg web based graphical interface.
 
 
 Quick notes
@@ -29,6 +29,6 @@ Quick notes
 
 	* CGI scripts must be executable: chmod 0777 *.cgi
 	* xHTML and text CGI scripts works well
-	* TazTPD can run in user mode throught nc and from inetd
+	* TazTPD can run in user mode through nc and from inetd
 	  --> www stream tcp nowait nobody /usr/bin/taztpd taztpd
 
