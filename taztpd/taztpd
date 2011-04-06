@@ -1,0 +1,188 @@
+#!/bin/sh
+#
+# TazTPD - The SliTaz micro HTTP Web Server all in SHell script
+# 
+# (C) 2011 SliTaz GNU/Linux - GNU gpl v2
+#
+# AUTHOR: Christophe Lincoln
+#
+
+# Personnal configuration overwrite system wide config.
+[ -f "/etc/slitaz/taztpd.conf" ] && . /etc/slitaz/taztpd.conf
+[ -f "taztpd.conf" ] && . taztpd.conf
+
+# Web Server functions
+
+# Output standardized header for valid requests
+http_header() {
+	cat << EOT
+HTTP/1.1 200 OK
+EOT
+}
+
+html_header() {
+	cat << EOT
+Content-Type: text/html
+
+EOT
+}
+
+text_header() {
+	cat << EOT
+Content-Type: text/plain
+
+EOT
+}
+
+# List all files in a directory
+directory_listing() {
+	cat << EOT
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Index of $url</title>
+	<meta charset="utf-8" />
+	`css_style`
+</head>
+EOT
+	echo -e "<h1>$PAGE_HEADING $url</h1>"
+	echo "<ul>"
+	if [ "$url" != "/" ]; then
+		echo "	<li><a href=\"../\">$PARENT_DIR/</a></li>"
+	fi
+	(cd ${SERVER_ROOT}$url && ls -p | while read line
+	do
+		echo "	<li><a href=\"$line\">$line</a></li>"
+	done)
+	echo -e "</ul>"
+	taztpd_footer
+	echo -e "</body>\n</html>"
+}
+
+# Handled by an external CSS file
+css_style() {
+	echo '<style type="text/css">'
+	cat $SERVER_CSS
+	echo '</style>'
+}
+
+taztpd_footer() {
+	echo "<div id=\"footer\">$SERVER_NAME</div>"
+}
+
+# Handle file type by extension
+handle_filetype() {
+	case $file in
+		# Check for HTML first for fast anser (most requests)
+		*.html|*.htm) type="text/html";;
+		*.css) type="text/css" ;;
+		*.xml) type="text/xml" ;;
+		*.jpg|*.jpeg) type="image/jpeg" ;;
+		*.png) type="image/png" ;;
+		*.tar.gz) "application/x-tgz" ;;
+		*.tazpkg) "application/x-tazpkg" ;;
+		*)
+			# Default to plain text document
+			type=text/plain ;;
+	esac
+	cat << EOT
+Content-Type: $type
+
+EOT
+}
+
+# Server main function
+read_request() {
+	# Record the HTTP request
+	read request
+	while /bin/true; do
+		read header
+		[ "$header" == $'\r' ] && break;
+	done
+	# Extract URL from the request string
+	url="${request#GET }"
+	url="${url% HTTP/*}"
+	query="${url#*\?}"
+	url="${url%%\?*}"
+	# Handle CGI scripts
+	if [ "$query" != "$url" -a -x "$file" ]; then
+		export QUERY_STRING="$query"
+		http_header
+		exec "$file"		
+		echo -e "\r"
+		exit 0
+	fi
+	# Locate the wanted file
+	file="${SERVER_ROOT}$url"
+	# First try to display requested page
+	if [ -f "$file" ]; then
+		http_header
+		handle_filetype
+		cat "$file"
+		echo -e "\r" && exit 0
+	fi
+	# Requested URL may be a directory
+	if [ -d "$file" ]; then
+		http_header
+		if [ -f "$file/index.html" ]; then
+			file=$file/index.html
+			echo -e "Content-Type: text/html\r"
+			echo -e "\r"
+			cat "$file"
+			echo -e "\r" && exit 0
+		fi
+		html_header
+		directory_listing
+		echo -e "\r"
+	# 404 error
+	else
+		cat << EOT
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>404 Not Found</title>
+	<meta charset="utf-8" />
+	`css_style`
+</head>
+<body>
+	<h1>404 Not Found</h1>
+	<p>$NOT_FOUND</p>
+	`taztpd_footer`
+</body>
+</html>
+EOT
+		echo -e "\r"
+	fi
+}
+
+# Web Server commands
+
+case $1 in
+	status|-s)
+		echo ""
+		ps | grep taztpd
+		echo "" ;;
+	dev|-d)
+		# Devel mode by keeping the hand
+		echo "Starting Web Server on port: $SERVER_PORT (dev mode)"
+		while true
+		do 
+			nc -l -p $SERVER_PORT -e /home/pankso/Public/taztpd/taztpd
+		done ;;
+	nc|-n)
+		# Use nc to listen on a port and execute TazTPD on a request
+		echo "Starting Web Server on port: $SERVER_PORT"
+		(while true
+		do 
+			nc -l -p $SERVER_PORT -e /home/pankso/Public/taztpd/taztpd
+		done) & ;;
+	usage|*help|-u|*-h)
+		# Display a short usage
+		echo "Usage: `basename $0` [status|dev|nc]" ;;
+	*)
+		read_request ;;
+esac
+exit 0	

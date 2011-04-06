@@ -1,0 +1,25 @@
+/* CSS style for TazTPD Web Server listing page and 404 error */
+
+body {
+	margin: 0;
+	font: 0.9em sans-serif;
+}
+
+h1 {
+	color: #4d4d4d;
+	margin: 0;
+	padding: 5px;
+	border-bottom: 1px dotted #ddd;
+}
+
+a { text-decoration: none; color: #215090; }
+a:hover { text-decoration: underline; color: blue; }
+p { padding: 5px; }
+
+#footer {
+	font-size: 84%;
+	padding: 5px;
+	width: 100%;
+	border-top: 1px dotted #ddd;
+	color: #888888;
+}

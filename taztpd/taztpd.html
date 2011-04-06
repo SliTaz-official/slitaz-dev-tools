@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>TazTPD Web Server</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+		body { padding: 40px 16%; }
+		h1 { color: #4d4d4d; border-bottom: 1px dotted #ddd; }
+		#content { text-align: justify; }
+		#footer { font-size: 84%; border-top: 1px solid #d4d4d4;
+			padding: 4px 0; }
+		#footer, #footer a { color: #888888; }
+	</style>
+</head>
+<body>
+
+<h1>TazTPD</h1>
+
+<div id="content">
+	<p>
+		A Web server in a nutSHell!
+	</p>
+	<p>
+		TazTPD is a very small Web Server all in Shell script who can
+		be run in user space. TazTPD is not designed to be used in
+		production but for fun, for testing, to easily and on demand
+		serve static files or dynamic content with CGI scripts.
+	</p>
+	<h4>CGI testing</h4>
+	<form method="get" action="taztpd.cgi">
+		<input type="text" name="var" size="32">
+	</form>
+</div>
+
+</body>
+</html>
