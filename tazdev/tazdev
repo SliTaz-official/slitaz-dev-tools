@@ -1,10 +1,13 @@
 #!/bin/sh
-# Tazdev - SliTaz developers and build host tool.
-# System wide config file: /etc/slitaz/tazdev.conf
+#
+# Tazdev - SliTaz developers and build host tool. System wide config
+# file is located at: /etc/slitaz/tazdev.conf
 #
 # (c) 2011 SliTaz GNU/Linux - GNU gpl v3
 #
-# Authors : Christophe Lincoln (Pankso) <pankso@slitaz.org>
+# AUTHORS
+#     Christophe Lincoln <pankso@slitaz.org>
+#     Pascal Bellard <bellard@slitaz.org>
 #
 
 if [ -f /etc/slitaz/tazdev.conf ]; then
@@ -24,20 +27,21 @@ usage()
 	echo -e "\nSliTaz developers and build host tool\n
 \033[1mUsage: \033[0m `basename $0` [command] [user] [stable|cooking|undigest|path]
 \033[1mCommands: \033[0m\n
- usage          Print this short usage and command list.
- projects-stats Display statistics about your projects (-ps).
- cmplog         Log 'tazwok cmp' result (or use tazbb).
- update-wok     Update Hg wok and copy it to the chroot wok.
- chroot         Mount virtual fs if needed and chroot into the build env.
- gen-chroot     Generate a chroot using the last cooking base rootfs.
- clean-chroot   Clean a chroot environment (skip root/ and home/).
- purge          Remove obsolete packages and obsolete source tarballs.
- dry-purge      Show obsolete packages and obsolete source tarballs.
- push           Upload new packages to the main mirror (-p).
- dry-push       Show what will be uploaded to the mirror. Does nothing (-dp).
- pull           Download new packages from the main mirror.
- dry-pull       Show what will be downloaded from the mirror. Does nothing.
- relpkg         Archive and upload new package/project version.\n"
+ usage               Print this short usage and command list
+ projects-stats|-ps  Display statistics about your projects
+ cmplog              Log 'tazwok cmp' result (or use tazbb)
+ update-wok          Update Hg wok and copy it to the chroot wok
+ chroot              Mount virtual fs if needed and chroot into the build env
+ gen-chroot          Generate a chroot using the last cooking base rootfs
+ clean-chroot        Clean a chroot environment (skip root/ and home/)
+ purge               Remove obsolete packages and obsolete source tarballs
+ dry-purge           Show obsolete packages and obsolete source tarballs
+ push|-p             Upload new packages to the main mirror.
+ dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
+ pull                Download new packages from the main mirror.
+ dry-pull            Show what will be downloaded from the mirror. Does nothing
+ relpkg|-rp          Archive and upload new package/project version
+ reliso|-ri          Create all main flavors (not loram)\n"
 }
 
 # Exit if user is not root.
@@ -208,7 +212,7 @@ case "$1" in
 		echo -e "Starting 'tazwok cmp' (can be long)...\n"
 		tazwok cmp | grep ^[A-Z] | tee $CMP_LOG
 		echo "Date: `date`" >> $CMP_LOG ;;
-	'-ps'|projects-stats)
+	projects-stats|-ps)
 		echo -e "\nStatistics for: $PROJECTS\n"
 		echo -n "Project" && echo -ne "\033[24G Size" && echo -ne "\033[38G Revision"
 		echo -ne "\033[48G Version" && echo -e "\033[64G Files"
@@ -295,11 +299,11 @@ case "$1" in
 		done
 		echo "================================================================================"
 		echo "" ;;
-	'-p'|push)
+	push|-p)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete \
 			$LOCAL_DIR -e ssh $USER@$MIRROR:$REMOTE_DIR ;;
-	'-dp'|dry-push)
+	dry-push|-dp)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
 			$LOCAL_DIR -e ssh $USER@$MIRROR:$REMOTE_DIR ;;
@@ -316,7 +320,7 @@ case "$1" in
 		get_version $@
 		purge_packages $1
 		purge_sources $1 ;;
-	relpkg)
+	relpkg|-rp)
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
 		if [ -z $2 ] || [ -z $3 ]; then
 			echo -e "\nUsage: $0 relpkg package version\n"
@@ -345,6 +349,24 @@ case "$1" in
 			scp $PACKAGE-$VERSION.tar.gz $PACKAGE-$VERSION.md5 \
 				$USER@$MIRROR:$MIRROR_SOURCES/${PACKAGE#slitaz-}
 		fi ;;
+	reliso|-ri)
+		# Generate all official images iso at once.
+		version=$2
+		mkdir -p $ISO
+		for flavor in base core justx firefox
+		do
+			cd /home/slitaz/$version
+			tazlito pack-flavor $flavor
+			tazlito get-flavor $flavor
+			tazlito gen-distro
+			if [ "$flavor" == "core" ]; then
+				cp distro/slitaz-$flavor.iso $ISO/slitaz-$version.iso
+				cd $ISO && md5sum slitaz-$version.iso > slitaz-$version.md5
+			else
+				cp distro/slitaz-$flavor.iso $ISO/slitaz-$version-$flavor.iso
+				cd $ISO && md5sum slitaz-$version-$flavor.iso slitaz-$version-$flavor.md5
+			fi
+		done ;;
 	usage|*)
 		usage ;;
 esac
