@@ -9,12 +9,21 @@
 	<meta name="author" content="SliTaz Contributors" />
 	<link rel="shortcut icon" href="/css/favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
+	<style type="text/css">
+#copy {
+	text-align: center;
+}
+
+#bottom {
+	text-align: center;
+}
+	</style>
 </head>
 <body>
 
 <!-- Header -->
 <div id="header">
-    <a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>"><img id="logo"
+    <a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/"><img id="logo"
 		src="/css/pics/website/logo.png" 
 		title="<?php echo $_SERVER["HTTP_HOST"]; ?>" alt="<?php echo $_SERVER["HTTP_HOST"]; ?>" /></a>
     <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
@@ -126,6 +135,8 @@ system("top -n1 -b");
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=scn.slitaz.org" target="_blank">stats</a>)</li>
 	<li><a href="http://pizza.slitaz.org/">pizza.slitaz.org</a> - SliTaz Flavor builder.
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=pizza.mirror.slitaz.org" target="_blank">stats</a>)</li>
+	<li><a href="http://tiny.slitaz.org/">tiny.slitaz.org</a> - Tiny SliTaz builder.
+	(<a href="http://mirror.slitaz.org/awstats.pl?config=tiny.mirror.slitaz.org" target="_blank">stats</a>)</li>
 	<li><a href="https://ajaxterm.slitaz.org/">ajaxterm.slitaz.org</a> - Slitaz Web Console.
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=ajaxterm.slitaz.org" target="_blank">stats</a>)</li>
 </ul>
@@ -155,77 +166,119 @@ system("top -n1 -b");
 	 alt="mirrors" /></a>Mirrors</h3>
 	Most mirrors are updated using the url: <b>rsync://mirror.slitaz.org/slitaz/</b>
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=rsync">stats</a>)
+	<pre>
+rsync -azH --delete rsync://mirror.slitaz.org/slitaz/ /local/slitaz/mirror/ </pre>
+	New mirrors should be announced on the 
+	<a href="http://www.slitaz.org/en/mailing-list.html">mailing list</a>.
 <ul>
-	<li><a href="http://en.utrace.de/?query=mirror.switch.ch">
-		<img title="map" src="pics/website/ch.png" alt="map" /></a>
-		<a href="http://mirror.switch.ch/ftp/mirror/slitaz/">
-		http://mirror.switch.ch/ftp/mirror/slitaz/</a> or
-		<a href="ftp://mirror.switch.ch/mirror/slitaz/">ftp</a></li>
-	<li><a href="http://en.utrace.de/?query=www.gtlib.gatech.edu">
-		<img title="map" src="pics/website/us.png" alt="map" /></a>
-		<a href="http://www.gtlib.gatech.edu/pub/slitaz/">
-		http://www.gtlib.gatech.edu/pub/slitaz/</a> or
-		<a href="ftp://ftp.gtlib.gatech.edu/pub/slitaz/">ftp</a> or
-		<a href="rsync://www.gtlib.gatech.edu/slitaz/">rsync</a></li>
-	<li><a href="http://en.utrace.de/?query=download.tuxfamily.org">
-		<img title="map" src="pics/website/fr.png" alt="map" /></a>
-		<a href="http://download.tuxfamily.org/slitaz/">
-		http://download.tuxfamily.org/slitaz/</a> or
-		<a href="ftp://download.tuxfamily.org/slitaz/">ftp</a> or
-		<a href="rsync://download.tuxfamily.org/pub/slitaz/">rsync</a></li>
-	<!-- li><a href="http://www.linuxembarque.com/slitaz/mirror/">
-		<img title="map" src="pics/website/fr.png" alt="map" /></a>
-		<a href="http://www.linuxembarque.com/slitaz/mirror/">
-		http://www.linuxembarque.com/slitaz/mirror/</a></li -->
-	<li><a href="http://en.utrace.de/?query=mirror.lupaworld.com">
-		<img title="map" src="pics/website/cn.png" alt="map" /></a>
-		<a href="http://mirror.lupaworld.com/slitaz/">
-		http://mirror.lupaworld.com/slitaz/</a></li>
-	<li><a href="http://en.utrace.de/?query=slitaz.c3sl.ufpr.br">
-		<img title="map" src="pics/website/br.png" alt="map" /></a>
-		<a href="http://slitaz.c3sl.ufpr.br/">
-		http://slitaz.c3sl.ufpr.br/</a> or
-		<a href="ftp://slitaz.c3sl.ufpr.br/slitaz/">ftp</a> or
-		<a href="rsync://slitaz.c3sl.ufpr.br/slitaz/">rsync</a></li>
-	<li><a href="http://en.utrace.de/?query=slitaz.mirror.garr.it">
-		<img title="map" src="pics/website/it.png" alt="map" /></a>
-		<a href="http://slitaz.mirror.garr.it/mirrors/slitaz/">
-		http://slitaz.mirror.garr.it/mirrors/slitaz/</a> or
-		<a href="ftp://slitaz.mirror.garr.it/mirrors/slitaz/">ftp</a> or
-		<a href="rsync://slitaz.mirror.garr.it/mirrors/slitaz/">rsync</a></li>
-	<!-- li><a href="http://mirror.drustvo-dns.si/slitaz/">
-		http://mirror.drustvo-dns.si/slitaz/</a></li -->
-	<li><a href="http://en.utrace.de/?query=ftp.pina.si">
-		<img title="map" src="pics/website/si.png" alt="map" /></a>
-		<a href="ftp://ftp.pina.si/slitaz/">
-		ftp://ftp.pina.si/slitaz/</a></li>
-	<li><a href="http://en.utrace.de/?query=distro.ibiblio.org">
-		<img title="map" src="pics/website/us.png" alt="map" /></a>
-		<a href="http://distro.ibiblio.org/pub/linux/distributions/slitaz/">
-		http://distro.ibiblio.org/pub/linux/distributions/slitaz/</a> or
-		<a href="ftp://distro.ibiblio.org/pub/linux/distributions/slitaz/">ftp</a></li>
-	<li><a href="http://en.utrace.de/?query=ftp.vim.org">
-		<img title="map" src="pics/website/nl.png" alt="map" /></a>
-		<a href="http://ftp.vim.org/ftp/os/Linux/distr/slitaz/">
-		http://ftp.vim.org/ftp/os/Linux/distr/slitaz/</a> or
-		<a href="ftp://ftp.vim.org/mirror/os/Linux/distr/slitaz/">
-		ftp</a></li>
-	<li><a href="http://en.utrace.de/?query=ftp.nedit.org">
-		<img title="map" src="pics/website/nl.png" alt="map" /></a>
-		<a href="http://ftp.nedit.org/ftp/ftp/pub/os/Linux/distr/slitaz/">
-		http://ftp.nedit.org/ftp/ftp/pub/os/Linux/distr/slitaz/</a> or
-		<a href="ftp://ftp.nedit.org/ftp/ftp/pub/os/Linux/distr/slitaz/">
-		ftp</a></li>
-	<li><a href="http://en.utrace.de/?query=ftp.ch.xemacs.org">
-		<img title="map" src="pics/website/ch.png" alt="map" /></a>
-		<a href="http://ftp.ch.xemacs.org/ftp/pool/2/mirror/slitaz/" />
-		http://ftp.ch.xemacs.org/ftp/pool/2/mirror/slitaz/</a> or
-		<a href="ftp://ftp.ch.xemacs.org//pool/2/mirror/slitaz/" />
-		ftp</a></li>
+<?php
+$output_url_file="";
+$output_url_handler;
+$mirrors_url_file="/tmp/mirrors";
+
+function test_url($link)
+{
+	global $output_url_file;
+	global $mirrors_url_file;
+	global $output_url_handler;
+	
+	if ($output_url_file != "") {
+		if (shell_exec("busybox wget -s $link/README && echo -n OK") == "OK") {
+			fwrite($output_url_handler,$link."\n");
+			return TRUE;
+		} 
+		return FALSE;
+	}
+	return shell_exec("grep -qs ^$link$ $mirrors_url_file && echo -n OK") == "OK"; 
+}
+
+if (! file_exists($mirrors_url_file)) {
+	$output_url_file = tempnam('/tmp','mkmirrors');
+	$output_url_handler = fopen($output_url_file, "w");
+	fwrite($output_url_handler,"http://mirror.slitaz.org/\n");
+}
+
+foreach (array(
+	array(	"flag"  => "ch",
+		"http"  => "http://mirror.switch.ch/ftp/mirror/slitaz/",
+		"ftp"   => "ftp://mirror.switch.ch/mirror/slitaz/"),
+	array(	"flag"  => "us",
+		"http"  => "http://www.gtlib.gatech.edu/pub/slitaz/",
+		"ftp"   => "ftp://ftp.gtlib.gatech.edu/pub/slitaz/",
+		"rsync" => "rsync://www.gtlib.gatech.edu/slitaz/"),
+	array(	"flag"  => "fr",
+		"http"  => "http://download.tuxfamily.org/slitaz/",
+		"ftp"   => "ftp://download.tuxfamily.org/slitaz/",
+		"rsync" => "rsync://download.tuxfamily.org/pub/slitaz/"),
+	array(	"flag"  => "fr",
+		"http"  => "http://www.linuxembarque.com/slitaz/mirror/"),
+	array(	"flag"  => "cn",
+		"http"  => "http://mirror.lupaworld.com/slitaz/"),
+	array(	"flag"  => "br",
+		"http"  => "http://slitaz.c3sl.ufpr.br/",
+		"ftp"   => "ftp://slitaz.c3sl.ufpr.br/slitaz/",
+		"rsync" => "rsync://slitaz.c3sl.ufpr.br/slitaz/"),
+	array(	"flag"  => "it",
+		"http"  => "http://slitaz.mirror.garr.it/mirrors/slitaz/",
+		"ftp"   => "ftp://slitaz.mirror.garr.it/mirrors/slitaz/",
+		"rsync" => "rsync://slitaz.mirror.garr.it/mirrors/slitaz/"),
+	array(	"flag"  => "si",
+		"http"  => "http://mirror.drustvo-dns.si/slitaz/"),
+	array(	"flag"  => "si",
+		"ftp"   => "ftp://ftp.pina.si/slitaz/"),
+	array(	"flag"  => "us",
+		"http"  => "http://distro.ibiblio.org/pub/linux/distributions/slitaz/",
+		"ftp"   => "ftp://distro.ibiblio.org/pub/linux/distributions/slitaz/"),
+	array(	"flag"  => "nl",
+		"http"  => "http://ftp.vim.org/ftp/os/Linux/distr/slitaz/",
+		"ftp"   => "ftp://ftp.vim.org/mirror/os/Linux/distr/slitaz/"),
+	array(	"flag"  => "nl",
+		"http"  => "http://ftp.nedit.org/ftp/ftp/pub/os/Linux/distr/slitaz/",
+		"ftp"   => "ftp://ftp.nedit.org/ftp/ftp/pub/os/Linux/distr/slitaz/"),
+	array(	"flag"  => "ch",
+		"http"  => "http://ftp.ch.xemacs.org/ftp/pool/2/mirror/slitaz/",
+		"ftp"   => "ftp://ftp.ch.xemacs.org//pool/2/mirror/slitaz/"),
+	array(	"flag"  => "us",
+		"http"  => "http://mirror.clarkson.edu/slitaz/",
+		"rsync" => "rsync://mirror.clarkson.edu/slitaz/")) as $mirror) {
+	$flag = "pics/website/".$mirror["flag"].".png";
+	$head = TRUE;
+	foreach(array("http", "ftp") as $proto) {
+		if (!isset($mirror[$proto])) continue;
+		$link = $mirror[$proto];
+		if (!test_url($link)) continue;
+		$serveur = parse_url($link, PHP_URL_HOST);
+		if ($head) echo <<<EOT
+	<li><a href="http://en.utrace.de/?query=$serveur">
+		<img title="map" src="$flag" alt="map" /></a>
+		<a href="$link">$link</a>
+EOT;
+		else echo <<<EOT
+		or <a href="$link">$proto</a>
+EOT;
+		$head = FALSE;
+	}
+	if ($head) continue;
+	if (isset($mirror["rsync"])) {
+		$link = $mirror["rsync"];
+		echo <<<EOT
+		or <a href="$link">rsync</a>
+EOT;
+	}
+	echo "	</li>\n";
+}
+
+if ($output_url_file != "") {
+	fclose($output_url_handler);
+	rename($output_url_file, $mirrors_url_file);
+	chmod($mirrors_url_file, 0644);
+}
+
+?>
 </ul>
 
 <a name="builds"></a>
-<h3><img title="Daily builds" src="pics/website/monitor.png" alt="builds" />
+<h3><img title="Daily builds" src="pics/website/cdrom.png" alt="builds" />
     Daily builds</h3>
 
 <?php
@@ -233,12 +286,10 @@ function display_log($file,$anchor,$url)
 {
 echo '<a name="'.$anchor.'"></a>';
 echo "<a href=\"$url\">";
-system("stat -c '<h4>%y %n</h4>' ".$file." | sed -e 's/.000000000//' -e 's|/var/log/\(.*\).log|\\1.iso|'");
+system("stat -c '<h4>%y %n</h4>' ".$file." | sed 's/.000000000//;s|/var/log/\(.*\).log|\\1.iso|'");
 echo "</a>";
 echo "<pre>";
-system("cat ".$file." | sed -e 's/.\[[0-9][^mG]*.//g' | awk '".
-'{ if (/\[/) { n=index($0,"["); printf("%s%s%s\n",substr($0,1,n-1),'.
-'substr("\t\t\t\t\t\t\t",1,9-(n/8)),substr($0,n)); } else print }'."'");
+system("sed 's/.\[[0-9][^mG]*.//g;:a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\\1 \\2/;ta' < $file");
 echo "</pre>";
 }
 
