@@ -10,7 +10,7 @@ which supports the latest GTK actions and goodies. With our original GTKdialog
 scripts some nice features were missing like for example --notification or
 ENTER for event (with gtkdialog one must press a button).
 
-If you motivated to code, please have a look at the TODO file and continue
+If you're motivated to code, please have a look at the TODO file and continue
 reading :-)
 
 
