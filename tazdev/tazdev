@@ -10,16 +10,11 @@
 #     Pascal Bellard <bellard@slitaz.org>
 #
 
-if [ -f /etc/slitaz/tazdev.conf ]; then
-	CONFIG=/etc/slitaz/tazdev.conf
-else [ -f $PWD/tazdev.conf ]
-	CONFIG=$PWD/tazdev.conf
-fi
-if ! [ "$CONFIG" ]; then
-	echo -e "\nNo config file found in /etc/slitaz or the current dir...\n"
-	exit 0
-else
-	. $CONFIG
+[ -f /etc/slitaz/tazdev.conf ] && . /etc/slitaz/tazdev.conf
+[ -f $PWD/tazdev.conf ] && . $PWD/tazdev.conf
+
+if [ -z "$SLITAZ" ]; then
+	echo -e "\nNo config file found\n" && exit 1
 fi
 
 usage()
@@ -29,10 +24,10 @@ usage()
 \033[1mCommands: \033[0m\n
  usage               Print this short usage and command list
  projects-stats|-ps  Display statistics about your projects
- cmplog              Log 'tazwok cmp' result (or use tazbb)
  update-wok          Update Hg wok and copy it to the chroot wok
  chroot              Mount virtual fs if needed and chroot into the build env
- gen-chroot          Generate a chroot using the last cooking base rootfs
+ gen-chroot|-gs      Generate a chroot using the last cooking base rootfs
+ umount-chroot|-uc   Unmount chroot specified on cmdline (--forced to force)
  clean-chroot        Clean a chroot environment (skip root/ and home/)
  purge               Remove obsolete packages and obsolete source tarballs
  dry-purge           Show obsolete packages and obsolete source tarballs
@@ -124,13 +119,14 @@ umount_chroot()
 	# Not working. Buggy ps ?
 	#sleep 6
 	ps=$(ps | grep `basename $0` | grep -v grep | wc -l)
-	if [ "$ps" == "1" ]; then
-		echo -ne "\Unmounting virtual filesystems..."
+	if [ "$ps" == "1" ] || [ "$2" == "--forced" ]; then
+		[ "$1" ] && ROOTF=$1
+		echo -e "\nUnmounting virtual filesystems...\n"
 		umount $ROOTFS/dev/shm
 		umount $ROOTFS/dev/pts
 		umount $ROOTFS/sys
 		umount $ROOTFS/proc
-		status
+		echo ""
 	else
 		echo -e "\nProcess: $ps\n"
 		ps | grep `basename $0` | grep -v grep
@@ -206,12 +202,6 @@ purge_sources()
 }
 
 case "$1" in
-	cmplog)
-		# Log 'tazwok cmp' for the web interface (can be used via a cron job).
-		check_root
-		echo -e "Starting 'tazwok cmp' (can be long)...\n"
-		tazwok cmp | grep ^[A-Z] | tee $CMP_LOG
-		echo "Date: `date`" >> $CMP_LOG ;;
 	projects-stats|-ps)
 		echo -e "\nStatistics for: $PROJECTS\n"
 		echo -n "Project" && echo -ne "\033[24G Size" && echo -ne "\033[38G Revision"
@@ -262,9 +252,15 @@ case "$1" in
 		chroot $ROOTFS /bin/sh --login
 		umount_chroot
 		echo -e "Exiting $ROOTFS chroot environment...\n" ;;
-	gen-chroot)
+	umount-chroot|-uc)
 		check_root
-		get_version $@
+		[ "$2" ] && ROOTFS=$2
+		[ "$3" ] && opt=$3
+		umount_chroot $ROOTFS $opt ;;
+	gen-chroot|-gc)
+		check_root
+		[ "$2" ] && ROOTFS=$2
+		[ "$2" ] || ROOTFS=$SLITAZ/cooking/chroot
 		# Dont break another env.
 		if [ -d $ROOTFS/bin ]; then
 			echo -e "\nA chroot environment already exists in : $ROOTFS\n"
