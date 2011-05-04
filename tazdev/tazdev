@@ -247,6 +247,7 @@ case "$1" in
 		# tazdev.conf
 		check_root
 		get_version $@
+		[ -d "$2" ] && ROOTFS=$2
 		mount_chroot
 		echo -e "\nChrooting in $ROOTFS...\n"
 		chroot $ROOTFS /bin/sh --login
@@ -259,8 +260,8 @@ case "$1" in
 		umount_chroot $ROOTFS $opt ;;
 	gen-chroot|-gc)
 		check_root
-		[ "$2" ] && ROOTFS=$2
-		[ "$2" ] || ROOTFS=$SLITAZ/cooking/chroot
+		get_version $@
+		[ -d "$2" ] && ROOTFS=$2
 		# Dont break another env.
 		if [ -d $ROOTFS/bin ]; then
 			echo -e "\nA chroot environment already exists in : $ROOTFS\n"
