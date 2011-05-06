@@ -139,13 +139,14 @@ gen_new_chroot()
 {
 	echo -e "\nGenerating new chroot in : $ROOTFS"
 	echo "================================================================================"
-	mkdir -p $ROOTFS && cd $ROOTFS
-	wget $DL_URL/boot/cooking/rootfs-base.gz
-	echo -n "Extracting the rootfs..."
-	lzma d rootfs-base.gz -so | cpio -id
-	rm rootfs-base.gz
+	mkdir -p $ROOTFS 
+	for pkg in busybox libtaz tazwok tazchroot \
+		tazpkg slitaz-base-files
+	do
+		tazpkg get-install $pkg --root=$ROOTFS
+	done
 	echo -n "Creating resolv.conf..."
-	cat /etc/resolv.conf > etc/resolv.conf
+	cat /etc/resolv.conf > $ROOTFS/etc/resolv.conf
 	status
 	echo "================================================================================"
 	echo -e "Ready to chroot. Use 'tazdev chroot [version|path]'"
