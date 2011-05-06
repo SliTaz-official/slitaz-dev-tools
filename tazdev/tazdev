@@ -40,25 +40,24 @@ usage()
  reliso|-ri          Create all main flavors (not loram)\n"
 }
 
-# Exit if user is not root.
-check_root()
-{
-	if test $(id -u) != 0 ; then
-	   echo -e "\nThis program requires being run as root.\n"
-	   exit 0
-	fi
+# Be sure we root.
+check_root() {
+	[ $(id -u) != 0 ] && \
+		echo -e "\nYou must be root to use: $(basename $0) $@\n" && exit 0
 }
 
-status()
-{
-	local check=$?
-	echo -en "\033[70G"
-	if [ $check = 0 ]; then
-		echo "Done"
+separator() {
+	echo "================================================================================"
+}
+
+status() {
+	echo -en "\\033[70G[ "
+	if [ $? = 0 ]; then
+		echo -en "\\033[1;32mOK"
 	else
-		echo "Failed"
+		echo -en "\\033[1;31mFailed"
 	fi
-	return $check
+	echo -e "\\033[0;39m ]"
 }
 
 get_version()
@@ -69,7 +68,7 @@ get_version()
 	elif [ -n "$2" ]; then
 		# Undigest - custom ?
 		version=$2
-		slitaz=/home/slitaz/$2
+		slitaz=$SLITAZ/$2
 	else
 		version=cooking
 		slitaz=$COOKING
@@ -86,14 +85,14 @@ check_mirror()
 		user=$user
 	fi
 	if [ "$2" = "stable" ] || [ "$3" = "stable" ]; then
-		REMOTE_DIR=$MIRROR_PKGS/stable/
-		LOCAL_DIR=$STABLE/packages/
+		remote=$MIRROR_PKGS/stable/
+		local=$STABLE/packages/
 	elif [ "$2" = "undigest" ] || [ "$3" = "undigest" ]; then
-		REMOTE_DIR=$MIRROR_PKGS/undigest/
-		LOCAL_DIR=$UNDIGEST/packages/
+		remote=$MIRROR_PKGS/undigest/
+		local=$UNDIGEST/packages/
 	else
-		REMOTE_DIR=$MIRROR_PKGS/cooking/
-		LOCAL_DIR=$COOKING/packages/
+		remote=$MIRROR_PKGS/cooking/
+		local=$COOKING/packages/
 	fi
 }
 
@@ -102,7 +101,7 @@ check_mirror()
 mount_chroot()
 {
 	if [ ! -d $rootfs/proc/1 ]; then
-		echo -en "\nMounting virtual filesystems..."
+		echo -ne "\nMounting virtual filesystems..."
 		mount -t proc proc $rootfs/proc
 		mount -t sysfs sysfs $rootfs/sys
 		mount -t devpts devpts $rootfs/dev/pts
@@ -129,15 +128,14 @@ umount_chroot()
 {
 	[ "$1" ] && ROOTF=$1
 	fs=$rootfs/home/slitaz
-	echo -e "\nChroot: $rootfs"
-	echo -n "Unmounting virtual filesystems..."
+	echo -ne "\nUnmounting virtual filesystems..."
 	umount $rootfs/dev/shm
 	umount $rootfs/dev/pts
 	umount $rootfs/sys
 	umount $rootfs/proc
 	umount $fs/src
 	umount $fs/packages
-	echo -e "Done\n"
+	status && echo ""
 	#echo -e "\nProcess: $ps\n"
 	#ps | grep `basename $0` | grep -v grep
 	#echo -e "\nLeaving virtual filesystems unmounted (`pidof tazdev`)...\n"
@@ -147,7 +145,7 @@ umount_chroot()
 gen_new_chroot()
 {
 	echo -e "\nGenerating new chroot in : $rootfs"
-	echo "================================================================================"
+	separator
 	mkdir -p $rootfs 
 	for pkg in busybox libtaz tazwok tazchroot \
 		tazpkg slitaz-base-files
@@ -157,7 +155,7 @@ gen_new_chroot()
 	echo -n "Creating resolv.conf..."
 	cat /etc/resolv.conf > $rootfs/etc/resolv.conf
 	status
-	echo "================================================================================"
+	separator
 	echo -e "Ready to chroot. Use 'tazdev chroot [version|path]'"
 	echo -e "Example: tazdev chroot $rootfs\n"
 }
@@ -216,7 +214,7 @@ case "$1" in
 		echo -e "\nStatistics for: $PROJECTS\n"
 		echo -n "Project" && echo -ne "\033[24G Size" && echo -ne "\033[38G Revision"
 		echo -ne "\033[48G Version" && echo -e "\033[64G Files"
-		echo "================================================================================"
+		separator
 		cd $PROJECTS
 		for proj in *
 		do
@@ -234,16 +232,15 @@ case "$1" in
 			files=`find $proj -type f | wc -l`
 			echo -e "\033[64G $files"
 		done
-		echo "================================================================================"
+		separator
 		echo "" ;;
 	chroot)
-		# Chroot into a build env. Default to cooking configured in
-		# tazdev.conf
+		# Chroot into a build env. Default to cooking configured in tazdev.conf
 		check_root
 		get_version $@
 		[ -d "$2" ] && rootfs=$2
 		mount_chroot
-		echo -e "Chrooting in $rootfs...\n"
+		echo -e "Chrooting to: $rootfs\n"
 		chroot $rootfs /bin/sh --login
 		umount_chroot ;;
 	umount-chroot|-uc)
@@ -280,37 +277,37 @@ case "$1" in
 		fi
 		cd $rootfs || exit 1
 		echo -e "\nCleaning chroot in: $rootfs"
-		echo "================================================================================"
+		separator
 		for i in bin dev etc init lib media mnt proc sbin sys tmp usr var
 		do
 			echo -n "Removing: $i (`du -sh $i | awk '{ print $1 }'`)... "
 			rm -rf $i
 			status
 		done
-		echo "================================================================================"
-		echo "" ;;
+		separator && echo "" ;;
 	push|-p)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete \
-			$LOCAL_DIR -e ssh $user@$MIRROR:$REMOTE_DIR ;;
+			$local -e ssh $user@$MIRROR:$remote ;;
 	dry-push|-dp)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
-			$LOCAL_DIR -e ssh $user@$MIRROR:$REMOTE_DIR ;;
+			$local -e ssh $user@$MIRROR:$remote ;;
 	pull)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete \
-			-e ssh $user@$MIRROR:$REMOTE_DIR $LOCAL_DIR ;;
+			-e ssh $user@$MIRROR:$remote $local ;;
 	dry-pull)
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
-			-e ssh $user@$MIRROR:$REMOTE_DIR $LOCAL_DIR ;;
+			-e ssh $user@$MIRROR:$remote $local ;;
 	purge|dry-purge)
 		check_root
 		get_version $@
 		purge_packages $1
 		purge_sources $1 ;;
 	relpkg|-rp)
+		# Release a slitaz sub-project and upload tarball to mirror
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
 		if [ -z $2 ] || [ -z $3 ]; then
 			echo -e "\nUsage: $0 relpkg package version\n"
@@ -342,12 +339,13 @@ case "$1" in
 				$user@$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
 		fi ;;
 	reliso|-ri)
-		# Generate all official images iso at once.
-		version=$2
-		mkdir -p $ISO
+		# Generate all official images iso at once for a specific version.
+		get_version $@
+		iso=$slitaz/iso
+		mkdir -p $iso
 		for flavor in base core justx firefox
 		do
-			cd /home/slitaz/$version
+			cd $slitaz
 			tazlito pack-flavor $flavor
 			tazlito get-flavor $flavor
 			tazlito gen-distro
@@ -358,7 +356,9 @@ case "$1" in
 				cp distro/slitaz-$flavor.iso $ISO/slitaz-$version-$flavor.iso
 				cd $ISO && md5sum slitaz-$version-$flavor.iso slitaz-$version-$flavor.md5
 			fi
-		done ;;
+		done
+		# Clean up slitaz working directory.
+		rm *.flavor tazlito.conf ;;
 	usage|*)
 		usage ;;
 esac
