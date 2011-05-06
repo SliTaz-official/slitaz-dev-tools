@@ -145,13 +145,20 @@ umount_chroot()
 gen_new_chroot()
 {
 	echo -e "\nGenerating new chroot in : $rootfs"
-	separator
-	mkdir -p $rootfs 
-	for pkg in busybox libtaz tazwok tazchroot \
-		tazpkg slitaz-base-files
-	do
-		tazpkg get-install $pkg --root=$rootfs
-	done
+	separator	
+	mkdir -p $rootfs
+	if [ "$ROOTFS_PKG" = "yes" ]; then
+		for pkg in $CHROOT_PKG
+		do
+			tazpkg get-install $pkg --root=$rootfs
+		done
+	else
+		cd $rootfs
+		wget $DL_URL/boot/cooking/rootfs-base.gz
+		echo -n "Extracting the rootfs..."
+		lzma d rootfs-base.gz -so | cpio -id
+		rm rootfs-base.gz
+	fi
 	echo -n "Creating resolv.conf..."
 	cat /etc/resolv.conf > $rootfs/etc/resolv.conf
 	status
