@@ -36,6 +36,7 @@ usage()
  dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
  pull                Download new packages from the main mirror.
  dry-pull            Show what will be downloaded from the mirror. Does nothing
+ pack-flavors        Pack all SliTaz Live flavors at once.
  relpkg|-rp          Archive and upload new package/project version
  reliso|-ri          Create all main flavors (not loram)\n"
 }
@@ -313,6 +314,21 @@ case "$1" in
 		get_version $@
 		purge_packages $1
 		purge_sources $1 ;;
+	pack-flavors)
+		# Create all flavors files at once. Do we realy need code to monitor
+		# flavors changes ? Let just build them all before syncing the mirror.
+		get_version $@
+		flavors=$slitaz/flavors
+		cd $flavors && hg pull -u && cd ..
+		for i in *
+		do
+			echo "Flavor: $i"
+			#tazlito pack-flavor $i
+			#mv $i.flavor $PKGS
+		done
+		# FIXME
+		echo "FIXME: tazlito will use the host packages list for version"
+		echo "FIXME: tazlito must use: $slitaz/packages" ;;
 	relpkg|-rp)
 		# Release a slitaz sub-project and upload tarball to mirror
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
