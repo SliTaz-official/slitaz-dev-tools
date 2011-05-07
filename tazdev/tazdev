@@ -148,12 +148,12 @@ gen_new_chroot()
 	echo -e "\nGenerating new chroot in : $rootfs"
 	separator	
 	mkdir -p $rootfs
-	if [ "$ROOTFS_PKG" = "yes" ]; then
-		for pkg in $CHROOT_PKG
+	if [ "$ROOTFS_PKG" == "yes" ]; then
+		for pkg in $CHROOT_PKGS
 		do
 			tazpkg get-install $pkg --root=$rootfs
 		done
-	else
+	elif [ "$ROOTFS_PKG" == "no" ]; then
 		cd $rootfs
 		wget $DL_URL/boot/cooking/rootfs-base.gz
 		echo -n "Extracting the rootfs..."
