@@ -1,0 +1,198 @@
+#!/bin/sh
+BIN=`which firefox`
+PROFILE_DIR=$HOME/.mozilla/firefox
+CONFDIR=$HOME/.yaff
+VERCONF=$CONFDIR/versions.conf
+PROFCONF=$CONFDIR/profiles.conf
+INSTANCES=`ps | grep firefox-bin | grep -v 'grep firefox-bin' | grep -v /bin/sh | wc -l`
+[ $INSTANCES -gt 0 ] && NOREMOTE='-no-remote' || NOREMOTE=''
+FIREFOX='3.5.7#/usr/bin/firefox 3.6#/home/gg/apps/firefox-3.6/firefox 4#/home/gg/apps/firefox-4/firefox#Firefox-4b'
+PROFILES=""
+
+add_new_versions() {
+	local tmp=`mktemp -t -p $CONFDIR`
+	ADD_VERSIONS='
+<window title="Yaff - Add new versions">
+	<vbox>
+		<hbox>
+			<text width-request="100"><label>Version number</label></text>
+			<entry width-request="20"><variable>VERNUMBER</variable></entry>
+		</hbox>
+		<button ok></button>
+	</vbox>
+</window>'
+	export ADD_VERSIONS
+	gtkdialog --program=ADD_VERSIONS &> $tmp
+	cat $tmp
+	[ -f "$tmp" ] && rm -f $tmp
+}
+
+[ ! -d "$CONFDIR" ] && mkdir -p $CONFDIR
+#~ [ ! -f "$VERCONF" -o `stat -c %s $VERCONF` -eq 0 ] && add_new_versions
+[ ! -f "$VERCONF" -o `stat -c %s $VERCONF` -eq 0 ]
+
+[ ! -f "$PROFCONF" ] && touch $PROFCONF; echo -n "" > $PROFCONF
+for firefox in $FIREFOX
+do
+	version=`echo $firefox | cut -d '#' -f 1`
+	exec=`echo $firefox | cut -d '#' -f 2`
+	profile=`echo $firefox | cut -d '#' -f 3`
+	echo "$profile|$version" >> $PROFCONF
+	[ -n "$profile" -a "$profile" != "" ] && echo "$version|$profile" >> $PROFCONF
+done
+	
+
+MAIN_DIALOG='
+<window title="Yet Another Firefox" window_position="1">
+	<vbox>
+		<notebook labels="Choose a profile|Configuration|Information">
+			<vbox>
+				<list selection-mode="2">
+					<variable>PROFIL</variable>'
+[ ! -d $PROFILE_DIR ] && echo "Directory $PROFILE_DIR not found" >&2 && exit 1
+cd $PROFILE_DIR
+for dir in $(ls -F $PROFILE_DIR | grep -iv "Crash" | grep -iv "reports" | grep \/$ | grep -v "~/$")
+#~ for dir in $(echo "$PROFILES")
+do
+	[ ! -d $dir -o ! -r $dir ] && continue
+	dir=${dir#*.}
+	MAIN_DIALOG=${MAIN_DIALOG}'<item>'${dir%%/}'</item>'
+done
+MAIN_DIALOG=$MAIN_DIALOG'
+				</list>
+				<text>
+					<label>'$INSTANCES' running instance(s) of Firefox detected.</label>
+				</text>
+				<hbox homogeneous="true">'
+for firefox in $FIREFOX
+do
+	version=`echo $firefox | cut -d '#' -f 1`
+	exec=`echo $firefox | cut -d '#' -f 2`
+	profile=`echo $firefox | cut -d '#' -f 3`
+	radio='<radiobutton><label>'$version'</label><variable>F'${version//./_}'</variable></radiobutton>'
+	#echo $radio
+	MAIN_DIALOG=$MAIN_DIALOG$radio
+done
+MAIN_DIALOG=$MAIN_DIALOG'
+				</hbox>
+				<hbox>
+					<button>
+						<input file>/usr/share/pixmaps/mozicon16.png</input>
+						<label>Launch Firefox</label>
+						<action>Exit:OK</action>
+					</button>
+					<button>
+						<input file icon="gtk-quit"></input>
+						<label>Quit</label>
+						<action type="CloseWindow">MAIN_DIALOG</action>
+					</button>
+				</hbox>
+			</vbox>
+			
+			<vbox>
+				<tree>
+					<label>Version | Profile</label>
+					<variable>DEFAULT_PROFILE</variable>'
+for firefox in $FIREFOX
+do
+	version=`echo $firefox | cut -d'#' -f1`
+	exec=`echo $firefox | cut -d'#' -f2`
+	profile=`echo $firefox | cut -d'#' -f3`
+	MAIN_DIALOG=$MAIN_DIALOG"<item>$version|$profile</item>"
+done
+MAIN_DIALOG=$MAIN_DIALOG'
+				</tree>
+				<hbox>
+					<text>
+						<label>Version number</label>
+					</text>
+					<entry>
+						<variable>ENTRY_VERSION_NUMBER</variable>
+					</entry>
+				</hbox>
+				<hbox>
+					<text>
+						<label>Path to this version executable</label>
+					</text>
+					<entry>
+						<variable>ENTRY_VERSION_BIN</variable>
+					</entry>
+				</hbox>
+				<hbox>
+					<text>
+						<label>Default profile</label>
+					</text>
+					<entry>
+						<variable>ENTRY_VERSION_DEFAULT_PROFILE</variable>
+					</entry>
+				</hbox>
+				<hbox>
+					<button>
+						<input file icon="gtk-add"></input>
+						<label>New version</label>
+						<action>zenity --info --text="coucou"</action>
+					</button>
+					<button>
+						<input file icon="gtk-quit"></input>
+						<label>Quit</label>
+						<action type="CloseWindow">MAIN_DIALOG</action>
+					</button>
+				</hbox>
+			</vbox>
+			
+			<vbox>
+				<frame>
+					<text use-markup="true" width-chars="30" height-request="50">
+						<label>"<i>Copyleft [^c] 2010 Babaorum</i>"</label>
+					</text>
+					<text use-markup="true" width-chars="30">
+						<label>"<b>YAFF (Yet Another Firefox)</b>"</label>
+					</text>
+					<text>
+						<label>lets you launch many instances of Firefox in different versions with different profiles.</label>
+					</text>
+				</frame>
+				<hbox>
+					<button>
+						<input file icon="gtk-quit"></input>
+						<label>Quit</label>
+						<action type="CloseWindow">MAIN_DIALOG</action>
+					</button>
+				</hbox>
+			</vbox>
+		</notebook>
+	</vbox>
+</window>'
+export MAIN_DIALOG
+VARIABLES=$(gtkdialog --program=MAIN_DIALOG)
+eval $VARIABLES
+for firefox in $FIREFOX
+do
+	version=`echo $firefox | cut -d '#' -f 1`
+	bin=`echo $firefox | cut -d '#' -f 2`
+	profile=`echo $firefox | cut -d '#' -f 3`
+	name_var="F${version}"
+	name_var=${name_var//./_}
+	eval "version_var=\$$name_var"
+	if [ "$version_var" = "true" ]
+	then
+		BIN=$bin
+		if [ -n $profile -a "$profile" != "" -a "$PROFIL" = "" ]; then
+			PROFIL=$profile
+			export ALERT_DIALOG='
+				<window title="CAUTION !" window_position="1">
+					<vbox>
+						<text use-markup="true"><label>"Profile for this version will be locked on: <b>'$PROFIL'</b>"</label></text>
+						<button ok></button>
+					</vbox>
+				</window>'
+			gtkdialog --program=ALERT_DIALOG
+		fi
+		break
+	fi
+done
+if [ $EXIT = "OK" -a "$PROFIL" != "" ]
+then
+	echo "$BIN $NOREMOTE -P \"$PROFIL\" 1>/dev/null 2>&1"
+	$BIN $NOREMOTE -P "$PROFIL" 1>/dev/null 2>&1
+fi

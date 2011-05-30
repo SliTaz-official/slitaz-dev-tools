@@ -1,0 +1,34 @@
+#!/bin/sh
+
+MAIN_DIALOG='
+<window title="edf" window_position="1" decorated="false" width-request="600">
+	<vbox>
+		<text use-markup="true"><label>"<b>Enhanced df</b>"</label></text>
+		<text height-request="10"><label>""</label></text>
+		<tree>
+			<label>Device|Mount point|Total size|Occupied|Occ.ratio|Free</label>
+'
+I=$IFS; IFS=$'\n'
+for line in `df -h | tail -n +2 | grep ^/dev/ | sed -e "s/ \+/|/g"`
+do
+	device=`echo $line | cut -d'|' -f1`
+	total=`echo $line | cut -d'|' -f2`
+	occupied=`echo $line | cut -d'|' -f3`
+	free=`echo $line | cut -d'|' -f4`
+	ratio=`echo $line | cut -d'|' -f5`
+	mount=`echo $line | cut -d'|' -f6`
+	MAIN_DIALOG=$MAIN_DIALOG"
+				<item>$device|$mount|$total|$occupied|$ratio|$free</item>"
+done
+IFS=$I
+MAIN_DIALOG=$MAIN_DIALOG'
+		</tree>
+		<button ok></button>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+gtkdialog -p MAIN_DIALOG
+
+

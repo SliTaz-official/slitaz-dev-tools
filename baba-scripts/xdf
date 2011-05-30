@@ -1,0 +1,39 @@
+#!/bin/sh
+field() {
+	textwidth=`length "$1"`
+	freewidth=$(( $2 - $textwidth ))
+	fieldtext="$1"
+	position=${3-after}
+	for i in `seq 1 $freewidth`; do
+		case $position in
+			before) fieldtext=" $fieldtext" ;;
+			after) 	fieldtext="$fieldtext " ;;
+		esac
+	done
+	echo "$fieldtext"
+}
+#df -h | grep ^/dev/ | grep -v ^/dev/root | sed "s/ \+/ /g" | while read line; do
+df -h | grep ^/dev/ | sed "s/ \+/ /g" | while read line; do
+	device=`echo $line | cut -d' ' -f1`
+	device=`field $device 8`
+	size=`echo $line | cut -d' ' -f2`
+	size=`field $size 6 before`
+	used=`echo $line | cut -d' ' -f3`
+	used=`field $used 6 before`
+	free=`echo $line | cut -d' ' -f4`
+	free=`field $free 6 before`
+	usepercent=`echo $line | cut -d' ' -f5`
+	usebar="|"
+	counter=`expr ${usepercent%\%} '/' 10`
+	for i in `seq 1 $counter`; do
+		usebar="${usebar}>"
+	done
+	for i in `seq $counter 9`; do
+		usebar="${usebar}."
+	done
+	usebar="${usebar}|"
+	usepercent=`field $usepercent 4 before`
+	mntpoint=`echo $line | cut -d' ' -f6`
+	mntpoint=`field "($mntpoint)" 20`
+	echo "$device $mntpoint $used/$size $usebar $usepercent - $free free"
+done
