@@ -1,6 +1,0 @@
-#!/bin/sh
-
-case "$0" in
-*html2js) exec sed 's/"/\\"/g;s/.*/document.write("&\\n")/' ;;
-*js2html) exec sed 's/^document.write("\(.*\).n")$/\1/;s/\\"/"/g' ;;
-esac
