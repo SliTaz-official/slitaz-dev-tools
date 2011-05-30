@@ -11,12 +11,17 @@ function download($name, $size, $cmd)
 	exit;
 }
 
+function my_filesize($path)	// 2G+ file support
+{
+	return rtrim(shell_exec("stat -c %s '".$path."'"));
+}
+
 if (isset($_GET['iso']))
 	$_POST['iso'] = $_GET['iso'];
 
 if (isset($_GET['file']))
 {
-	$max = floor((filesize("../".$_GET["iso"]) + $fdsz - 1 + $cpiopad) / $fdsz);
+	$max = floor((my_filesize("../".$_GET["iso"]) + $fdsz - 1 + $cpiopad) / $fdsz);
 	$cmd = "cd ../".dirname($_GET['iso'])."; ls ".
 		basename($_GET['iso'],".iso").".*".
 		" | cpio -o -H newc | cat - /dev/zero ";
@@ -62,7 +67,7 @@ if (isset($_GET['file']))
 		<a href="http://www.slitaz.org/">
 		<img src="/css/pics/network.png" alt="network.png" /></a>
 		<a href="../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a> |
-		<a href="http://tiny.slitaz.org/" title="SliTaz for (very) old PC">Tiny SliTaz</a> |
+		<a href="http://tiny.slitaz.org/" title="SliTaz in one floppy !">Tiny SliTaz</a> |
 		<a href="index-loram.html" title="Floppy image sets for low ram systems">Loram floppies</a> |
 		<a href="builder/index.php" title="Build floppies with your own kernel and initramfs">Floppy set web builder</a> |
 		<a href="builder/bootloader" title="Build your floppy sets without Internet">Shell builder</a>
@@ -74,18 +79,19 @@ if (isset($_GET['file']))
 <div id="block">
 	<!-- Navigation -->
 	<div id="block_nav">
-		<h4><img src="pics/floppy.png" alt="@" />Download 1.44Mb images <?php echo substr($_POST["iso"],4,3); ?></h4>
+		<h4><img src="pics/floppy.png" alt="@" />Download 1.44Mb images for <?php $dir = explode('/',$_POST["iso"]); echo $dir[1]; ?></h4>
 <table width="100%">
 <?php
-$max = floor((filesize("../".$_POST["iso"]) + $fdsz - 1 + $cpiopad) / $fdsz);
+$max = floor((my_filesize("../".$_POST["iso"]) + $fdsz - 1 + $cpiopad) / $fdsz);
 for ($i = 1; $i <= $max ; $i++) {
 	if ($i % 4 == 1) echo "<tr>\n";
 	echo "	<td><a href=\"download.php?file=$i&amp;iso=".
-		urlencode($_POST["iso"])."\">fdiso".
-		sprintf("%02d",$i).".img</a></td>\n";
+		urlencode($_POST["iso"])."\">fdiso".sprintf("%02d",$i);
+	if ($max < 100) echo ".img";
+	echo "</a></td>\n";
 	if ($i % 4 == 0) echo "</tr>\n";
 }
-if ($max % 4 != 1) {
+if ($max % 4 != 0) {
 	while ($max % 4 != 3) { echo "<td></td>"; $max++; }
 }
 else echo "<tr>\n";
