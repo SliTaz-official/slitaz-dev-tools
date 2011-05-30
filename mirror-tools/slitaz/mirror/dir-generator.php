@@ -89,7 +89,6 @@ function format_bytes($size, $precision=1) {
     return sprintf('%.'.$precision.'f', $size).$sizes[$total];
 }
 
-
 //
 // Get some variables from /etc/lighttpd/lighttpd.conf
 //
@@ -162,7 +161,7 @@ if ($slitaz_style) {
 	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
 	<style type='text/css'>
 		div.list { background-color: white; padding-bottom: 14px;}
-		table {width: 100% ;}
+		table { width: 100% ;}
 		th, td { font: 90% monospace; text-align: left;}
 		th { font-weight: bold; padding-right: 14px; padding-bottom: 3px;}
 		td {padding-right: 14px;}
@@ -173,45 +172,28 @@ if ($slitaz_style) {
 
 <!-- Header -->
 <div id="header">
-	<a href="http://mirror.slitaz.org/"><img id="logo" 
-		src="/css/pics/website/logo.png" 
-		title="mirror.slitaz.org" alt="mirror.slitaz.org" /></a>
-	<p id="titre">#!/Mirror/${vpath}</p>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+			<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/">Doc</a>
+		<a href="http://forum.slitaz.org/">Forum</a>
+		<a href="http://bugs.slitaz.org">Bugs</a>
+		<a href="http://hg.slitaz.org/">Hg</a>
+	</div>
+	<h1><a href="http://mirror.slitaz.org/">SliTaz Mirror</a> /${vpath}</h1>
 </div>
 
-<!-- Content -->
-<div id="content-full">
-
-<!-- Block begin -->
-<div class="block">
-	<!-- Nav block begin -->
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
 	<div id="block_nav">
-		<h3><img src="/css/pics/website/users.png" alt="users.png" />Community</h3>
-		<ul>
-			<li><a href="http://pizza.slitaz.org/">Live Builder</a></li>
-			<li><a href="http://boot.slitaz.org/">Web Boot</a></li>
-		</ul>
-		<h3>Search</h3>
-		<form class="search" action="${_SERVER["REQUEST_URI"]}" method="get" >
-			<p><input type="text" name="f" $fvalue /></p>
-		</form>
-	<!-- Nav block end -->
-	</div>
-	<!-- Top block begin -->
-	<div id="block_top">
-		<h1>About Mirror</h1>
-		<p>Welcome to Open Source!
+		<h4><img src="/css/pics/network.png" alt=".png" />Mirrors</h4>
+		<div>
 EOT;
-	if ($_SERVER["SERVER_NAME"] == "mirror.slitaz.org") print <<<EOT
-		This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
-		(stable) in an lguest virtual machine provided by 
-		<a href="http://www.ads-lu.com/">ADS</a>.	
-EOT;
-	print <<<EOT
-		</p>
-		<p><img src="/css/pics/website/network.png" 
-			alt=".png" style="vertical-align:middle;"/>Mirrors: 
-EOT;
+
+	// Mirror list
 	$mirrors = array();
 	$fp = @fopen(dirname($_SERVER["SCRIPT_FILENAME"])."/mirrors","r");
 	if ($fp) {
@@ -228,12 +210,35 @@ EOT;
 	foreach($mirrors as $name => $url) {
 		echo "<a href=\"$url$vpath\" title=\"$name mirror\">$name</a>\n";
 	}
+	
 	print <<<EOT
+		</div>
+		<p>
+			<strong>Online tools:</strong>
+			<a href="http://pizza.slitaz.org/">Live Builder</a> -
+			<a href="http://boot.slitaz.org/">Web Boot</a>
 		</p>
-	<!-- Top block end -->
 	</div>
-<!-- Block end -->
+	<!-- Information/image -->
+	<div id="block_info">
+		<h4>Welcome to Open Source!</h4>
+EOT;
+	if ($_SERVER["SERVER_NAME"] == "mirror.slitaz.org") print <<<EOT
+		<p>This is the SliTaz GNU/Linux main mirror. The server runs naturally 
+		SliTaz (stable) in an lguest virtual machine provided by 
+		<a href="http://www.ads-lu.com/">ADS</a>.
+		<a href="/info/">Mirror info...</a></p>
+EOT;
+	print <<<EOT
+		<form action="${_SERVER["REQUEST_URI"]}" method="get" style="width: 300px;">
+			<p><input type="text" name="f" $fvalue
+				style="height: 14px; border-radius: 4px;" /></p>
+		</form>
+	</div>
 </div>
+
+<!-- Content -->
+<div id="content">
 
 EOT;
 }
@@ -277,7 +282,21 @@ print "	<div class='list'>
 	<table summary='Directory Listing' cellpadding='0' cellspacing='0'>
 ";
 
+function my_is_file($path)	// 2G+ file support
+{
+	exec("[ -f '".$path."' ]", $tmp, $ret);
+	return $ret == 0;
+}
 
+function my_filesize($path)	// 2G+ file support
+{
+	return rtrim(shell_exec("stat -c %s '".$path."'"));
+}
+
+function my_filemtime($path)	// 2G+ file support
+{
+	return rtrim(shell_exec("stat -c %Y '".$path."'"));
+}
 
 // Get all of the folders and files. 
 $folderlist = array();
@@ -300,7 +319,7 @@ if($handle = @opendir($path)) {
 				'file_type' => "Directory"
 			);
 		}
-		elseif(is_file($path.'/'.$item)) {
+		elseif(my_is_file($path.'/'.$item)) {
 			if(!$show_hidden_files) {
 				if(substr($item, 0, 1) == "." or substr($item, -1) == "~") {
 					continue;
@@ -308,8 +327,8 @@ if($handle = @opendir($path)) {
 			}
 			$filelist[] = array(
 				'name'=> $item, 
-				'size'=> filesize($path.'/'.$item), 
-				'modtime'=> filemtime($path.'/'.$item),
+				'size'=> my_filesize($path.'/'.$item), 
+				'modtime'=> my_filemtime($path.'/'.$item),
 				'file_type' => get_file_type($path.'/'.$item)
 			);
 		}
@@ -402,30 +421,22 @@ if ($slitaz_style) { ?>
 
 <!-- Footer -->
 <div id="footer">
-	<div class="right_box">
-	<h4>SliTaz Network</h4>
-		<ul>
-			<li><a href="http://www.slitaz.org/">Main Website</a></li>
-			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
-			<li><a href="http://forum.slitaz.org/">Support Forum</a></li>
-			<li><a href="http://scn.slitaz.org/">Community Network</a></li>
-			<li><a href="http://pkgs.slitaz.org/">Packages</a></li>
-			<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
-		</ul>
-	</div>
-	<h4>SliTaz Website</h4>
-	<ul>
-		<li><a href="#header">Top of the page</a></li>
-		<li>Copyright &copy; <span class="year"></span>
-			<a href="http://www.slitaz.org/">SliTaz</a></li>
-		<li><a href="about/">About the project</a></li>
-		<li><a href="netmap.php">Network Map</a></li>
-		<li>Page modified the <?php echo date('r'); ?></li>
-		<li><a href="http://validator.w3.org/check?uri=referer"><img
-		src="pics/website/xhtml10.png" alt="Valid XHTML 1.0"
-		title="Code validé XHTML 1.0"
-		style="width: 80px; height: 15px; vertical-align: middle;" /></a></li>
-	</ul>
+	Copyright &copy; <span class="year"></span>
+	<a href="http://www.slitaz.org/">SliTaz</a> - Network:
+	<a href="http://scn.slitaz.org/">Community</a>
+	<a href="http://doc.slitaz.org/">Doc</a>
+	<a href="http://forum.slitaz.org/">Forum</a>
+	<a href="http://pkgs.slitaz.org/">Packages</a>
+	<a href="http://bugs.slitaz.org">Bugs</a>
+	<a href="http://hg.slitaz.org/">Hg</a>
+	<p>
+		SliTaz @
+		<a href="http://twitter.com/slitaz">Twitter</a>
+		<a href="http://www.facebook.com/slitaz">Facebook</a>
+		<a href="http://distrowatch.com/slitaz">Distrowatch</a>
+		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a>
+		<a href="http://flattr.com/profile/slitaz">Flattr</a>
+	</p>
 </div>
 
 <?php }

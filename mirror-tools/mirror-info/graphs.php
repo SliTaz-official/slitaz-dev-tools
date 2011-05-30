@@ -9,59 +9,7 @@
 	<meta name="author" content="SliTaz Contributors" />
 	<link rel="shortcut icon" href="/css/favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
-</head>
-<body>
-
-<!-- Header -->
-<div id="header">
-    <a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/info/"><img id="logo"
-		src="/css/pics/website/logo.png" 
-		title="<?php echo $_SERVER["HTTP_HOST"]; ?>/info/" alt="<?php echo $_SERVER["HTTP_HOST"]; ?>/info/" /></a>
-    <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
-</div>
-
-<!-- Content -->
-<div id="content-full">
-
-<!-- Block begin -->
-<div class="block">
-	<!-- Nav block begin -->
-	<div id="block_nav">
-		<h4>SliTaz Network</h4>
-		<ul>
-			<li><a href="http://www.slitaz.org/">Main Website</a></li>
-			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
-			<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
-			<li><a href="http://scn.slitaz.org/">Community Platform</a></li>
-			<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
-			<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
-			<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
-			<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
-			<li><a href="http://bb.slitaz.org/">SliTaz Build Bot</a></li>
-			<li><a href="http://hg.slitaz.org/">SliTaz Repositories</a></li>
-			<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
-			<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
-		</ul>
-	<!-- Nav block end -->
-	</div>
-	<!-- Top block begin -->
-	<div id="block_top">
-		<h1>Mirror RRD stats</h1>
-		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-		<meta name="description" content="slitaz mirror rrdtool graphs" />
-		<meta name="robots" content="noindex" />
-		<meta name="author" content="SliTaz Contributors" />
-		<link rel="shortcut icon" href="/css/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
-		<style type="text/css">
-#nav {
-	right: 4%;
-}
-
-#content {
-	padding: 0px 40px 60px 4%;
-}
-
+	<style type="text/css">
 #copy {
 	text-align: center;
 }
@@ -69,9 +17,44 @@
 #bottom {
 	text-align: center;
 }
-
 	</style>
+</head>
+<body>
 
+<!-- Header -->
+<div id="header">
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/" title="SliTaz Community Documentation">Doc</a>
+		<a href="http://forum.slitaz.org/" title="Slitaz Forum">Forum</a>
+		<a href="http://bugs.slitaz.org/" title="Bug Tracking System">Bugs</a>
+		<a href="http://hg.slitaz.org/" title="SliTaz repositories">Hg</a>
+	</div>
+	<h1><a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/">SliTaz 
+	<?php $host=preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); echo $host; ?></a></h1>
+</div>
+
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
+	<div id="block_nav">
+		<h4><img src="/css/pics/development.png" alt="development.png" />Developers Corner</h4>
+		<ul>
+			<li><a href="http://www.slitaz.org/en/devel/">Website devel</a></li>
+			<li><a href="http://scn.slitaz.org/">Community</a></li>
+			<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
+			<li><a href="http://hg.slitaz.org/">Mercurial Repos</a></li>
+			<li><a href="http://cook.slitaz.org/">Build Bot</a></li>
+			<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
+			<li><a href="http://mirror.slitaz.org/info/">Mirror Server</a></li>
+		</ul>
+	</div>
+	<!-- Information/image -->
+	<div id="block_info">
+	<h4>Codename: <?php echo $host; ?></h4>
 		<p>
 			This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
 			(stable) in an lguest virtual machine provided by 
@@ -89,12 +72,11 @@
 			<code>system()</code> Mirror is also monitored by RRDtool which provides 
 			<a href="graphs.php">graphical stats</a>.
 		</p>
-	<!-- Top block end -->
 	</div>
-<!-- Block end -->
 </div>
 
-
+<!-- Content -->
+<div id="content">
 
 <?php
 

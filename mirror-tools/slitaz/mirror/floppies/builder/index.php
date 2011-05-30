@@ -48,23 +48,43 @@ if (isset($_GET['id']) && is_file("/tmp/".$_GET['id']."/fd")) {
 	<meta name="author" content="SliTaz Contributors" />
 	<link rel="shortcut icon" href="../../css/favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="../../css/slitaz.css" />
-	<style>
+	<style type="text/css">
+	
 input[type=text] {
 	width: inherit;
 }
+
+#content {
+	margin: 6px 280px 0px 0px;
+	padding: 0px 3% 20px 4%;
+}
+
+#nav {
+	right: 4%;
+}
+
+#copy {
+	text-align: center;
+}
+
+#bottom {
+	text-align: center;
+}
+
 	</style>
 </head>
 <body bgcolor="#ffffff">
 <!-- Header -->
 <div id="header">
     <a name="top"></a>
-<!-- Access -->
-<div id="access">
-	<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a> |
-	<a href="../../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
-</div>   
-	<a href="http://www.slitaz.org/"><img id="logo" src="../../css/pics/website/logo.png" title="www.slitaz.org" alt="www.slitaz.org" style="border: 0px solid ; width: 200px; height: 74px;" /></a>
-	<p id="titre">#!/boot/floppies/builder</p>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a> |
+		<a href="../../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
+	</div>
+	<h1><a href="http://www.slitaz.org/">Boot floppies builder</a></h1>
 </div>
 
 <!-- Navigation menu -->
@@ -237,42 +257,6 @@ function show_size($size)
 	global $sizes;
 	if ($size != 0) return " ".$sizes[$size];
 }
-	if (!isset($count)) {
-?>
-<div class="nav_box">
-<h4>How does it work ?</h4>
-<p>
-This tool updates the boot sector of your kernel with
-<a href="http://hg.slitaz.org/wok/raw-file/b84ff32e3457/linux/stuff/linux-header-2.6.34.u">this patch</a>.
-You may add a default cmdline and an initramfs. The cmdline can be edited at boot
-time but the keyboard is not mandatory.
-A <a href="bootloader"> standalone version</a> is available.
-</p>
-<p>
-Each part (boot, setup, cmdline, kernel, initramfs) is aligned to 512 bytes.
-The result is split to fit the floppy size.
-The last floppy image is padded with zeros.
-</p>
-</div>
-<?php
-	}
-	else {
-?>
-<div class="nav_box">
-<h4>Download image<?php if ($count >= 2) echo "s"; ?></h4>
-<ul>
-<?php
-		for ($i = 1; $i <= $count; $i++) {
-			echo '	<li><a href="'.$_SERVER["PHP_SELF"].
-			     "?id=".basename($tmp_dir)."&amp;n=$i&amp;s=".
-			     $_POST["size"].'">'.sprintf("fd%03d.img",$i).
-			     show_size($_POST["size"])."</a></li>\n";
-		}
-		echo "</ul>\n".floor($padding/1024)."KB padding.\n";
-?>
-</div>
-<?php
-	}
 ?>
 
 <!-- End navigation menu -->
@@ -287,8 +271,7 @@ The last floppy image is padded with zeros.
 <!-- Content -->
 <div id="content">
 
-<h1><font color="#3e1220">Boot</font></h1>
-<h2><font color="#df8f06">Floppy image set builder</font></h2>
+<h2>Floppy image set builder</h2>
 
 <?php
 	if (!isset($count)) {
@@ -379,6 +362,17 @@ EOT;
 	}
 	else {
 ?>
+<h4>Download image<?php if ($count >= 2) echo "s"; ?></h4>
+<ul>
+<?php
+		for ($i = 1; $i <= $count; $i++) {
+			echo '	<li><a href="'.$_SERVER["PHP_SELF"].
+			     "?id=".basename($tmp_dir)."&amp;n=$i&amp;s=".
+			     $_POST["size"].'">'.sprintf("fd%03d.img",$i).
+			     show_size($_POST["size"])."</a></li>\n";
+		}
+		echo "</ul>\n".floor($padding/1024)."KB padding.\n";
+?>
 
 <p>
 You can write floppies with SliTaz <i>bootfloppybox</i>, 
@@ -412,6 +406,22 @@ Good luck.
 <?php
 	}
 ?>
+
+<div class="nav_box">
+<h4>How does it work ?</h4>
+<p>
+This tool updates the boot sector of your kernel with
+<a href="http://hg.slitaz.org/wok/raw-file/b84ff32e3457/linux/stuff/linux-header-2.6.34.u">this patch</a>.
+You may add a default cmdline and an initramfs. The cmdline can be edited at boot
+time but the keyboard is not mandatory.
+A <a href="bootloader"> standalone version</a> is available.
+</p>
+<p>
+Each part (boot, setup, cmdline, kernel, initramfs) is aligned to 512 bytes.
+The result is split to fit the floppy size.
+The last floppy image is padded with zeros.
+</p>
+</div>
 
 <!-- End of content with round corner -->
 </div>

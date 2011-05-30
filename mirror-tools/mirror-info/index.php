@@ -23,39 +23,38 @@
 
 <!-- Header -->
 <div id="header">
-    <a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/"><img id="logo"
-		src="/css/pics/website/logo.png" 
-		title="<?php echo $_SERVER["HTTP_HOST"]; ?>" alt="<?php echo $_SERVER["HTTP_HOST"]; ?>" /></a>
-    <p id="titre">#!/project/<?php echo preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); ?></p>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/" title="SliTaz Community Documentation">Doc</a>
+		<a href="http://forum.slitaz.org/" title="Slitaz Forum">Forum</a>
+		<a href="http://bugs.slitaz.org/" title="Bug Tracking System">Bugs</a>
+		<a href="http://hg.slitaz.org/" title="SliTaz repositories">Hg</a>
+	</div>
+	<h1><a href="http://<?php echo $_SERVER["HTTP_HOST"]; ?>/">SliTaz 
+	<?php $host=preg_replace('/(\w+).*/i','$1',$_SERVER["HTTP_HOST"]); echo $host; ?></a></h1>
 </div>
 
-<!-- Content -->
-<div id="content-full">
-
-<!-- Block begin -->
-<div class="block">
-	<!-- Nav block begin -->
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
 	<div id="block_nav">
-		<h4>SliTaz Network</h4>
+		<h4><img src="/css/pics/development.png" alt="development.png" />Developers Corner</h4>
 		<ul>
-			<li><a href="http://www.slitaz.org/">Main Website</a></li>
-			<li><a href="http://doc.slitaz.org/">Documentation</a></li>
-			<li><a href="http://forum.slitaz.org/">Community Forum</a></li>
-			<li><a href="http://scn.slitaz.org/">Community Platform</a></li>
-			<li><a href="http://labs.slitaz.org/">SliTaz Laboratories</a></li>
-			<li><a href="http://pkgs.slitaz.org/">Packages Database</a></li>
-			<li><a href="http://boot.slitaz.org/">SliTaz Web Boot</a></li>
-			<li><a href="http://tank.slitaz.org/">SliTaz main server</a></li>
-			<li><a href="http://bb.slitaz.org/">SliTaz Build Bot</a></li>
-			<li><a href="http://hg.slitaz.org/">SliTaz Repositories</a></li>
-			<li><a href="http://twitter.com/slitaz">SliTaz on Twitter</a></li>
-			<li><a href="http://www.distrowatch.com/slitaz">SliTaz on DistroWatch</a></li>
+			<li><a href="http://www.slitaz.org/en/devel/">Website devel</a></li>
+			<li><a href="http://scn.slitaz.org/">Community</a></li>
+			<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
+			<li><a href="http://hg.slitaz.org/">Mercurial Repos</a></li>
+			<li><a href="http://cook.slitaz.org/">Build Bot</a></li>
+			<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
+			<li><a href="http://mirror.slitaz.org/info/">Mirror Server</a></li>
 		</ul>
-	<!-- Nav block end -->
 	</div>
-	<!-- Top block begin -->
-	<div id="block_top">
-		<h1>About Mirror</h1>
+	<!-- Information/image -->
+	<div id="block_info">
+	<h4>Codename: <?php echo $host; ?></h4>
 		<p>
 			This is the SliTaz GNU/Linux main mirror. The server runs naturally SliTaz 
 			(stable) in an lguest virtual machine provided by 
@@ -73,10 +72,11 @@
 			<code>system()</code> Mirror is also monitored by RRDtool which provides 
 			<a href="graphs.php">graphical stats</a>.
 		</p>
-	<!-- Top block end -->
 	</div>
-<!-- Block end -->
 </div>
+
+<!-- Content -->
+<div id="content">
 
 <h2><a href="graphs.php"><img 
 	style="vertical-align: middle; padding: 0 4px 0 0;"
@@ -136,7 +136,7 @@ system("top -n1 -b");
 	<li><a href="http://pizza.slitaz.org/">pizza.slitaz.org</a> - SliTaz Flavor builder.
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=pizza.mirror.slitaz.org" target="_blank">stats</a>)</li>
 	<li><a href="http://tiny.slitaz.org/">tiny.slitaz.org</a> - Tiny SliTaz builder.
-	(<a href="http://mirror.slitaz.org/awstats.pl?config=tiny.mirror.slitaz.org" target="_blank">stats</a>)</li>
+	(<a href="http://mirror.slitaz.org/awstats.pl?config=tiny.slitaz.org" target="_blank">stats</a>)</li>
 	<li><a href="https://ajaxterm.slitaz.org/">ajaxterm.slitaz.org</a> - Slitaz Web Console.
 	(<a href="http://mirror.slitaz.org/awstats.pl?config=ajaxterm.slitaz.org" target="_blank">stats</a>)</li>
 </ul>
@@ -176,14 +176,25 @@ $output_url_file="";
 $output_url_handler;
 $mirrors_url_file="/tmp/mirrors";
 
-function test_url($link)
+function test_url($link, $proto)
 {
 	global $output_url_file;
 	global $mirrors_url_file;
 	global $output_url_handler;
 	
 	if ($output_url_file != "") {
-		if (shell_exec("busybox wget -s $link/README && echo -n OK") == "OK") {
+		switch($proto) {
+		case "http" :
+		case "ftp" :
+			$cmd = "busybox wget -s $link/README" ;
+			break;
+		case "rsync" :
+			$cmd = "rsync $link > /dev/null 2>&1" ;
+			break;
+		default :
+			return FALSE;
+		}
+		if (shell_exec("$cmd && echo -n OK") == "OK") {
 			fwrite($output_url_handler,$link."\n");
 			return TRUE;
 		} 
@@ -196,6 +207,7 @@ if (! file_exists($mirrors_url_file)) {
 	$output_url_file = tempnam('/tmp','mkmirrors');
 	$output_url_handler = fopen($output_url_file, "w");
 	fwrite($output_url_handler,"http://mirror.slitaz.org/\n");
+	fwrite($output_url_handler,"rsync://mirror.slitaz.org/\n");
 }
 
 foreach (array(
@@ -243,10 +255,10 @@ foreach (array(
 		"rsync" => "rsync://mirror.clarkson.edu/slitaz/")) as $mirror) {
 	$flag = "pics/website/".$mirror["flag"].".png";
 	$head = TRUE;
-	foreach(array("http", "ftp") as $proto) {
+	foreach(array("http", "ftp", "rsync") as $proto) {
 		if (!isset($mirror[$proto])) continue;
 		$link = $mirror[$proto];
-		if (!test_url($link)) continue;
+		if (!test_url($link, $proto)) continue;
 		$serveur = parse_url($link, PHP_URL_HOST);
 		if ($head) echo <<<EOT
 	<li><a href="http://en.utrace.de/?query=$serveur">
@@ -259,12 +271,6 @@ EOT;
 		$head = FALSE;
 	}
 	if ($head) continue;
-	if (isset($mirror["rsync"])) {
-		$link = $mirror["rsync"];
-		echo <<<EOT
-		or <a href="$link">rsync</a>
-EOT;
-	}
 	echo "	</li>\n";
 }
 
@@ -278,16 +284,17 @@ if ($output_url_file != "") {
 </ul>
 
 <a name="builds"></a>
-<h3><img title="Daily builds" src="pics/website/cdrom.png" alt="builds" />
+<h3><img title="Daily builds" src="pics/website/cdrom.png" alt="builds" 
+     width="25" height="25" />
     Daily builds</h3>
 
 <?php
 function display_log($file,$anchor,$url)
 {
 echo '<a name="'.$anchor.'"></a>';
-echo "<a href=\"$url\">";
-system("stat -c '<h4>%y %n</h4>' ".$file." | sed 's/.000000000//;s|/var/log/\(.*\).log|\\1.iso|'");
-echo "</a>";
+echo "<h4><a href=\"$url\">";
+system("stat -c '%y %n' ".$file." | sed 's/.000000000//;s|/var/log/\(.*\).log|\\1.iso|'");
+echo "</a></h4>";
 echo "<pre>";
 system("sed 's/.\[[0-9][^mG]*.//g;:a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\\1 \\2/;ta' < $file");
 echo "</pre>";
@@ -300,7 +307,6 @@ display_log("/var/log/packages-cooking.log","buildcooking","/iso/cooking/package
 <!-- End of content -->
 </div>
 
-</div>
 <div id="content_bottom">
 <div class="bottom_left"></div>
 <div class="bottom_right"></div>

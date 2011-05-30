@@ -29,7 +29,7 @@ if [ $packages/$flavor.flavor -nt $system -o \
 #!/bin/sh
 
 tazlito get-flavor $flavor
-yes '' | tazlito gen-distro
+echo -e "\n" | tazlito gen-distro
 EOT
 	cat > $TMP/fs/BUILD <<EOT
 #!/bin/sh

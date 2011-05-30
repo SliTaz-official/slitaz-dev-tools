@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<title>SliTaz Boot Floppies</title>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<meta name="description" content="slitaz boot floppies" />
+	<meta name="robots" content="index, nofollow" />
+	<meta name="author" content="SliTaz Contributors" />
+	<link rel="shortcut icon" href="../css/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="../css/slitaz.css" />
+	<style type="text/css">
+#copy {
+	text-align: center;
+}
+
+#bottom {
+	text-align: center;
+}
+
+	</style>
+</head>
+<body bgcolor="#ffffff">
+<!-- Header -->
+<div id="header">
+    <a name="top"></a>
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a> |
+		<a href="http://tiny.slitaz.org/" title="SliTaz for (very) old PC">Tiny SliTaz</a> |
+		<a href="index-loram.html" title="Floppy image sets for low ram systems">Loram floppies</a> |
+		<a href="builder/index.php" title="Build floppies with your own kernel and initramfs">Floppy set web builder</a> |
+		<a href="builder/bootloader" title="Build your floppy sets without Internet">Shell builder</a>
+	</div>
+	<h1><a href="http://www.slitaz.org/">Boot floppies</a></h1>
+</div>   
+
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
+	<div id="block_nav">
+		<h4><img src="pics/floppy.png" alt="@" />1.44Mb SliTaz 3.0 floppy images</h4>
+<table width="100%">
+<tr>
+	<td> <a href="3.0/fd001.img">fd001.img</a> </td>
+	<td> <a href="3.0/fd002.img">fd002.img</a> </td>
+	<td> <a href="3.0/fd003.img">fd003.img</a> </td>
+	<td> <a href="3.0/fd004.img">fd004.img</a> </td>
+</tr>
+<tr>
+	<td> <a href="3.0/fd005.img">fd005.img</a> </td>
+	<td> <a href="3.0/fd100.img">fd100.img</a> </td>
+	<td> <a href="3.0/fd101.img">fd101.img</a> </td>
+	<td> <a href="3.0/fd102.img">fd102.img</a> </td>
+</tr>
+<tr>
+	<td> <a href="3.0/fd103.img">fd103.img</a> </td>
+	<td> <a href="3.0/fd104.img">fd104.img</a> </td>
+	<td> <a href="3.0/fd105.img">fd105.img</a> </td>
+	<td> <a href="3.0/fd200.img">fd200.img</a> </td>
+</tr>
+<tr>
+	<td> <a href="3.0/fd201.img">fd201.img</a> </td>
+	<td> <a href="3.0/fd202.img">fd202.img</a> </td>
+	<td> <a href="3.0/fd203.img">fd203.img</a> </td>
+	<td> <a href="3.0/fd204.img">fd204.img</a> </td>
+</tr>
+<tr>
+	<td> <a href="3.0/fd205.img">fd205.img</a> </td>
+	<td> <a href="3.0/fd206.img">fd206.img</a> </td>
+	<td> <a href="3.0/fd207.img">fd207.img</a> </td>
+	<td> <a href="3.0/fd208.img">fd208.img</a> </td>
+</tr>
+<tr>
+	<td> <a href="3.0/fd209.img">fd209.img</a> </td>
+	<td> <a href="3.0/fd210.img">fd210.img</a> </td>
+	<td> </td>
+	<td> <a href="3.0/md5sum">md5sum</a> </td>
+</tr>
+</table>
+	</div>
+	<!-- Information/image -->
+	<div id="block_info">
+		<h4>Available boot floppies</h4>
+		<ul>
+	<li><a href="index-3.0.html">SliTaz 3.0</a></li>
+	<li><a href="index-loram-3.0.html">SliTaz loram 3.0</a></li>
+	<li><a href="index-2.0.html">SliTaz 2.0</a></li>
+	<li><a href="index-1.0.html">SliTaz 1.0</a></li>
+		</ul>
+	</div>
+</div>
+		
+<!-- Content top. -->
+<div id="content_top">
+<div class="top_left"></div>
+<div class="top_right"></div>
+</div>
+
+<!-- Content -->
+<div id="content">
+
+<h2>Floppy image set</h2>
+
+<p>
+This floppy set will boot a Slitaz stable version. You can write floppies
+with SliTaz <i>bootfloppybox</i>, 
+<a href="http://en.wikipedia.org/wiki/RaWrite">Windows rawrite</a> or simply dd:
+</p><pre># dd if=fd001.img of=/dev/fd0
+</pre>
+
+<p>
+If you have a CD-ROM, an USB port and an USB key or a network card, but you
+can't boot these devices directly, then try
+<a href="http://mirror.slitaz.org/boot/floppy-grub4dos">floppy-grub4dos</a> 
+first. This 1.44Mb floppy provides tiny programs to boot these devices without BIOS
+support and some other tools.
+</p>
+<p>
+You can start with one of the 3 following flavors :
+</p><ul>
+  <li>
+  <b>base</b> needs 32Mb of RAM and 5 floppies: <i>fd001.img</i> to <i>fd005.img</i>.<br />
+  base provides the minimum slitaz distribution subset in text mode. 
+  </li>
+  <li>
+  <b>justx</b> needs 96M of RAM and 11 floppies: <i>fd001.img</i> to <i>fd105.img</i>.<br />
+  justx provides the minimum slitaz distribution subset with X11 support. 
+  </li>
+  <li>
+  <b>core</b> needs 160M of RAM and 22 floppies: <i>fd001.img</i> to <i>fd210.img</i>.<br />
+  core provides the default slitaz distribution. 
+  </li>
+</ul>
+
+Start your computer with <i>fd001.img</i>. It will show the kernel version string and
+the kernel cmdline line. You can edit the cmdline. Most users can just press Enter.
+
+<p>
+The floppy is then loaded into memory (one dot each 64k) and you will be prompted to
+insert the next floppy, <i>fd002.img</i>. And so on up to <i>fd005.img</i>.
+</p>
+<p>
+The base flavor will then start and you will be prompted to insert extra floppies
+for justx and core flavors. You can bypass this by using Q and Enter.
+</p>
+<p>
+Each floppy set detects disk swaps and can be used without a keyboard.
+</p>
+<p>
+Good luck.
+</p>
+
+<a name="fdiso"></a>
+<h2>ISO image floppy set</h2>
+
+<form method="post" action="http://mirror.slitaz.org/floppies/download.php">
+<p>
+You may need these images to
+<a href="http://doc.slitaz.org/en:guides:uncommoninst#floppy-install">
+install SliTaz</a>
+<select name="iso">
+	<option value="iso/cooking/slitaz-cooking.iso">core cooking</option>
+	<option value="iso/cooking/flavors/slitaz-cooking-base.iso">base cooking</option>
+	<option value="iso/cooking/flavors/slitaz-cooking-loram.iso">loram cooking</option>
+	<option value="iso/3.0/slitaz-3.0.iso" selected="selected">core 3.0</option>
+	<option value="iso/3.0/flavors/slitaz-3.0-base.iso">base 3.0</option>
+	<option value="iso/3.0/flavors/slitaz-3.0-loram.iso">loram 3.0</option>
+	<option value="iso/2.0/slitaz-2.0.iso">core 2.0</option>
+	<option value="iso/2.0/flavors/slitaz-2.0-base.iso">base 2.0</option>
+	<option value="iso/2.0/flavors/slitaz-loram.iso">loram 2.0</option>
+	<option value="iso/1.0/slitaz-1.0.iso">core 1.0</option>
+</select>
+<input name="build" value="Build floppy set" type="submit" />
+</p>
+</form>
+<p>
+You can restore the ISO image on your hard disk using :
+</p>
+<pre>
+# dd if=/dev/fd0 of=fdiso01.img
+# dd if=/dev/fd0 of=fdiso02.img
+# ...
+# cat fdiso*.img | cpio -i
+</pre>
+
+<h2>Images generation</h2>
+<p>
+All these floppy images are built with <b>bootfloppybox</b> from
+a <i>core</i> or a <i>3in1</i> iso. The <i>loram</i> is preprocessed by
+<b>tazlitobox</b> (Low RAM tab). These tools are available since 3.0.
+</p>
+
+<!-- End of content with round corner -->
+</div>
+<div id="content_bottom">
+<div class="bottom_left"></div>
+<div class="bottom_right"></div>
+</div>
+
+<!-- Start of footer and copy notice -->
+<div id="copy">
+<p>
+Copyright &copy; <span class="year"></span> <a href="http://www.slitaz.org/">SliTaz</a> -
+<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
+</p>
+<!-- End of copy -->
+</div>
+
+<!-- Bottom and logo's -->
+<div id="bottom">
+<p>
+<a href="http://validator.w3.org/check?uri=referer"><img src="../css/pics/website/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
+</p>
+</div>
+
+</body>
+</html>

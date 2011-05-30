@@ -198,6 +198,8 @@ EOT
 
 if [ "$FORMAT" == "0" ]; then # unsplitted
 	floppyset > $PREFIX
+	PAD=$(( 512 - ($(stat -c %s $PREFIX) % 512) ))
+	[ $PAD -ne 512 ] && dd if=/dev/zero bs=1 count=$PAD >> $PREFIX 2> /dev/null
 	exit
 fi
 floppyset | split -b ${FORMAT}k /dev/stdin floppy$$
