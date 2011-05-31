@@ -3,6 +3,9 @@
 # Christophe Lincoln <pankso@slitaz.org>
 #
 
+[ -f "/etc/slitaz/tazpkg-web.conf" ] && . /etc/slitaz/tazpkg-web.conf
+[ -f "tazpkg-web.conf" ] && . ./tazpkg-web.conf
+
 read QUERY_STRING
 for i in $(echo $QUERY_STRING | sed 's/&/ /g'); do
 	eval $i
@@ -178,8 +181,8 @@ cn)	package="软件包："
 
 esac
 
-WOK=/home/slitaz/$SLITAZ_VERSION/clean-wok
-PACKAGES_REPOSITORY=/home/slitaz/$SLITAZ_VERSION/packages
+WOK=$SLITAZ/$SLITAZ_VERSION/wok-hg
+PACKAGES_REPOSITORY=$SLITAZ/$SLITAZ_VERSION/packages
 
 echo Content-type: text/html
 echo
@@ -330,7 +333,7 @@ _EOT_
 installed_size()
 {
 [ $VERBOSE -gt 0 ] &&
-grep -A 3 "^$1\$" /home/slitaz/$SLITAZ_VERSION/packages/packages.txt | \
+grep -A 3 "^$1\$" $SLITAZ/$SLITAZ_VERSION/packages/packages.txt | \
        grep installed | sed 's/.*(\(.*\) installed.*/(\1) /'
 }
 

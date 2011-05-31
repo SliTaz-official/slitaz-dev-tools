@@ -261,8 +261,8 @@ _EOT_
 		done && echo "" ;;
 	stable)
 		PACKAGES_REPOSITORY=$STABLE/packages
-		if [ -d $STABLE/clean-wok ]; then
-			WOK=$STABLE/clean-wok
+		if [ -d $STABLE/wok-hg ]; then
+			WOK=$STABLE/wok-hg
 		else
 			WOK=$STABLE/wok
 		fi
@@ -270,8 +270,8 @@ _EOT_
 		gen_all_pages ;;
 	cooking)
 		PACKAGES_REPOSITORY=$COOKING/packages
-		if [ -d $COOKING/clean-wok ]; then
-			WOK=$COOKING/clean-wok
+		if [ -d $COOKING/wok-hg ]; then
+			WOK=$COOKING/wok-hg
 		else
 			WOK=$COOKING/wok
 		fi
