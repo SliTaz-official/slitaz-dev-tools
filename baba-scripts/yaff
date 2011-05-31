@@ -45,7 +45,7 @@ done
 MAIN_DIALOG='
 <window title="Yet Another Firefox" window_position="1">
 	<vbox>
-		<notebook labels="Choose a profile|Configuration|Information">
+		<notebook labels="Choose a profile|Information">
 			<vbox>
 				<list selection-mode="2">
 					<variable>PROFIL</variable>'
@@ -89,55 +89,6 @@ MAIN_DIALOG=$MAIN_DIALOG'
 				</hbox>
 			</vbox>
 			
-			<vbox>
-				<tree>
-					<label>Version | Profile</label>
-					<variable>DEFAULT_PROFILE</variable>'
-for firefox in $FIREFOX
-do
-	version=`echo $firefox | cut -d'#' -f1`
-	exec=`echo $firefox | cut -d'#' -f2`
-	profile=`echo $firefox | cut -d'#' -f3`
-	MAIN_DIALOG=$MAIN_DIALOG"<item>$version|$profile</item>"
-done
-MAIN_DIALOG=$MAIN_DIALOG'
-				</tree>
-				<hbox>
-					<text>
-						<label>Version number</label>
-					</text>
-					<entry>
-						<variable>ENTRY_VERSION_NUMBER</variable>
-					</entry>
-				</hbox>
-				<hbox>
-					<text>
-						<label>Path to this version executable</label>
-					</text>
-					<entry>
-						<variable>ENTRY_VERSION_BIN</variable>
-					</entry>
-				</hbox>
-				<hbox>
-					<text>
-						<label>Default profile</label>
-					</text>
-					<entry>
-						<variable>ENTRY_VERSION_DEFAULT_PROFILE</variable>
-					</entry>
-				</hbox>
-				<hbox>
-					<button>
-						<input file icon="gtk-add"></input>
-						<label>New version</label>
-						<action>zenity --info --text="coucou"</action>
-					</button>
-					<button>
-						<input file icon="gtk-quit"></input>
-						<label>Quit</label>
-						<action type="CloseWindow">MAIN_DIALOG</action>
-					</button>
-				</hbox>
 			</vbox>
 			
 			<vbox>
