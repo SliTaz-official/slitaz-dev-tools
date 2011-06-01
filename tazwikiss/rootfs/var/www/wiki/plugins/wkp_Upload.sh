@@ -47,7 +47,7 @@ EOT
 		done
 		mv $(FILE file tmpname) pages/data/$n$name
 		rm -rf $(dirname $(FILE file tmpname) )
-		URL=$(dirname $HTTP_REFERER)/pages/data/$n$name
+		URL=pages/data/$n$name
 		PAGE_TITLE_link=false
 		editable=false
 		PAGE_TITLE="$UPLOAD"
