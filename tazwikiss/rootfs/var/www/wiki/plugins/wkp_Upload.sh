@@ -1,0 +1,76 @@
+plugin="<a href=\"?action=upload\">Upload</a>"
+description_fr="Télécharge des fichiers complémentaires (ex: images)"
+description="Upload page extra files (ex: images)"
+      
+case "$LANG" in
+fr) UPLOAD="Chargement" ;;
+*)  UPLOAD="Upload" ;;
+esac
+
+template()
+{
+	case "$(GET action)" in
+	edit)	UPLOAD="<a href=\"$urlbase?action=upload\">$UPLOAD</a>"
+		html="$(sed "s|HISTORY|$UPLOAD / HISTORY|" <<EOT
+$html
+EOT
+)" ;;
+	upload*) html="$(sed 's| / <a href.*recent.*</a>||;s|.*name="query".*||' <<EOT
+$html
+EOT
+)" ;;
+	*)	return 1 ;;
+	esac
+	return 0
+}
+
+action()
+{
+	case "$1" in
+	upload) CONTENT="$(cat <<EOT
+<form method="post" enctype="multipart/form-data" action="?action=uploadfile">
+<input type="file" name="file" value="file"/>
+<input type="submit"/>
+</form>
+EOT
+)"
+		PAGE_TITLE_link=false
+		editable=false
+		lang="${HTTP_ACCEPT_LANGUAGE%%,*}"
+		PAGE_TITLE="$UPLOAD" ;;
+	uploadfile)
+		mkdir -p pages/data 2> /dev/null
+		name=$(FILE file name)
+		n=''
+		while [ -e pages/data/$n$name ]; do
+			n=$(($n+1))
+		done
+		mv $(FILE file tmpname) pages/data/$n$name
+		rm -rf $(dirname $(FILE file tmpname) )
+		URL=$(dirname $HTTP_REFERER)/pages/data/$n$name
+		PAGE_TITLE_link=false
+		editable=false
+		PAGE_TITLE="$UPLOAD"
+		CONTENT="$(cat <<EOT
+<h1><a href="javascript:history.go(-2)">$EDIT_BUTTON</a></h1>
+<p>
+The file $(FILE file name) ($(FILE file size) bytes, $(FILE file type)) is
+stored at <a href="$URL">$URL</a>.
+</p>
+EOT
+)"
+		case "$(FILE file type)" in
+		image*) CONTENT="$(cat <<EOT
+$CONTENT
+<p>
+You can insert this image with <b>[$URL]</b> see
+<a href="?page=$HELP_BUTTON">$HELP_BUTTON</a> for details
+</p>
+<img src="$URL" alt="$URL" />
+EOT
+)"
+		esac ;;
+	*)	return 1 ;;
+	esac
+	return 0
+}
