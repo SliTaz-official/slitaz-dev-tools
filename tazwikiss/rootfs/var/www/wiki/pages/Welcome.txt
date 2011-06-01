@@ -7,7 +7,7 @@ Feel free to browse the default installation, until you feel comfortable.
 
 !!Help
 
-To test edition and formatting of ''WiKiss'', just click on "'''Edit'''" on top of this screen to access (and modify, original password is '''test''') this page. You can also create and test via the [SandBox] page.
+To test edition and formatting of ''WiKiss'', just click on "'''Edit'''" on top of this screen to access (and modify) this page. You can also create and test via the [SandBox] page.
 
 Go see the [Help] and [HelpTables] for an overview of all the possibilities. You can always return to this page by clicking on "'''Home'''"
 
