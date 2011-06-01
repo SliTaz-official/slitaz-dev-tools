@@ -31,6 +31,16 @@ action()
 <form method="post" enctype="multipart/form-data" action="?action=uploadfile">
 <input type="file" name="file" value="file"/>
 <input type="submit"/>
+<table>
+EOT
+		for i in pages/data/* ; do
+			[ -e $i ] || continue
+			echo -n "<tr><td><input type=checkbox "
+			grep -qs "$i" pages/*.txt &&  echo "checked=checked "
+			echo "disabled=disabled /><a href="$i">$(basename $i)</a></td></tr>"
+		done
+		cat <<EOT
+</table>
 </form>
 EOT
 )"
