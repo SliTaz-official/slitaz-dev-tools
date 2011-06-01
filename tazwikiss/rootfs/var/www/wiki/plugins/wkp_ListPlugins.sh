@@ -6,23 +6,23 @@ action()
 {
 	case "$1" in
 	list|config);;
-	backup)	if [ -n "$(POST save)" ]; then
+	backup)	if [ -z "$(FILE file tmpname)" ]; then
 			file=$(mktemp -p /tmp)
 			find */ | cpio -o -H newc | gzip -9 > $file
-			cat <<EOT
+			cat - $file <<EOT
 Content-Type: application/octet-stream
 Content-Length: $(stat -c %s $file)
 Content-Disposition: attachment; filename=wiki-$(date '+%Y%m%d%H%M').cpio.gz
 
 EOT
-			cat $file
+			rm -f $file
+			exit 0
 		else
 			file=$(FILE file tmpname)
 			zcat $file | cpio -idmu $(echo */ | sed 's|/||g')
+			rm -rf $(dirname $file)
 			return 1
 		fi
-		rm -f $file
-		exit 0
 		;;
 	*) return 1
 	esac
