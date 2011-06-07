@@ -1,4 +1,4 @@
-SliTaz developers tools                                  http://www.slitaz.org/ 
+SliTaz developers tools
 ===============================================================================
 
 
@@ -7,6 +7,9 @@ Shell or Python scripts and tinyutils to help maintain the distribution and
 automate the packages compilation. The package provides 'tazdev' and its 
 default config file which goes in: /etc/slitaz/tazdev.conf
 
+
+scripts/
+--------
 The scripts folder provides small scripts for special tasks and some code
 used by some of the contributors. Feel free to put your own scripts in here, 
 but add some comments to let people quickly know what they do. 
@@ -15,12 +18,12 @@ but add some comments to let people quickly know what they do.
 On the web
 ----------
 
-Website Devel corner:   http://www.slitaz.org/en/devel/
-Mercurial repositories: http://hg.slitaz.org/
-SliTaz Laboratories:    http://labs.slitaz.org/
-Developers wiki:        http://labs.slitaz.org/wiki/distro
-Build host:             http://tank.slitaz.org/
-Build bot:              http://bb.slitaz.org/
+Website Devel corner   : http://www.slitaz.org/en/devel/
+Mercurial repositories : http://hg.slitaz.org/
+Bugu tracker           : http://bugs.slitaz.org/
+Cookbook doc           : http://doc.slitaz.org/en:cookbook:start
+Build host             : http://tank.slitaz.org/
+Build bot              : http://cook.slitaz.org/
 
 
 ===============================================================================
