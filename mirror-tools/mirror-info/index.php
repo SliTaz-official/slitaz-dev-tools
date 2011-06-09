@@ -210,6 +210,7 @@ if (! file_exists($mirrors_url_file)) {
 	fwrite($output_url_handler,"rsync://mirror.slitaz.org/\n");
 }
 
+# Flags icons from http://www.famfamfam.com/lab/icons/flags/famfamfam_flag_icons.zip
 foreach (array(
 	array(	"flag"  => "ch",
 		"http"  => "http://mirror.switch.ch/ftp/mirror/slitaz/",
@@ -226,6 +227,8 @@ foreach (array(
 		"http"  => "http://www.linuxembarque.com/slitaz/mirror/"),
 	array(	"flag"  => "cn",
 		"http"  => "http://mirror.lupaworld.com/slitaz/"),
+	array(	"flag"  => "cn",
+		"http"  => "http://ks.lupaworld.com/slitaz/"),
 	array(	"flag"  => "br",
 		"http"  => "http://slitaz.c3sl.ufpr.br/",
 		"ftp"   => "ftp://slitaz.c3sl.ufpr.br/slitaz/",
@@ -250,6 +253,13 @@ foreach (array(
 	array(	"flag"  => "ch",
 		"http"  => "http://ftp.ch.xemacs.org/ftp/pool/2/mirror/slitaz/",
 		"ftp"   => "ftp://ftp.ch.xemacs.org//pool/2/mirror/slitaz/"),
+	array(	"flag"  => "de",
+		"http"  => "http://ftp.uni-stuttgart.de/slitaz/",
+		"ftp"   => "ftp://ftp.uni-stuttgart.de/slitaz/"),
+	array(	"flag"  => "au",
+		"http"  => "http://mirror.iprimus.com/slitaz/"),
+	array(	"flag"  => "au",
+		"http"  => "http://mirror01.ipgn.com.au/slitaz/"),
 	array(	"flag"  => "us",
 		"http"  => "http://mirror.clarkson.edu/slitaz/",
 		"rsync" => "rsync://mirror.clarkson.edu/slitaz/")) as $mirror) {

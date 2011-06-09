@@ -12,7 +12,7 @@ CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%,*}.sh
 [ -r "$CONFIG" ] || CONFIG=config.sh
 . ./$CONFIG
 
-WIKI_VERSION="TazWiKiss 0.3"
+WIKI_VERSION="Based on WiKiss 0.3"
 
 # Initialisations
 toc=''				# Table Of Content

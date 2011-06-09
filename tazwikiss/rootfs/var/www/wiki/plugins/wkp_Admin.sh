@@ -35,7 +35,7 @@ EOT
 		cat $(POST file)
 		exit 0
 	fi
-	[ -n "$(POST restore)" ] && mv -f $(FILE file tmpname) $(POST file)
+	[ -n "$(POST restore)" ] && mv -f $(FILE data tmpname) $(POST file)
 	admin_enable locales config- ./
 	admin_enable plugins wkp_ plugins/
 	CONTENT="
@@ -88,7 +88,7 @@ $j</b></td><td><i>$(. ./$i ; echo $WIKI_TITLE)</i></td></tr>
 	done
 	CONTENT="$CONTENT
 </form>
-<form method=\"post\" action=\"?action=admin\">
+<form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=admin\">
 <input type=\"hidden\" name=\"curpassword\" value=\"$curpassword\" />
 <tr><td><h2>Configuration</h2></td><td>
 <select name="file">
@@ -96,6 +96,7 @@ $(for i in template.html style.css config*.sh; do
   [ -x $i ] && echo "<option>$i</option>"; done)
 </select>
 <input type=\"submit\" value=\"$DONE_BUTTON\" name=\"save\" />
+<input type=\"file\" name=\"data\" />
 <input type=\"submit\" value=\"$RESTORE\" name=\"restore\" /></td></tr>
 </form>
 </table>
