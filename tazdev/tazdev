@@ -295,11 +295,11 @@ case "$1" in
 		separator && echo "" ;;
 	push|-p)
 		check_mirror $@
-		rsync -r -t -l -v -z --delete \
+		rsync -r -t -O -l -v -z --delete \
 			$local -e ssh $user@$MIRROR:$remote ;;
 	dry-push|-dp)
 		check_mirror $@
-		rsync -r -t -l -v -z --delete --dry-run \
+		rsync -r -t -O -l -v -z --delete --dry-run \
 			$local -e ssh $user@$MIRROR:$remote ;;
 	pull)
 		check_mirror $@
