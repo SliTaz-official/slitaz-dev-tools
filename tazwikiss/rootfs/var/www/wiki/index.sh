@@ -111,8 +111,9 @@ content="$(POST content)"
 PAGE_txt="$PAGES_DIR$PAGE_TITLE.txt"
 if [ -n "$content" ]; then	# content => page
 	if authentified; then
-		sed 's/</\&lt;/g' > $PAGE_txt <<EOT
-$POST_content
+		CR="$(echo -en '\r')"
+		sed 's/</\&lt;/g;s/'$CR' /'$CR'\n/g' > $PAGE_txt <<EOT
+$content
 EOT
 		if [ -n "$BACKUP_DIR" ]; then
 			complete_dir_s="$BACKUP_DIR$PAGE_TITLE/"
