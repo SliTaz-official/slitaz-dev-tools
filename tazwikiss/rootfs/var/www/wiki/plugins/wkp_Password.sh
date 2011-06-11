@@ -1,4 +1,3 @@
-# WARNING: not secure! You can add &action=edit to the URI and remove HASHPASSWORD...
 plugin="Password"
 description_fr="Ajoute un mot de passe &agrave; une page avec {PASSWORD=code}"
 description="Add a password to a page with {PASSWORD=something}"
@@ -6,6 +5,21 @@ description="Add a password to a page with {PASSWORD=something}"
 pagepass_hash()
 {
 	echo $1 | md5sum | cut -c1-8
+}
+
+init()
+{
+	if grep -qs '{HASHPASSWORD=' $1; then
+		case "$(GET action)" in
+			pagepass|'') return ;;
+		esac
+		hash="$(sed '/{HASHPASSWORD=.*}/!d;s/.*{HASHPASSWORD=\([^}]*\)}.*/\1/;q' <$1)"
+		cookie="pagepass$(pagepass_hash $PWD$PAGE_txt)"
+		[ "$(COOKIE $cookie)" == "$hash" ] && return
+		header
+		echo "<script> history.go(-1); </script>"
+		exit 0
+	fi
 }
 
 action()
