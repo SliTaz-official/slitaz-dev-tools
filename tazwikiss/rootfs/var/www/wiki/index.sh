@@ -109,6 +109,7 @@ content="$(POST content)"
 
 # Ecrire les modifications, s'il y a lieu
 PAGE_txt="$PAGES_DIR$PAGE_TITLE.txt"
+plugin_call_method "init" $PAGE_txt
 if [ -n "$content" ]; then	# content => page
 	if authentified; then
 		CR="$(echo -en '\r')"
