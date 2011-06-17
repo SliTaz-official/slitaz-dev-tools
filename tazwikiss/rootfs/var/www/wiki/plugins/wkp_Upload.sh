@@ -51,11 +51,30 @@ EOT
 	uploadfile)
 		mkdir -p pages/data 2> /dev/null
 		name=$(FILE file name)
+		if [ -z "$name" ]; then
+			CONTENT="<script> history.go(-2); </script>"
+			return 1
+		fi
 		n=''
 		while [ -e pages/data/$n$name ]; do
 			n=$(($n+1))
 		done
-		mv $(FILE file tmpname) pages/data/$n$name
+		filesize=$(stat -c "%s" $(FILE file tmpname))
+		ls pages/data | while read file; do
+			stat -c "%s %n" pages/data/$file
+		done | while read size file; do
+			[ $filesize == $size ] && 
+			cmp $(FILE file tmpname) $file > /dev/null &&
+			ln -s $(basename $file) pages/data/$n$name && break
+		done
+		if [ -L pages/data/$n$name ]; then
+			n=pages/data/$n$name
+			name="$(readlink $n)"
+			rm -f $n
+			n=""
+		else
+			mv $(FILE file tmpname) pages/data/$n$name
+		fi
 		rm -rf $(dirname $(FILE file tmpname) )
 		URL=pages/data/$n$name
 		PAGE_TITLE_link=false
