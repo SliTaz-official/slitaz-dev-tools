@@ -5,9 +5,9 @@ description="Wiki administration"
 admin_enable()
 {
 	[ -n "$(POST $1)" ] || return
-	chmod 0 $4$2*
+	chmod 444 $4/$2*
 	for i in $(POST); do
-		case "$i" in $3*) chmod 755 $4${i/$3/$2}* ;; esac
+		case "$i" in $3*) chmod 755 $4/${i/$3/$2}.* ;; esac
 	done
 }
 
@@ -43,72 +43,85 @@ action()
 	editable=false
 	lang="${HTTP_ACCEPT_LANGUAGE%%,*}"
 	PAGE_TITLE="Administration"
-	curpassword="$(POST curpassword)"
+	curpass="$(POST curpass)"
 	secret="admin.secret"
-	if [ -n "$(POST setpassword)" ]; then
-		if [ -z "$curpassword" ]; then	# unauthorized
+	if [ -n "$(POST setpass)" ]; then
+		if [ -z "$curpass" ]; then	# unauthorized
 			if [ ! -s $secret -o "$(cat $secret)" == \
 				  "$(echo $(POST password) | md5sum)" ]; then
-				curpassword="$(POST password)"
+				curpass="$(POST password)"
 			fi
 		fi
-		[ -n "$curpassword" ] && echo $curpassword | md5sum > $secret
+		[ -n "$curpass" ] && echo $curpass | md5sum > $secret
 	fi
 	if [ -n "$(POST save)" ]; then
 		admin_download $(POST file)
 		exit 0
 	fi
 	[ -n "$(POST restore)" ] && mv -f $(FILE data tmpname) $(POST file)
-	admin_enable locales config- config_ ./
-	admin_enable plugins wkp_ wkp_ plugins/
+	admin_enable Locales config- config_ .
+	admin_enable Plugins wkp_ wkp_ plugins
+	admin_enable Pages '' page pages
 	disabled="disabled=disabled"
-	[ -n "$curpassword" ] && disabled="" && 
-	curpassword="<input type=\"hidden\" name=\"curpassword\" value=\"$curpassword\" />
+	[ -n "$curpass" ] && disabled="" && 
+	curpass="<input type=\"hidden\" name=\"curpass\" value=\"$curpass\" />
 "
-	hr="$curpassword<tr><td colspan=2><hr /></td><tr />"
+	hr="$curpass<tr><td colspan=2><hr /></td><tr />"
 	CONTENT="
 <table width=\"100%\">
 <form method=\"post\" action=\"?action=admin\">
 <tr><td><h2>$MDP</h2></td>
-<td><input type=\"text\" name=\"password\" />$curpassword
-<input type=\"submit\" value=\"$DONE_BUTTON\" name=\"setpassword\" /></td></tr>
+<td><input type=\"text\" name=\"password\" />$curpass
+<input type=\"submit\" value=\"$DONE_BUTTON\" name=\"setpass\" /></td></tr>
 </form>
-<form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=admin\">
-$hr
-<tr><td><h2>Plugins</h2></td>
-<td><input type=\"submit\" $disabled value=\"$DONE_BUTTON\" name=\"plugins\" /></td></tr>
 "
-	for i in $plugins_dir/*.sh ; do
-		plugin=
-		eval $(grep ^plugin= $i)
-		[ -n "$plugin" ] || continue
-		eval $(grep ^description= $i)
-		alt="$(grep ^description_$lang= $i)"
-		[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
+	mform="form method=\"post\" enctype=\"multipart/form-data\" action=\"?action"
+	while read section files test; do
 		CONTENT="$CONTENT
-<tr><td><b>
-<input type=checkbox $disabled $([ -x $i ] && echo 'checked=checked ') name=\"$(basename $i .sh)\" />
-$plugin</b></td><td><i>$description</i></td></tr>"
-	done
-	CONTENT="$CONTENT
-</form>
-<form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=admin\">
+<$mform=admin\">
 $hr
-<tr><td><h2>Locales</h2></td>
-<td><input type=\"submit\" $disabled value=\"$DONE_BUTTON\" name=\"locales\" /></td></tr>
+<tr><td><h2>$section</h2></td>
+<td><input type=\"submit\" $disabled value=\"$DONE_BUTTON\" name=\"$section\" /></td></tr>
 "
-	for i in config-*.sh ; do
-		j=${i#config-}
-		j=${j%.sh}
-		[ -n "$j" ] && CONTENT="$CONTENT
+		for i in $files ; do
+			case "$section" in
+			Plugins)
+				plugin=
+				eval $(grep ^plugin= $i)
+				[ -n "$plugin" ] || continue
+				eval $(grep ^description= $i)
+				alt="$(grep ^description_$lang= $i)"
+				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
+				name="$(basename $i .sh)"
+				;;
+			Locales)
+				j=${i#config-}
+				j=${j%.sh}
+				[ -n "$j" ] || continue
+				name="config_$j"
+				plugin="$j"
+				description="$(. ./$i ; echo $WIKI_TITLE)"
+				;;
+			Pages)
+				j="$(basename $i .txt)"
+				plugin="<a href=\"?page=$j\">$j</a>"
+				name="page$j"
+				description="$([ -w $i ] || echo -n $PROTECTED_BUTTON)"
+				;;
+			esac
+			CONTENT="$CONTENT
 <tr><td><b>
-<input type=checkbox $disabled $([ -x $i ] && echo 'checked=checked ') name=\"config_$j\" />
-$j</b></td><td><i>$(. ./$i ; echo $WIKI_TITLE)</i></td></tr>
-"
-	done
+<input type=checkbox $disabled $([ $test $i ] && echo 'checked=checked ') name=\"$name\" />
+$plugin</b></td><td><i>$description</i></td></tr>"
+		done
+		CONTENT="$CONTENT\n</form>\n"
+	done <<EOT
+Plugins	$plugins_dir/*.sh	-x
+Locales	config-*.sh		-x
+Pages	pages/*.txt		-w
+EOT
 	CONTENT="$CONTENT
-</form>
-<form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=admin\">
+<$mform=admin\">
 $hr
 <tr><td><h2>Configuration</h2></td>
 <td><select name="file" $disabled>
@@ -119,7 +132,7 @@ $(for i in template.html style.css config*.sh; do
 <input type=\"file\" $disabled name=\"data\" />
 <input type=\"submit\" $disabled value=\"$RESTORE\" name=\"restore\" /></td></tr>
 </form>
-<form method=\"post\" enctype=\"multipart/form-data\" action=\"?action=backup\">
+<$mform=backup\">
 $hr
 <tr><td><h2>Data</h2></td>
 <td><input type=\"submit\" $disabled name=\"save\" value=\"$DONE_BUTTON\" />
