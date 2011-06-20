@@ -290,12 +290,12 @@ function my_is_file($path)	// 2G+ file support
 
 function my_filesize($path)	// 2G+ file support
 {
-	return rtrim(shell_exec("stat -c %s '".$path."'"));
+	return rtrim(shell_exec("stat -Lc %s '".$path."'"));
 }
 
 function my_filemtime($path)	// 2G+ file support
 {
-	return rtrim(shell_exec("stat -c %Y '".$path."'"));
+	return rtrim(shell_exec("stat -Lc %Y '".$path."'"));
 }
 
 // Get all of the folders and files. 
