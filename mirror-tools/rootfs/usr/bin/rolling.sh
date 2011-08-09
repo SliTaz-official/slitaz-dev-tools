@@ -1,35 +1,41 @@
 #!/bin/sh
 
-# Current root of web server
-rootwww=/var/www/slitaz/mirror
-packages=$rootwww/packages/cooking
-
 # Location of slitaz rolling release
-rolling=$rootwww/iso/rolling
+rolling=/home/bellard/rolling
 
 flavor=core
+packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 
 # We use the last build as build environment
 system=$rolling/slitaz-*.iso
-[ -s $system ] || system=$rootwww/iso/cooking/slitaz-cooking.iso
 
 # Build the rolling release if something is new on mirror
 if [ $packages/$flavor.flavor -nt $system -o \
      $packages/packages.list -nt $system ]; then
 	[ -d $rolling ] || mkdir -p $rolling
-	TMP=/tmp/rolling$$
-	mkdir -p $TMP/iso $TMP/fs/home/slitaz/cooking/packages
-	ln $packages/* $TMP/fs/home/slitaz/cooking/packages
+	TMP=$rolling/tmp$$
+	mkdir -p $TMP/iso $TMP/fs/var/lib/tazpkg $TMP/fs/home/slitaz/cooking \
+		 $TMP/fs/var/cache/tazpkg/cooking/packages
+	mount --bind $packages $TMP/fs/var/cache/tazpkg/cooking/packages
+	ln -s /var/cache/tazpkg/cooking/packages $TMP/fs/home/slitaz/cooking
+	# 3.0 compatibility...
+	ln -s cooking/packages $TMP/fs/home/slitaz/packages
+	cp -a $packages/packages.* $TMP/fs/var/lib/tazpkg
+	cp $packages/$flavor.flavor $TMP/fs
 	mount -o loop,ro $system $TMP/iso
 	for i in $TMP/iso/boot/rootfs*.gz ; do
 		unlzma -c $i | ( cd $TMP/fs ; cpio -id )
 	done
+	[ -d $rolling/fixes ] && cp -a $rolling/fixes/. $TMP/fs/.
+	echo "cooking" > $TMP/fs/etc/slitaz-release
 	umount -d $TMP/iso
 	cat > $TMP/fs/root/build.sh <<EOT
 #!/bin/sh
 
+date
 tazlito get-flavor $flavor
-echo -e "\n" | tazlito gen-distro
+yes '' | tazlito gen-distro
+date
 EOT
 	cat > $TMP/fs/BUILD <<EOT
 #!/bin/sh
@@ -50,7 +56,14 @@ for i in \$MOUNTS; do
 done
 EOT
 	sh $TMP/fs/BUILD
+	# 3.0 compatibility...
+	[ -d $TMP/fs/home/slitaz/cooking/distro ] || 
+	ln -s ../distro $TMP/fs/home/slitaz/cooking/distro
+	umount $TMP/fs/var/cache/tazpkg/cooking/packages
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
 	rm -rf $TMP
+	rsync --bwlimit=40 -vP -e 'ssh -i /home/bellard/.ssh/id_rsa' \
+		$rolling/slitaz-$flavor.* \
+		bellard@mirror.slitaz.org:/var/www/slitaz/mirror/iso/rolling
 fi
