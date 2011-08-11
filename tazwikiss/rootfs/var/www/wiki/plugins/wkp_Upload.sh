@@ -103,3 +103,11 @@ EOT
 	esac
 	return 0
 }
+
+formatEnd()
+{
+	CONTENT="$(sed 's|href="[^"]*page=pages/data/|href="pages/data/|g' <<EOT
+$CONTENT
+EOT
+)"
+}
