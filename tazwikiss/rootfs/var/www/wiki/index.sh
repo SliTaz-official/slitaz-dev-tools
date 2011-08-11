@@ -308,12 +308,14 @@ EOT
 		 	-e 's/([eE])/\&euro;/g' -e 's/([pP])/\&pound;/g' \
 		 	-e 's/([yY])/\&yen;/g'  -e 's/([tT][mM])/\&trade;/g' \
 		 	-e 's/([cC])/\&copy;/g' -e 's/([rR])/\&reg;/g' \
+		 	-e 's/([dD])/\&deg;/g'  -e 's/(1\/2)/\&frac12;/g' \
+		 	-e 's/(1\/4)/\&frac14;/g'  -e 's/(3\/4)/\&frac34;/g' \
 		 	-e 's/(&lt;=)/\&le;/g'  -e 's/(>=)/\&ge;/g' \
 		 	-e 's/(!=)/\&ne;/g'     -e 's/(+-)/\&plusmn;/g' <<EOT
 $CONTENT
 EOT
 )"
-		rg_url="[0-9a-zA-Z\.\#/~\-\_%=\?\&,\+\:@;!\(\)\*\$']*" # TODO: verif & / &amp;
+		rg_url="[0-9a-zA-Z\.\#/~\_%=\?\&,\+\:@;!\(\)\*\$'\-]*" # TODO: verif & / &amp;
 		rg_link_local="$rg_url"
 		rg_link_http="https\?://$rg_url"
 		rg_img_local="$rg_url\.jpe\?g\|$rg_url\.gif\|$rg_url\.png"
@@ -321,6 +323,8 @@ EOT
 
 		# image, image link, link, wikipedia, email ...
 		CONTENT="$(sed \
+			-e "s#\[\($rg_img_http\)\]#<img src=\"\1\" alt=\"\1\" style=\"float:\"/>#g" \
+			-e "s#\[\($rg_img_local\)\]#<img src=\"\1\" alt=\"\1\" style=\"float:\"/>#g" \
 			-e "s#\[\($rg_img_http\)|*\([a-z]*\)*\]#<img src=\"\1\" alt=\"\1\" style=\"float:\2;\"/>#g" \
 			-e "s#\[\($rg_img_local\)|*\([a-z]*\)*\]#<img src=\"\1\" alt=\"\1\" style=\"float:\2;\"/>#g" \
 			-e "s#\[\($rg_img_http\)|\($rg_link_http\)|*\([a-z]*\)*\]#<a href=\"\2\" class=\"url\"><img src=\"\1\" alt=\"\1\" title=\"\1\"style=\"float:\3;\"/></a>#g" \
@@ -356,7 +360,7 @@ EOT
 )"
 		while read link; do
 			[ -s $PAGES_DIR$link.txt ] && continue
-			CONTENT="$(sed "s/\\?page=$link\"/& class=\"pending\"/" <<EOT
+			CONTENT="$(sed "s|\\?page=$link\"|& class=\"pending\"|" <<EOT
 $CONTENT
 EOT
 )"
