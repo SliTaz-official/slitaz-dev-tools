@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>SliTaz DVD/USB Key builder</title>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<meta name="description" content="slitaz DVD and USB key generator" />
+	<meta name="robots" content="index, nofollow" />
+	<meta name="author" content="SliTaz Contributors" />
+	<link rel="shortcut icon" href="/css/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
+	<style type="text/css">
+#copy {
+	text-align: center;
+}
+
+#bottom {
+	text-align: center;
+}
+	</style>
+</head>
+<body>
+
+<!-- Header -->
+<div id="header">
+	<div id="logo"></div>
+	<div id="network">
+		<a href="http://www.slitaz.org/">
+		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/" title="SliTaz Community Documentation">Doc</a>
+		<a href="http://forum.slitaz.org/" title="Slitaz Forum">Forum</a>
+		<a href="http://bugs.slitaz.org/" title="Bug Tracking System">Bugs</a>
+		<a href="http://hg.slitaz.org/" title="SliTaz repositories">Hg</a>
+	</div>
+	<h1><a href="http://www.slitaz.org/">SliTaz DVD & USB key builder</a></h1>
+</div>
+
+<!-- Block -->
+<div id="block">
+	<!-- Navigation -->
+	<div id="block_nav">
+		<h4><img src="/css/pics/development.png" alt="development.png" />Developers Corner</h4>
+		<a href="http://www.slitaz.org/en/devel/">Website devel</a> -
+		<a href="http://cook.slitaz.org/">Build Bot</a> -
+		<a href="http://pkgs.slitaz.org/">packages database</a>
+		<p>
+			<strong>Online tools:</strong>
+			<a href="http://pizza.slitaz.org/">Live Builder</a> -
+			<a href="http://boot.slitaz.org/">Web Boot</a> -
+			<a href="http://mirror.slitaz.org/packages/convert/">Package Converter</a> -
+			<a href="http://mirror.slitaz.org/floppies/builder/">Floppies Builder</a>
+		</p>
+	</div>
+	<!-- Information/image -->
+	<div id="block_info">
+	<h4>DVD and USB key generator</h4>
+		<p>
+			This tool will create a shell script. You should run this script
+			on your own SliTaz to build the DVD iso image. You can put this image on
+			a DVD with <u>wodim</u> or on an USB key with <u>tazusb geniso2usb</u>.
+		</p>
+		<p>
+			GUI tools are also available: <u>burnbox</u> and <u>tazusbbox</u>.
+		</p>
+	</div>
+</div>
+
+<!-- Content, from http://en.wikipedia.org/wiki/Miscellaneous_Symbols_Unicode_block -->
+<div id="content">
+
+<form method="post" enctype="multipart/form-data" action="http://mirror.slitaz.org/dvd/download.php">
+<input type="hidden" name="rsync" value="on" />
+<input type="hidden" name="filter" value="on" />
+<input type="hidden" id="size" name="size" value="0" />
+
+<table width="100%" >
+<tr>
+<td><h2><img title="Features" src="cdrom.png" alt="" width="25" height="25" />
+    Features</h2></td>
+<!-- td align="right"><h2><input type="radio" name="version" value="4.0">stable 4.0</h2></td -->
+<td align="right"><h2><input type="radio" name="version" value="cooking">cooking</h2></td>
+<td align="right"><h2><input type="radio" name="version" value="3.0" checked="checked">3.0</h2></td>
+<td align="right"><h2><input type="radio" name="version" value="2.0">2.0</h2></td>
+<td align="right"><h2><input type="radio" name="version" value="1.0">1.0</h2></td>
+<!-- td align="right"><h2><input type="radio" name="version" value="all">all</h2></td -->
+</tr>
+<tr><td colspan="5"><hr /></td></tr>
+
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" checked="checked" disabled="disabled" name="boot" />Bootable on SliTaz</td>
+<!-- td align="right" id="boot_stable">29 MB</td -->
+<td align="right" id="boot_cooking">29 MB</td>
+<td align="right" id="boot_3.0">29 MB</td>
+<td align="right" id="boot_2.0">28 MB</td>
+<td align="right" id="boot_1.0">24 MB</td>
+<!-- td align="right" id="boot_all">139 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" checked="checked" name="webboot" />Bootable on Internet &#9786</td>
+<!-- td align="right" id="webboot_stable">196 KB</td -->
+<td align="right" id="webboot_cooking">196 KB</td>
+<td align="right" id="webboot_3.0">196 KB</td>
+<td align="right" id="webboot_2.0">196 KB</td>
+<td align="right" id="webboot_1.0">196 KB</td>
+<!-- td align="right" id="webboot_all">196 KB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" checked="checked" name="website" />with the SliTaz website</td>
+<!-- td align="right" id="website_stable">23 MB</td -->
+<td align="right" id="website_cooking">23 MB</td>
+<td align="right" id="website_3.0">23 MB</td>
+<td align="right" id="website_2.0">23 MB</td>
+<td align="right" id="website_1.0">23 MB</td>
+<!-- td align="right" id="website_all">23 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" name="doc" />with the SliTaz doc website</td>
+<!-- td align="right" id="doc_stable">85 MB</td -->
+<td align="right" id="doc_cooking">85 MB</td>
+<td align="right" id="doc_3.0">85 MB</td>
+<td align="right" id="doc_2.0">85 MB</td>
+<td align="right" id="doc_1.0">85 MB</td>
+<!-- td align="right" id="doc_all">85 MB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" name="tiny" />with the Tiny SliTaz website</td>
+<!-- td align="right" id="tiny_stable">15 MB</td -->
+<td align="right" id="tiny_cooking">15 MB</td>
+<td align="right" id="tiny_3.0">15 MB</td>
+<td align="right" id="tiny_2.0">15 MB</td>
+<td align="right" id="tiny_1.0">15 MB</td>
+<!-- td id="tiny_all">15 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" name="pxe" />with the SliTaz PXE website</td>
+<!-- td align="right" id="pxe_stable">112 MB</td -->
+<td align="right" id="pxe_cooking">112 MB</td>
+<td align="right" id="pxe_3.0">112 MB</td>
+<td align="right" id="pxe_2.0">82 MB</td>
+<td align="right" id="pxe_1.0">25 MB</td>
+<!-- td align="right" id="pxe_all">444 MB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" name="tools" />with online tools (pkgs, pizza, convert, floppy, dvd)</td>
+<!-- td align="right" id="tools_stable">1.0 MB</td -->
+<td align="right" id="tools_cooking">1.0 MB</td>
+<td align="right" id="tools_3.0">1.0 MB</td>
+<td align="right" id="tools_2.0">1.0 MB</td>
+<td align="right" id="tools_1.0">1.0 MB</td>
+<!-- td align="right" id="tools_all">1.0 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" checked="checked" name="wok" />with the SliTaz wok (rules to build any package)</td>
+<!-- td align="right" id="wok_stable">87 MB</td -->
+<td align="right" id="wok_cooking">87 MB</td>
+<td align="right" id="wok_3.0">87 MB</td>
+<td align="right" id="wok_2.0">87 MB</td>
+<td align="right" id="wok_1.0">87 MB</td>
+<!-- td align="right" id="wok_all">87 MB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" name="hg" />with all Mercurial repositories</td>
+<!-- td align="right" id="hg_stable">250 MB</td -->
+<td align="right" id="hg_cooking">250 MB</td>
+<td align="right" id="hg_3.0">250 MB</td>
+<td align="right" id="hg_2.0">250 MB</td>
+<td align="right" id="hg_1.0">250 MB</td>
+<!-- td align="right" id="hg_all">250 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" checked="checked" name="packages" />with all packages & flavors files</td>
+<!-- td align="right" id="packages_stable">2.6 GB</td -->
+<td align="right" id="packages_cooking">2.6 GB</td>
+<td align="right" id="packages_3.0">1.4 GB</td>
+<td align="right" id="packages_2.0">910 MB</td>
+<td align="right" id="packages_1.0">230 MB</td>
+<!-- td align="right" id="packages_all">5.1 GB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" name="nonfree" />with non-free &#9888; packages (from get-* scripts) <sup>1</sup></td>
+<!-- td align="right" id="nonfree_stable">500 MB</td -->
+<td align="right" id="xnonfree_cooking">not yet</td>
+<td align="right" id="xnonfree_3.0">not yet</td>
+<td align="right" id="nonfree_2.0">200 MB</td>
+<td align="right" id="nonfree_1.0">50 MB</td>
+<!-- td align="right" id="nonfree_all">500 MB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" name="huge" />with free but huge packages (from get-* scripts) <sup>2</sup></td>
+<!-- td align="right" id="huge_stable">500 MB</td -->
+<td align="right" id="xhuge_cooking">not yet</td>
+<td align="right" id="xhuge_3.0">not yet</td>
+<td align="right" id="huge_2.0">500 MB</td>
+<td align="right" id="xhuge_1.0">none</td>
+<!-- td align="right" id="huge_all">900 MB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" name="sources" />with all sources files <sup>3</sup></td>
+<!-- td align="right" id="sources_stable">5.0 GB</td -->
+<td align="right" id="sources_cooking">5.0 GB</td>
+<td align="right" id="sources_3.0">2.4 GB</td>
+<td align="right" id="sources_2.0">1.5 GB</td>
+<td align="right" id="sources_1.0">650 MB</td>
+<!-- td align="right" id="sources_all">9.6 GB</td -->
+</tr>
+<tr>
+<td><input type="checkbox" checked="checked" name="loram_detect" />with loram &#9842; autodetection</td>
+<!-- td align="right" id="loram_detect_stable">129 MB</td -->
+<td align="right" id="loram_detect_cooking">129 MB</td>
+<td align="right" id="loram_detect_3.0">132 MB</td>
+<td align="right" id="loram_detect_2.0">99 MB</td>
+<td align="right" id="loram_detect_1.0">82 MB</td>
+<!-- td align="right" id="loram_detect_all">570 MB</td -->
+</tr>
+<tr style="background:#f0f0f0">
+<td><input type="checkbox" checked="checked" name="auto_install" />with auto activation on boot (standalone mode)</td>
+<!-- td align="right" id="auto_install_stable">2 KB</td -->
+<td align="right" id="auto_install_cooking">2 KB</td>
+<td align="right" id="auto_install_3.0">2 KB</td>
+<td align="right" id="auto_install_2.0">2 KB</td>
+<td align="right" id="auto_install_1.0">2 KB</td>
+<!-- td align="right" id="auto_install_all">2 KB</td -->
+</tr>
+</table>
+<hr />
+<input name="download" value="Download" type="submit" />
+the script to build the ISO image.
+<span id="result">
+</span>
+</form>
+
+<script type="text/javascript">
+<!--
+function toKb(size)
+{
+	var divisor = 1, result = 0;
+	for (var i = 0; i < size.length; i++) {
+		switch (size.charAt(i)) {
+		case '.' : divisor = 10; continue;
+		case 'K' : return result/divisor;
+		case 'M' : return (1024*result)/divisor;
+		case 'G' : return (1024*1024*result)/divisor;
+		case 'T' : return (1024*1024*1024*result)/divisor;
+		}
+		if (size.charAt(i) >= '0' && size.charAt(i) <= '9') {
+			result *= 10
+			result += parseInt(size.charAt(i) - '0')
+		}
+	}
+	return result/divisor
+}
+
+function toHuman(size)
+{
+	var i;
+	for (size *= 10, i = 0; size > 10000; size /= 1024, i++);
+	if (size >= 100) size = parseInt(size / 10)
+	else size = parseInt(size / 10) + "." + parseInt(size % 10)
+	return size + " " + "KMGT".charAt(i) + "B"
+}
+
+function update_size()
+{
+	var total = 1024; // padding
+	for (var i = 0; i < document.getElementsByTagName("td").length; i++) {
+		var obj = document.getElementsByTagName("td")[i]
+		var reg = new RegExp("^[0-9\.]* [KMGT]B$")
+		if (!reg.test(obj.innerHTML)) continue
+		obj.style.fontWeight="normal"
+		obj.style.textDecoration="none"
+		obj.style.backgroundColor="inherit"
+	}
+	for (var i = 0; i < document.forms[0].elements.length; i++) {
+		var obj = document.forms[0].elements[i]
+		if (obj.checked == false) continue
+		var version = document.forms[0].version
+		for (j = 0; j < version.length; j++) {
+			if (version[j].checked) {
+				version = version[j].value
+				break
+			}
+		}
+		var size = document.getElementById(obj.name + "_" + version)
+		if (size == null) continue
+		size.style.fontWeight="bold"
+		//size.style.textDecoration="underline"
+		size.style.backgroundColor="#d66018"
+		total += parseInt(toKb(size.innerHTML))
+	}
+	var size = document.getElementById("size")
+	size.value = total
+	var result=document.getElementById("result")
+	result.innerHTML="Expected size: <u><b>"+toHuman(total)+"</b></u>"+
+		" (needs "+toHuman(2*total)+" free space)."
+}
+update_size()
+window.onchange = update_size
+//-->
+</script>
+
+<p>
+<sup>1</sup> SliTaz can't and don't want to provide non free software. 
+Many people want to use software such as <b>Opera</b>, <b>Skype &#9742;</b> or <b>flash-plugin</b>.
+SliTaz provides some <u>get-*</u> scripts to let you install it.
+The DVD creation tool will lauch this script, repackage the software and 
+store it in the package directory.
+</p>
+
+<p>
+<sup>2</sup> Some software such as <b>OpenOffice</b> or <b>LibreOffice</b> are
+so huge that they don't compile on SliTaz buid bot.
+The DVD creation tool will use <u>get-*</u> scripts (see above) to store these
+packages in the package directory. The scripts download pre-built binaries for
+another Linux distribution.
+</p>
+
+<p>
+<sup>3</sup> Original source files. Install <u>SliTaz wok</u> to get the SliTaz
+patchs.
+</p>
+<!-- End of content -->
+</div>
+
+<div id="content_bottom">
+<div class="bottom_left"></div>
+<div class="bottom_right"></div>
+</div>
+
+<!-- Start of footer and copy notice -->
+<div id="copy">
+<p>
+Copyright &copy; <span class="year"></span> <a href="http://www.slitaz.org/">SliTaz</a> -
+<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
+</p>
+<!-- End of copy -->
+</div>
+
+<!-- Bottom and logo's -->
+<div id="bottom">
+<p>
+<a href="http://validator.w3.org/check?uri=referer"><img
+   src="/css/pics/website/xhtml10.png" alt="Valid XHTML 1.0"
+   title="Code validé XHTML 1.0"
+   style="width: 80px; height: 15px;" /></a>
+</p>
+</div>
+
+</body>
+</html>
