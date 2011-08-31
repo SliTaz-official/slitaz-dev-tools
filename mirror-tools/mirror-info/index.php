@@ -45,11 +45,11 @@
 		<ul>
 			<li><a href="http://www.slitaz.org/en/devel/">Website devel</a></li>
 			<li><a href="http://scn.slitaz.org/">Community</a></li>
-			<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
-			<li><a href="http://hg.slitaz.org/">Mercurial Repos</a></li>
 			<li><a href="http://cook.slitaz.org/">Build Bot</a></li>
 			<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
-			<li><a href="http://mirror.slitaz.org/info/">Mirror Server</a></li>
+			<li><a href="http://mirror.slitaz.org/info/">Mirror Server</a> -
+			<a href="http://mirror.slitaz.org/console/">Console</a>
+			</li>
 		</ul>
 	</div>
 	<!-- Information/image -->
@@ -159,6 +159,29 @@ system("top -n1 -b");
 	<li><a href="http://mirror.slitaz.org/webboot/">boot.slitaz.org</a> - gPXE Web boot.
 	(<a href="http://boot.slitaz.org/" target="_blank">main</a>)</li>
 </ul>
+
+<a name="boot"></a>
+<h3><a href="http://doc.slitaz.org/en:guides:pxe#web-booting" target="_blank">
+	<img title="Web boot" src="pics/website/vhosts.png" 
+	 alt="web boot" /></a>Web boot services</h3>
+	 The SliTaz mirror provides a <b>tftp</b> access and a 
+	 <a href="/pxe">pxe</a> tree. Simply add to your DHCP server configuration file:
+	 <ul>
+	 <li>for <b>udhcpd</b><!-- siaddr? sname? tftp? -->
+	 <pre>
+siaddr mirror.slitaz.org
+boot_file gpxe.pxe</pre>
+	 </li>
+	 <li>for <b>dhcpd</b>
+	 <pre>
+next-server "mirror.slitaz.org"
+filemane "gpxe.pxe"</pre>
+	 </li>
+	 <li>for <b>dnsmasq</b>
+	 <pre>
+dhcp-boot=gpxe.pxe,mirror.slitaz.org</pre>
+	 </li>
+	 </ul>
 
 <a name="mirrors"></a>
 <h3><a href="http://mirror.slitaz.org/awstats.pl?config=rsync" target="_blank">

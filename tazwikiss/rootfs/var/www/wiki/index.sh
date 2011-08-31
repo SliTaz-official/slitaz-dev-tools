@@ -9,7 +9,7 @@
 
 cd $(dirname $0)
 CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%,*}.sh
-[ -r "$CONFIG" ] || CONFIG=config.sh
+[ -x "$CONFIG" ] || CONFIG=config.sh
 . ./$CONFIG
 
 WIKI_VERSION="Based on WiKiss 0.3"
