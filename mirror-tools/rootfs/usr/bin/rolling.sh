@@ -3,15 +3,16 @@
 # Location of slitaz rolling release
 rolling=/home/bellard/rolling
 
-flavor=core
+flavors="core-4in1 core"
 packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 
 # We use the last build as build environment
-system=$rolling/slitaz-*.iso
+system=$rolling/slitaz-core.iso
 
 # Build the rolling release if something is new on mirror
-if [ $packages/$flavor.flavor -nt $system -o \
-     $packages/packages.list -nt $system ]; then
+for flavor in $flavors ; do
+    if [ $packages/$flavor.flavor -nt $rolling/slitaz-$flavor.iso -o \
+         $packages/packages.list -nt $rolling/slitaz-$flavor.iso ]; then
 	[ -d $rolling ] || mkdir -p $rolling
 	TMP=$rolling/tmp$$
 	mkdir -p $TMP/iso $TMP/fs/var/lib/tazpkg $TMP/fs/home/slitaz/cooking \
@@ -63,7 +64,8 @@ EOT
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
 	rm -rf $TMP
-	rsync --bwlimit=40 -vP -e 'ssh -i /home/bellard/.ssh/id_rsa' \
-		$rolling/slitaz-$flavor.* \
-		bellard@mirror.slitaz.org:/var/www/slitaz/mirror/iso/rolling
-fi
+    fi
+    rsync --bwlimit=40 -vtP -e 'ssh -i /home/bellard/.ssh/id_rsa' \
+	$rolling/slitaz-$flavor.* \
+	bellard@mirror.slitaz.org:/var/www/slitaz/mirror/iso/rolling
+done
