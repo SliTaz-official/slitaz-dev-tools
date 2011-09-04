@@ -252,7 +252,15 @@ EOF
 	if get_from_hg website "web site"; then
 		echo "$SORT_DIR/website -6000" >> $SORT_FILE
 		cat >>$TEMP_DIR/install.sh<<EOF
-echo "=> slitaz web site installed in file://\$DIR/website/index.html"
+if [ -s \$DIR/website/index.html ]; then
+	echo "=> slitaz web site installed in file://\$DIR/website/index.html"
+elif [ -s \$DIR/website/index.php ]; then
+	yes y | tazpkg get-install php
+	ln -s /\$DIR/website /var/www
+	echo "=> slitaz web site installed in http://127.0.0.1/website/index.php"
+else
+	echo "=> slitaz web site is not installed. How can I do it ?"
+fi
 EOF
 	fi;;
 --sources)
