@@ -329,7 +329,11 @@ echo "<h4><a href=\"$url\">";
 system("stat -c '%y %n' ".$file." | sed 's/.000000000//;s|/var/log/\(.*\).log|\\1.iso|'");
 echo "</a></h4>";
 echo "<pre>";
-system("sed 's/.\[[0-9][^mG]*.//g;:a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\\1 \\2/;ta' < $file");
+$sed_script="s/.\[[0-9][^mG]*.//g";
+$sed_script.=";:a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\\1 \\2/;ta";
+$sed_script.=";s#\[ OK \]#[ <span style=\"color:green\">OK</span> ]#";
+$sed_script.=";s#\[ Failed \]#[ <span style=\"color:red\">Failed</span> ]#";
+system("sed '".$sed_script."' < $file");
 echo "</pre>";
 }
 
