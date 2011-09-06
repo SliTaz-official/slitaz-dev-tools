@@ -292,10 +292,10 @@ extract_boot()
 f=$(ls $REPOS/$1-[0-9]*.tazpkg 2> /dev/null)
 [ -f "$f" ] || return 1
 [ -d $TEMP_DIR/boot ] || mkdir $TEMP_DIR/boot
-( cd $TEMP_DIR/boot ; cpio -i fs.cpio.gz < $f 2> /dev/null ) 
-( cd $TEMP_DIR/boot ; zcat fs.cpio.gz | cpio -id 2> /dev/null )
+( cd $TEMP_DIR/boot ; cpio -i fs.cpio.gz fs.cpio.lzma < $f 2> /dev/null ) 
+( cd $TEMP_DIR/boot ; { zcat fs.cpio.gz || unlzma -c fs.cpio.lzma ; } | cpio -id 2> /dev/null )
 mv $TEMP_DIR/boot/fs/boot/* $TEMP_DIR/boot
-rm -rf $TEMP_DIR/boot/fs.cpio.gz $TEMP_DIR/boot/fs
+rm -rf $TEMP_DIR/boot/fs.cpio.* $TEMP_DIR/boot/fs
 return 0
 }
 
@@ -422,7 +422,9 @@ echo "$(du -hs $OUTPUT | awk '{ print $1 }') used by iso image."
 
 cd ${ROOT}
 echo -n "Creating hybrid DVD/CDROM"
-which isohybrid > /dev/null && isohybrid $IMAGE 2> /dev/null
+ISOHYBRID=isohybrid.sh
+which isohybrid > /dev/null && ISOHYBRID=isohybrid
+which $ISOHYBRID > /dev/null && $ISOHYBRID $IMAGE 2> /dev/null
 status
 
 echo -n "Calculating md5sum"

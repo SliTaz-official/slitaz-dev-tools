@@ -3,7 +3,7 @@
 # Location of slitaz rolling release
 rolling=/home/bellard/rolling
 
-flavors="core-4in1 core"
+flavors="core-4in1 core preinit"
 packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 
 # We use the last build as build environment
@@ -11,7 +11,8 @@ system=$rolling/slitaz-core.iso
 
 # Build the rolling release if something is new on mirror
 for flavor in $flavors ; do
-    if [ $packages/$flavor.flavor -nt $rolling/slitaz-$flavor.iso -o \
+    if [ ! -s $rolling/slitaz-$flavor.iso \
+	 $packages/$flavor.flavor -nt $rolling/slitaz-$flavor.iso -o \
          $packages/packages.list -nt $rolling/slitaz-$flavor.iso ]; then
 	[ -d $rolling ] || mkdir -p $rolling
 	TMP=$rolling/tmp$$
