@@ -8,6 +8,7 @@ INSTANCES=`ps | grep firefox-bin | grep -v 'grep firefox-bin' | grep -v /bin/sh 
 [ $INSTANCES -gt 0 ] && NOREMOTE='-no-remote' || NOREMOTE=''
 FIREFOX='3.5.7#/usr/bin/firefox 3.6#/home/gg/apps/firefox-3.6/firefox 4#/home/gg/apps/firefox-4/firefox#Firefox-4b'
 PROFILES=""
+REMOTE="-no-remote"
 
 add_new_versions() {
 	local tmp=`mktemp -t -p $CONFDIR`
