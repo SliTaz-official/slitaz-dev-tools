@@ -273,7 +273,7 @@ xhtml_header()
 		</div>
 		<ul>
 			<li><a href="http://hg.slitaz.org/wok">Hg Repos</a></li>
-			<li><a href="http://bb.slitaz.org/">Build Bot</a></li>
+			<li><a href="http://cook.slitaz.org/">Build Bot</a></li>
 			<li><a href="http://bugs.slitaz.org/">Bug Tracker</a></li>
 			<li><a href="http://forum.slitaz.org/">Get Support</a></li>
 		</ul>
