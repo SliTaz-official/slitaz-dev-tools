@@ -539,7 +539,7 @@ _EOT_
 				PACKAGE=
 				DEPENDS=
 				. $i
-				echo "$PACKAGE $DEPENDS"
+				echo "$PACKAGE $(echo $DEPENDS)"
 			done | show_loops
 			cat << _EOT_
 </pre>
@@ -588,7 +588,7 @@ _EOT_
 				WANTED=
 				BUILD_DEPENDS=
 				. $i
-				echo "$PACKAGE $WANTED $BUILD_DEPENDS"
+				echo "$PACKAGE $(echo $WANTED $BUILD_DEPENDS)"
 			done | show_loops
 			cat << _EOT_
 </pre>
