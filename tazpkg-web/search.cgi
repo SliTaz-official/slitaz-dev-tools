@@ -374,8 +374,9 @@ show_loops()
 function chkloop(pkg, i, n)
 {
 	if (n < 12)
-	for (i = 1; i < split(deps[pkg],curdep," "); i++) {
+	for (i = 1; i <= split(deps[pkg],curdep," "); i++) {
 		if (curdep[i] == base || chkloop(curdep[i], 0, n+1)) {
+			split(deps[pkg],curdep," ")
 			p = curdep[i] " " p
 			return 1
 		}
