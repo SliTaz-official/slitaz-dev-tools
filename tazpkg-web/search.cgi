@@ -8,22 +8,24 @@
 
 read QUERY_STRING
 for i in $(echo $QUERY_STRING | sed 's/&/ /g'); do
+	i=$(httpd -d $i)
 	eval $i
 done
 LANG=$lang
 SEARCH=$query
 SLITAZ_VERSION=$version
 OBJECT=$object
-DATE=`date +%Y-%m-%d\ \%H:%M:%S`
+DATE=`date +%Y-%m-%d\ %H:%M:%S`
 VERSION=cooking
 if [ "$REQUEST_METHOD" = "GET" ]; then
 	SEARCH=""
 	VERBOSE=0
 	for i in $(echo $REQUEST_URI | sed 's/[?&]/ /g'); do
+		# i=$(httpd -d $i)
 		SLITAZ_VERSION=cooking
 		case "$(echo $i | tr [A-Z] [a-z])" in
-		search=*)
-			SEARCH=${i#*=};;
+		query=*|search=*)
+			[ ${i#*=} == Search ] || SEARCH=${i#*=};;
 		object=*)
 			OBJECT=${i#*=};;
 		verbose=*)
@@ -60,11 +62,14 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
 		version=s*|version=3*)
 			SLITAZ_VERSION=stable;;
 		version=[1-9]*)
-			i=${version%%.*}
+			i=${i%%.*}
 			SLITAZ_VERSION=${i#*=}.0;;
+		version=u*)
+			SLITAZ_VERSION=undigest;;
 		esac
 	done
 	[ -n "$SEARCH" ] && REQUEST_METHOD="POST"
+	[ "$SEARCH" == "." ] && SEARCH=
 fi
 
 case "$OBJECT" in
@@ -79,9 +84,11 @@ FileOverlap)	selected_overlap="selected";;
 esac
 
 case "$SLITAZ_VERSION" in
+tiny)		selected_tiny="selected";;
 1.0)	 	selected_1="selected";;
 2.0)	 	selected_2="selected";;
 stable)		selected_stable="selected";;
+undigest)	selected_undigest="selected";;
 esac
 
 # unescape query
@@ -105,6 +112,7 @@ receipt="Receipt"
 file_list="File list"
 depends="Depends"
 bdepends="Build depends"
+loops="loops"
 search="Search"
 cooking="cooking"
 stable="stable"
@@ -124,6 +132,7 @@ fr)	package="Paquet"
 	receipt="Recette"
 	depends="Dépendances"
 	bdepends="Fabrication"
+	loops="sans fin"
 	search="Recherche"
 	result="Recherche de : $SEARCH"
 	noresult="Paquet $SEARCH introuvable"
@@ -193,34 +202,36 @@ search_form()
 	cat << _EOT_
 
 <div style="text-align: center; margin-bottom: 30px;">
-	<form method="post" action="search.cgi">
+	<form method="post" action="$(basename $SCRIPT_NAME)">
 		<div class="searchbox">
 			<p>
 				<input type="hidden" name="lang" value="$LANG" />
-				<input type="text" name="query" 
+				<input type="text" name="query"
 					size="20" value="$SEARCH" style="width: 80%;" />
 				<input type="submit" name="search" value="$search" />
 			</p>
 		</div>
-		Search for:
-		<select name="object">
-			<option value="Package">$package</option>
-			<option $selected_desc value="Desc">$desc</option>
-			<option $selected_tags value="Tags">$tags</option>
-			<option $selected_receipt value="Receipt">$receipt</option>
-			<option $selected_depends value="Depends">$depends</option>
-			<option $selected_build_depends value="BuildDepends">$bdepends</option>
-			<option $selected_file value="File">$file</option>
-			<option $selected_file_list value="File_list">$file_list</option>
-			<option $selected_overlap value="FileOverlap">$overlap</option>
-		</select>
+	Search for:
+	<select name="object">
+		<option value="Package">$package</option>
+		<option $selected_desc value="Desc">$desc</option>
+		<option $selected_tags value="Tags">$tags</option>
+		<option $selected_receipt value="Receipt">$receipt</option>
+		<option $selected_depends value="Depends">$depends</option>
+		<option $selected_build_depends value="BuildDepends">$bdepends</option>
+		<option $selected_file value="File">$file</option>
+		<option $selected_file_list value="File_list">$file_list</option>
+		<option $selected_overlap value="FileOverlap">$overlap</option>
+	</select>
 		in
-		<select name="version">
-			<option value="cooking">$cooking</option>
-			<option $selected_stable value="stable">$stable</option>
-			<option $selected_1 value="1.0">1.0</option>
-			<option $selected_2 value="2.0">2.0</option>
-		</select>
+	<select name="version">
+		<option value="cooking">$cooking</option>
+		<option $selected_stable value="stable">$stable</option>
+		<option $selected_2 value="2.0">2.0</option>
+		<option $selected_1 value="1.0">1.0</option>
+		<option $selected_tiny value="tiny">tiny</option>
+		<option $selected_undigest value="undigest">undigest</option>
+	</select>
 	</form>
 </div>
 _EOT_
@@ -247,15 +258,17 @@ xhtml_header()
 
 <!-- Header -->
 <div id="header">
+	<a name="top"></a>
 	<div id="logo"></div>
 	<div id="network">
 		<a href="http://www.slitaz.org/">
-			<img src="images/network.png" alt="network.png" /></a>
+		<img src="images/network.png" alt="network.png" /></a>
 		<a href="http://scn.slitaz.org/">Community</a>
 		<a href="http://doc.slitaz.org/">Doc</a>
 		<a href="http://forum.slitaz.org/">Forum</a>
 		<a href="http://bugs.slitaz.org/">Bugs</a>
 		<a href="http://hg.slitaz.org/">Hg</a>
+		<a href="http://cook.slitaz.org/">BB</a>
 	</div>
 	<h1><a href="http://pkgs.slitaz.org/">SliTaz Packages</a></h1>
 </div>
@@ -282,7 +295,7 @@ xhtml_header()
 	<div id="block_info">
 		<h4>$package</h4>
 		<p>
-			Search for SliTaz packages! 
+			Search for SliTaz packages!
 		</p>
 		<p>
 			Any results ? Make a package request on the official
@@ -303,8 +316,8 @@ xhtml_footer()
 </center>
 
 <!-- End of content -->
-</div>
 
+</div>
 <!-- Footer -->
 <div id="footer">
 	Copyright &copy; <span class="year"></span>
@@ -333,7 +346,7 @@ _EOT_
 installed_size()
 {
 [ $VERBOSE -gt 0 ] &&
-grep -A 3 "^$1\$" $SLITAZ/$SLITAZ_VERSION/packages/packages.txt | \
+grep -A 3 "^$1\$" $PACKAGES_REPOSITORY/packages.txt | \
        grep installed | sed 's/.*(\(.*\) installed.*/(\1) /'
 }
 
@@ -344,10 +357,43 @@ if [ -s "$(dirname $0)/$SLITAZ_VERSION/$CATEGORY.html" ]; then
 <a href="$SLITAZ_VERSION/$CATEGORY.html#$PACKAGE">$PACKAGE</a> $(installed_size $PACKAGE): $SHORT_DESC
 _EOT_
 else
+	PACKAGE_HREF="<u>$PACKAGE</u>"
+	PACKAGE_URL="http://mirror.slitaz.org/packages/$SLITAZ_VERSION/$PACKAGE-$VERSION$EXTRA_VERSION.tazpkg"
+	busybox wget -s $PACKAGE_URL 2> /dev/null && 
+	PACKAGE_HREF="<a href=\"$PACKAGE_URL\">$PACKAGE</a>"
 	cat << _EOT_
-<a href="http://mirror.slitaz.org/packages/$SLITAZ_VERSION/$PACKAGE-$VERSION$EXTRA_VERSION.tazpkg">$PACKAGE</a> $(installed_size $PACKAGE): $SHORT_DESC
+$PACKAGE_HREF $(installed_size $PACKAGE): $SHORT_DESC
 _EOT_
 fi
+}
+
+# Show loop in depends/build_depends chains
+show_loops()
+{
+	awk '
+function chkloop(pkg, i, n)
+{
+	if (n < 12)
+	for (i = 1; i < split(deps[pkg],curdep," "); i++) {
+		if (curdep[i] == base || chkloop(curdep[i], 0, n+1)) {
+			p = curdep[i] " " p
+			return 1
+		}
+	}
+	return 0
+}
+{
+	for (i = 2; i <= NF; i++)
+		deps[$1] = deps[$1] " " $i
+}
+END {
+	for (pkg in deps) {
+		base = pkg
+		p = ""
+		if (chkloop(pkg, 0, 0))
+			print pkg " : " p
+	}
+}'
 }
 
 # recursive dependencies scan
@@ -422,7 +468,7 @@ package_exist()
 	cat << _EOT_
 
 <h3>$noresult</h3>
-<pre>
+<pre class="package">
 _EOT_
 	return 1
 }
@@ -431,6 +477,13 @@ _EOT_
 htmlize()
 {
 	sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+}
+
+echonb()
+{
+read n
+echo -n "$n $1"
+[ $n -gt 1 ] && echo -n s
 }
 
 display_packages_and_files()
@@ -455,7 +508,10 @@ if [ "$REQUEST_METHOD" != "POST" ]; then
 
 <!-- Content -->
 <div id="content">
+<a name="content"></a>
 
+<h1>$package</h1>
+<h2>$search</h2>
 _EOT_
 	search_form
 	xhtml_footer
@@ -465,15 +521,33 @@ else
 
 <!-- Content -->
 <div id="content">
+<a name="content"></a>
 
+<h1>$package</h1>
+<h2>$search</h2>
 _EOT_
 	search_form
 	if [ "$OBJECT" = "Depends" ]; then
-		if package_exist $SEARCH ; then
+		if [ -z "$SEARCH" ]; then
+			cat << _EOT_
+
+<h3>$depends $loops</h3>
+<pre class="package">
+_EOT_
+			for i in $WOK/*/receipt; do
+				PACKAGE=
+				DEPENDS=
+				. $i
+				echo "$PACKAGE $DEPENDS"
+			done | show_loops
+			cat << _EOT_
+</pre>
+_EOT_
+		elif package_exist $SEARCH ; then
 			cat << _EOT_
 
 <h3>$deptree</h3>
-<pre>
+<pre class="package">
 _EOT_
 			ALL_DEPS=""
 			dep_scan $SEARCH ""
@@ -484,7 +558,7 @@ _EOT_
 </pre>
 
 <h3>$deptree (SUGGESTED)</h3>
-<pre>
+<pre class="package">
 _EOT_
 				ALL_DEPS=""
 				dep_scan "$SUGGESTED" "    "
@@ -493,7 +567,7 @@ _EOT_
 </pre>
 
 <h3>$rdeptree</h3>
-<pre>
+<pre class="package">
 _EOT_
 			ALL_DEPS=""
 			rdep_scan $SEARCH
@@ -502,15 +576,32 @@ _EOT_
 _EOT_
 		fi
 	elif [ "$OBJECT" = "BuildDepends" ]; then
-		if package_exist $SEARCH ; then
+		if [ -z "$SEARCH" ]; then
+			cat << _EOT_
+
+<h3>$bdepends $loops</h3>
+<pre class="package">
+_EOT_
+			for i in $WOK/*/receipt; do
+				PACKAGE=
+				WANTED=
+				BUILD_DEPENDS=
+				. $i
+				echo "$PACKAGE $WANTED $BUILD_DEPENDS"
+			done | show_loops
+			cat << _EOT_
+</pre>
+_EOT_
+		elif package_exist $SEARCH ; then
 			cat << _EOT_
 
 <h3>$bdeplist</h3>
-<pre>
+<pre class="package">
 _EOT_
 			BUILD_DEPENDS=""
+			WANTED=""
 			. $WOK/$SEARCH/receipt
-			[ -n "$BUILD_DEPENDS" ] && for dep in $BUILD_DEPENDS ; do
+			[ -n "$WANTED$BUILD_DEPENDS" ] && for dep in $WANTED $BUILD_DEPENDS ; do
 				if [ ! -s $WOK/$dep/receipt ]; then
 					cat << _EOT_
 $dep: not found !
@@ -524,12 +615,13 @@ _EOT_
 </pre>
 
 <h3>$rbdeplist</h3>
-<pre>
+<pre class="package">
 _EOT_
 			for dep in $(grep -l $SEARCH $WOK/*/receipt); do
 				BUILD_DEPENDS=""
+				WANTED=""
 				. $dep
-				echo " $BUILD_DEPENDS " | grep -q " $SEARCH " &&
+				echo " $WANTED $BUILD_DEPENDS " | grep -q " $SEARCH " &&
 				package_entry
 			done
 			cat << _EOT_
@@ -541,7 +633,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$overloading $SEARCH</h3>
-<pre>
+<pre class="package">
 _EOT_
 			( unlzma -c $PACKAGES_REPOSITORY/files.list.lzma | grep ^$SEARCH: ;
 			  unlzma -c $PACKAGES_REPOSITORY/files.list.lzma | grep -v ^$SEARCH: ) | awk '
@@ -564,7 +656,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 _EOT_
 		last=""
 		unlzma -c $PACKAGES_REPOSITORY/files.list.lzma \
@@ -583,20 +675,28 @@ _EOT_
 			echo "    $file"
 		done
 	elif [ "$OBJECT" = "File_list" ]; then
-		package_exist $SEARCH && cat << _EOT_
+		if package_exist $SEARCH; then
+			cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 _EOT_
-		last=""
-		unlzma -c $PACKAGES_REPOSITORY/files.list.lzma \
-		| grep ^$SEARCH: |  sed 's/.*: /    /' | sort
+			last=""
+			unlzma -c $PACKAGES_REPOSITORY/files.list.lzma \
+			| grep ^$SEARCH: |  sed 's/.*: /    /' | sort
+			cat << _EOT_
+</pre>
+<pre class="package">
+$(unlzma -c $PACKAGES_REPOSITORY/files.list.lzma | grep ^$SEARCH: | wc -l | echonb file)  \
+$(busybox sed -n "/^$SEARCH$/{nnnpq}" $PACKAGES_REPOSITORY/packages.txt)
+_EOT_
+		fi
 	elif [ "$OBJECT" = "Desc" ]; then
 		if [ -f $WOK/$SEARCH/description.txt ]; then
 			cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 <pre>
 $(htmlize < $WOK/$SEARCH/description.txt)
 </pre>
@@ -605,7 +705,7 @@ _EOT_
 			cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 _EOT_
 			last=""
 			grep -i $SEARCH $PACKAGES_REPOSITORY/packages.desc | \
@@ -618,7 +718,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 _EOT_
 		last=""
 		grep ^TAGS= $WOK/*/receipt |  grep -i $SEARCH | \
@@ -630,7 +730,7 @@ _EOT_
 		package_exist $SEARCH && cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 <pre>
 $(if [ -f  $WOK/$SEARCH/taz/*/receipt ]; then
 	cat $WOK/$SEARCH/taz/*/receipt
@@ -643,7 +743,7 @@ _EOT_
 		cat << _EOT_
 
 <h3>$result</h3>
-<pre>
+<pre class="package">
 _EOT_
 		for pkg in `ls $WOK/ | grep $SEARCH`
 		do
@@ -661,7 +761,7 @@ _EOT_
 </pre>
 
 <h3>$result (package providing $vpkg)</h3>
-<pre>
+<pre class="package">
 _EOT_
 			for pkg in $(grep $vpkg= $equiv | sed "s/$vpkg=//"); do
 				. $WOK/${pkg#*:}/receipt
