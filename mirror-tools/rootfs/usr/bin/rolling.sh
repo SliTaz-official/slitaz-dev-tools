@@ -9,9 +9,20 @@ packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 # We use the last build as build environment
 system=$rolling/slitaz-core.iso
 
+htmlize()
+{
+echo -e "<html>\n<body>\n<pre>"
+dos2unix | sed -e 's|\(Filesystem size:\).*G\([0-9\.]*M\) *$|\1 \2|' \
+    -e 's|.\[1m|<b>|' -e 's|.\[0m|</b>|' -e 's|.\[[0-9Gm;]*||g' \
+    -e ':a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\1 \2/;ta' \
+    -e 's#\[ OK \]#[ <span style="color: green">OK</span> ]#' \
+    -e 's#\[ Failed \]#[ <span style="color: red">Failed</span> ]#'
+echo -e "</pre>\n</body>\n</html>"
+}
+
 # Build the rolling release if something is new on mirror
 for flavor in $flavors ; do
-    if [ ! -s $rolling/slitaz-$flavor.iso \
+    if [ ! -s $rolling/slitaz-$flavor.iso -o \
 	 $packages/$flavor.flavor -nt $rolling/slitaz-$flavor.iso -o \
          $packages/packages.list -nt $rolling/slitaz-$flavor.iso ]; then
 	[ -d $rolling ] || mkdir -p $rolling
@@ -34,9 +45,13 @@ for flavor in $flavors ; do
 	cat > $TMP/fs/root/build.sh <<EOT
 #!/bin/sh
 
+echo "# date"
 date
+echo "# tazlito get-flavor $flavor"
 tazlito get-flavor $flavor
+echo "# yes '' | tazlito gen-distro"
 yes '' | tazlito gen-distro
+echo "# date"
 date
 EOT
 	cat > $TMP/fs/BUILD <<EOT
@@ -51,7 +66,7 @@ if [ ! -d \$DIR/proc/1 ]; then
 	done
 	mount --bind /tmp \$DIR/tmp || mount -t tmpfs tmpfs \$DIR/tmp
 fi
-script -c "SHELL=/bin/sh chroot \$DIR /bin/sh -x /root/build.sh" $TMP/slitaz-$flavor.log
+script -c "SHELL=/bin/sh chroot \$DIR /bin/sh /root/build.sh" $TMP/slitaz-$flavor.log
 umount \$DIR/tmp
 for i in \$MOUNTS; do
 	umount \$DIR/\$i 
@@ -64,9 +79,11 @@ EOT
 	umount $TMP/fs/var/cache/tazpkg/cooking/packages
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
+	htmlize < $rolling/slitaz-$flavor.log > $rolling/slitaz-$flavor.log.html
 	rm -rf $TMP
     fi
-    rsync --bwlimit=40 -vtP -e 'ssh -i /home/bellard/.ssh/id_rsa' \
-	$rolling/slitaz-$flavor.* \
+    export DROPBEAR_PASSWORD=none
+    SSH="dbclient -p 222 -i /home/bellard/.ssh/id_rsa.dropbear"
+    rsync --bwlimit=40 -vtP -e "$SSH" $rolling/slitaz-$flavor.* \
 	bellard@mirror.slitaz.org:/var/www/slitaz/mirror/iso/rolling
 done
