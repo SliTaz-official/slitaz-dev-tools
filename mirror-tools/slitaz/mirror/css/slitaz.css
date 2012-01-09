@@ -1,5 +1,5 @@
 /*
-	CSS style for SliTaz Network - (C) 2011 SliTaz GNU/Linux
+	CSS style for SliTaz Network - (C) 2012 SliTaz GNU/Linux
 */
 
 html {
@@ -294,6 +294,6 @@ input[type=text] {
 #footer a { color: #666; padding: 0 2px; }
 
 .year:after {
-	/* content: "2007-2011"; */
-	content: "2011";
+	/* content: "2007-2012"; */
+	content: "2012";
 }
