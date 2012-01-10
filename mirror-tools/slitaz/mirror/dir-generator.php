@@ -273,7 +273,7 @@ print " <style type='text/css'>
 ";
 }
 print "	</head>
-	<boby>
+	<body>
 	<h2>Index of /" . $vpath ."</h2>
 ";
 }
