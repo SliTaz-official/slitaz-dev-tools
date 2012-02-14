@@ -97,6 +97,21 @@ check_mirror()
 	fi
 }
 
+# Bind a directory into the chroot
+bind_chroot_dir()
+{
+	mkdir -p $1 $2
+	mount -o bind $1 $2
+
+	# Update aufs jail configuration
+	if [ "${2#*/home}" != "$2" ] &&
+	   grep -s ^AUFS_MOUNTS= ${2%/home/*}/etc/slitaz/cook.conf &&
+	   ! grep -q /home${2#*/home} ${2%/home/*}/etc/slitaz/cook.conf; then
+		sed -i "s|^AUFS_MOUNTS=\"|&/home${2#*/home}|" \
+			${2%/home/*}/etc/slitaz/cook.conf
+	fi
+}
+
 # Mount virtual Kernel file systems and chroot but check that nobody
 # else has done mounts
 mount_chroot()
@@ -113,13 +128,11 @@ mount_chroot()
 	# But do it only if it's a slitaz developement chroot.
 	fs=$rootfs/home/slitaz
 	if [ -d "$slitaz" ]; then
-		mkdir -p $SLITAZ/src $fs/src
-		mount -o bind $SLITAZ/src $fs/src
+		bind_chroot_dir $SLITAZ/src $fs/src
 		# Now mount package dir so they are in /home/slitaz/$version
 		# We may not mount cache wok or others it has no point and if
 		# one want to use a shared wok he can bind it manually.
-		mkdir -p $slitaz/packages $fs/packages
-		mount -o bind $slitaz/packages $fs/packages
+		bind_chroot_dir $slitaz/packages $fs/packages
 	fi
 }
 
