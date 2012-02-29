@@ -2,8 +2,8 @@
 #
 # Tazdev - SliTaz developers and build host tool. System wide config
 # file is located at: /etc/slitaz/tazdev.conf. Keep the code clear and
-# well commented please, also: configuration variablea are $UPERCASE
-# and variables initialized by tazdev itself are $lowersace
+# well commented please, also: configuration variables are $UPPERCASE
+# and variables initialized by tazdev itself are $lowerspace
 #
 # (c) 2011 SliTaz GNU/Linux - GNU gpl v3
 #
@@ -204,7 +204,7 @@ purge_packages()
 	rm -f $tmp
 }
 
-# Remove obsolate source tarballs
+# Remove obsolete source tarballs
 purge_sources()
 {
 	arg=$1
