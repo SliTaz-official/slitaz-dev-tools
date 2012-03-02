@@ -24,7 +24,7 @@ skel_main() {
 # have multiple commands and options.
 skel() {
 	# Store box results
-	main=`skel_main`
+	main=$(skel_main)
 	ret=$?
 	# Deal with --button values
 	case $ret in
@@ -46,7 +46,7 @@ skel() {
 
 case "$1" in
 	usage)
-		echo "Usage: `basename $0` [command]" ;;
+		echo "Usage: $(basename $0) [command]" ;;
 	*) 
 		skel ;;
 esac
