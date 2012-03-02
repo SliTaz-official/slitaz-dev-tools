@@ -358,13 +358,21 @@ case "$1" in
 			echo "Uploading to: $MIRROR/sources/${pkg#slitaz-}"
 			scp $pkg-$version.tar.gz $pkg-$version.md5 \
 				$user@$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
+		fi 
+		
+		# Update pkg in wok
+		echo -n "Do you wish to update $pkg in wok [N/y] ? "
+		read update
+		if [ "$update" = "y" ]; then
+			cd $PROJECTS/wok
+			sed -i s"/VERSION=.*/VERSION=\"$version\"/" $pkg*/receipt
 		fi ;;
 	reliso|-ri)
 		# Generate all official images iso at once for a specific version.
 		get_version $@
 		iso=$slitaz/iso
 		mkdir -p $iso
-		for flavor in base core justx firefox
+		for flavor in base core gtkonly firefox
 		do
 			cd $slitaz
 			tazlito pack-flavor $flavor
