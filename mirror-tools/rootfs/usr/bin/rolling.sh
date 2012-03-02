@@ -4,15 +4,25 @@
 rolling=/home/bellard/rolling
 
 flavors="core-4in1 core preinit"
+lorams="core-4in1"
 packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 
 # We use the last build as build environment
 system=$rolling/slitaz-core.iso
 
+create_loram()
+{
+case " $lorams " in
+*\ $1\ *)	true;;
+*)		false;;
+esac
+}
+
 htmlize()
 {
 echo -e "<html>\n<body>\n<pre>"
-dos2unix | sed -e 's|\(Filesystem size:\).*G\([0-9\.]*M\) *$|\1 \2|' \
+sed 's/.*%.\[/[/g' | dos2unix | sed 's/?Getting/? y\nGetting/' | sed \
+    -e 's|\(Filesystem size:\).*G\([0-9\.]*M\) *$|\1 \2|' \
     -e 's|.\[1m|<b>|' -e 's|.\[0m|</b>|' -e 's|.\[[0-9Gm;]*||g' \
     -e 's|#.*|<i><span style="color: blue">&</span></i>|' \
     -e ':a;s/^\(.\{1,68\}\)\(\[ [A-Za-z]* \]\)/\1 \2/;ta' \
@@ -54,6 +64,14 @@ echo "# tazlito get-flavor $flavor"
 tazlito get-flavor $flavor
 echo "# yes '' | tazlito gen-distro"
 yes '' | tazlito gen-distro
+EOT
+	create_loram $flavor && cat >> $TMP/fs/root/build.sh <<EOT
+if [ -s /home/slitaz/cooking/distro/slitaz-$flavor.iso ]; then
+echo "# yes y | tazlito build-loram  /home/slitaz/cooking/distro/slitaz-$flavor.iso /root/slitaz-$flavor.loram.iso"
+yes y | tazlito build-loram  /home/slitaz/cooking/distro/slitaz-$flavor.iso /root/slitaz-$flavor.loram.iso
+fi
+EOT
+	cat >> $TMP/fs/root/build.sh <<EOT
 echo "# date"
 date
 EOT
@@ -83,6 +101,13 @@ EOT
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
 	htmlize < $rolling/slitaz-$flavor.log > $rolling/slitaz-$flavor.log.html
+	if [ -s $TMP/fs/root/slitaz-$flavor.loram.iso ]; then
+		mv -f $TMP/fs/root/slitaz-$flavor.loram.iso $rolling/
+		cd $rolling
+		md5sum slitaz-$flavor.loram.iso > slitaz-$flavor.loram.md5
+		cd - > /dev/null
+		echo
+	fi
 	rm -rf $TMP
     fi
     export DROPBEAR_PASSWORD=none
