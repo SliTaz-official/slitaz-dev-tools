@@ -51,7 +51,7 @@ for flavor in $flavors ; do
 	# 3.0 compatibility...
 	ln -s cooking/packages $TMP/fs/home/slitaz/packages
 	cp -a $packages/packages.* $TMP/fs/var/lib/tazpkg
-	cp $packages/$flavor.flavor $TMP/fs
+	cp $packages/*.flavor $TMP/fs
 	[ -d $rolling/fixes ] && cp -a $rolling/fixes/. $TMP/fs/.
 	echo "cooking" > $TMP/fs/etc/slitaz-release
 	umount -d $TMP/iso
