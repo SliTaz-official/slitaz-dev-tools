@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Wiki documents
 Name[fr]=Documents Wiki
-Icon=html.png
+Icon=html
 Exec=browser http://localhost/wiki/index.sh
 Type=Application
 Categories=Office;
