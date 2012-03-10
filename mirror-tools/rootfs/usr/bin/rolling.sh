@@ -10,6 +10,9 @@ packages=/home/slitaz/cooking/chroot/home/slitaz/packages
 # We use the last build as build environment
 system=$rolling/slitaz-core.iso
 
+# On chroot:
+# # cook pkgdb --flavors
+
 create_loram()
 {
 case " $lorams " in
@@ -33,19 +36,23 @@ echo -e "</pre>\n</body>\n</html>"
 
 # Build the rolling release if something is new on mirror
 for flavor in $flavors ; do
+    echo "Checking $flavor dates ..."
     if [ ! -s $rolling/slitaz-$flavor.iso -o \
 	 $packages/$flavor.flavor -nt $rolling/slitaz-$flavor.iso -o \
          $packages/packages.list -nt $rolling/slitaz-$flavor.iso ]; then
+        echo "Updating $flavor ..."
 	[ -d $rolling ] || mkdir -p $rolling
 	TMP=$rolling/tmp$$
 	mkdir -p $TMP/iso $TMP/fs/var/lib/tazpkg $TMP/fs/home/slitaz/cooking \
 		 $TMP/fs/var/cache/tazpkg/cooking/packages
 	chown -R root.root $TMP
 	chmod -R 755 $TMP
+	echo "Create system chroot with $system ..."
 	mount -o loop,ro $system $TMP/iso
 	for i in $(ls -r $TMP/iso/boot/rootfs*.gz) ; do
 		unlzma -c $i | ( cd $TMP/fs ; cpio -idmu )
 	done
+	echo "Get cooking packages & flavors ..."
 	mount --bind $packages $TMP/fs/var/cache/tazpkg/cooking/packages
 	ln -s /var/cache/tazpkg/cooking/packages $TMP/fs/home/slitaz/cooking
 	# 3.0 compatibility...
@@ -55,6 +62,7 @@ for flavor in $flavors ; do
 	[ -d $rolling/fixes ] && cp -a $rolling/fixes/. $TMP/fs/.
 	echo "cooking" > $TMP/fs/etc/slitaz-release
 	umount -d $TMP/iso
+	echo "Create build.sh script ..."
 	cat > $TMP/fs/root/build.sh <<EOT
 #!/bin/sh
 
@@ -94,10 +102,12 @@ for i in \$MOUNTS; do
 done
 EOT
 	sh $TMP/fs/BUILD
+	reset
 	# 3.0 compatibility...
 	[ -d $TMP/fs/home/slitaz/cooking/distro ] || 
 	ln -s ../distro $TMP/fs/home/slitaz/cooking/distro
 	umount $TMP/fs/var/cache/tazpkg/cooking/packages
+	echo "Get back slitaz-$flavor.* files ..."
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
 	htmlize < $rolling/slitaz-$flavor.log > $rolling/slitaz-$flavor.log.html
@@ -110,6 +120,7 @@ EOT
 	fi
 	rm -rf $TMP
     fi
+    echo "Sending slitaz-$flavor.* files to mirror ..."
     export DROPBEAR_PASSWORD=none
     SSH="dbclient -i /home/bellard/.ssh/id_rsa.dropbear"
     #BWLIMIT="--bwlimit=40"
