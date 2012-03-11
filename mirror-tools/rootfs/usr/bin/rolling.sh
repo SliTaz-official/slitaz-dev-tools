@@ -47,12 +47,12 @@ for flavor in $flavors ; do
 		 $TMP/fs/var/cache/tazpkg/cooking/packages
 	chown -R root.root $TMP
 	chmod -R 755 $TMP
-	echo "Create system chroot with $system ..."
+	echo "Creating system chroot with $system ..."
 	mount -o loop,ro $system $TMP/iso
 	for i in $(ls -r $TMP/iso/boot/rootfs*.gz) ; do
 		unlzma -c $i | ( cd $TMP/fs ; cpio -idmu )
 	done
-	echo "Get cooking packages & flavors ..."
+	echo "Getting cooking packages & flavors ..."
 	mount --bind $packages $TMP/fs/var/cache/tazpkg/cooking/packages
 	ln -s /var/cache/tazpkg/cooking/packages $TMP/fs/home/slitaz/cooking
 	# 3.0 compatibility...
@@ -62,7 +62,7 @@ for flavor in $flavors ; do
 	[ -d $rolling/fixes ] && cp -a $rolling/fixes/. $TMP/fs/.
 	echo "cooking" > $TMP/fs/etc/slitaz-release
 	umount -d $TMP/iso
-	echo "Create build.sh script ..."
+	echo "Creating build.sh script ..."
 	cat > $TMP/fs/root/build.sh <<EOT
 #!/bin/sh
 
@@ -107,7 +107,7 @@ EOT
 	[ -d $TMP/fs/home/slitaz/cooking/distro ] || 
 	ln -s ../distro $TMP/fs/home/slitaz/cooking/distro
 	umount $TMP/fs/var/cache/tazpkg/cooking/packages
-	echo "Get back slitaz-$flavor.* files ..."
+	echo "Getting back slitaz-$flavor.* files ..."
 	mv -f $TMP/fs/home/slitaz/cooking/distro/slitaz-$flavor.* $rolling/
 	mv -f $TMP/slitaz-$flavor.log $rolling/
 	htmlize < $rolling/slitaz-$flavor.log > $rolling/slitaz-$flavor.log.html

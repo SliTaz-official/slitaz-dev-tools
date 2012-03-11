@@ -78,6 +78,6 @@ chmod 700 *
 
 [ -n "$REMOTE_USER" ] && for i in $(cd .. ; ls); do
 	[ $i == $(hostname) -o $i.slitaz.org == $(hostname) ] && continue
-	echo "Get backups from $i ..."
+	echo "Getting backups from $i ..."
 	rsync -aH -e "$SSH" --bwlimit=50 $REMOTE_USER@$i.slitaz.org:/home/backups/$i/. ../$i/.
 done

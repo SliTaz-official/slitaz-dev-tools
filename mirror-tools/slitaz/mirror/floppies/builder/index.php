@@ -395,7 +395,7 @@ insert the next floppy, <i>fd002.img</i>. And so on.
 </p>
 
 <p>
-The floppy set detects disk swaps and can be used without keyboard.
+The floppy set detects disk swaps and can be used without a keyboard.
 </p>
 <?php
 		}

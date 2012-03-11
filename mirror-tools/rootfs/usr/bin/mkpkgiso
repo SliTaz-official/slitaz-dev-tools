@@ -61,7 +61,7 @@ if [ "$PKG_VER" == "update-hg" ]; then
 	exit 1
 fi
 
-# Check if we provide a valide version
+# Check if we provide a valid version
 if [ ! -d $REPOS ]; then
 	echo "Boooh! $PKG_VER is not a valid version."
 	exit 1
