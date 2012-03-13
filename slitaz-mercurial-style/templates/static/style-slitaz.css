@@ -75,7 +75,7 @@ pre {
 /* Block */
 
 #block { 
-	min-height: 160px; 
+	min-height: 150px; 
 	background: #d66018; 
 	padding: 26px 10% 0px;
 	text-align: center;
