@@ -104,12 +104,13 @@ bind_chroot_dir()
 	mount -o bind $1 $2
 
 	# Update aufs jail configuration
-	if [ "${2#*/home}" != "$2" ] &&
-	   grep -s ^AUFS_MOUNTS= ${2%/home/*}/etc/slitaz/cook.conf &&
-	   ! grep -q /home${2#*/home} ${2%/home/*}/etc/slitaz/cook.conf; then
-		sed -i "s|^AUFS_MOUNTS=\"|&/home${2#*/home}|" \
-			${2%/home/*}/etc/slitaz/cook.conf
-	fi
+	# BUGGY
+	#if [ "${2#*/home}" != "$2" ] &&
+	   #grep -s ^AUFS_MOUNTS= ${2%/home/*}/etc/slitaz/cook.conf &&
+	   #! grep -q /home${2#*/home} ${2%/home/*}/etc/slitaz/cook.conf; then
+		#sed -i "s|^AUFS_MOUNTS=\"|&/home${2#*/home}|" \
+			#${2%/home/*}/etc/slitaz/cook.conf
+	#fi
 }
 
 # Mount virtual Kernel file systems and chroot but check that nobody
