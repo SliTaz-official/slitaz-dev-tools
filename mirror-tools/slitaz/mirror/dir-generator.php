@@ -143,10 +143,11 @@ function get_file_type($file) {
 }
 
 //$slitaz_style = (dirname($_SERVER["PHP_SELF"]) == '/');
-$slitaz_style = ($_SERVER["SERVER_NAME"] == "mirror.slitaz.org");
+//$slitaz_style = ($_SERVER["SERVER_NAME"] == "mirror.slitaz.org");
+$slitaz_style = preg_match("/mirror\.slitaz\./",$_SERVER["SERVER_NAME"]);
 if ($slitaz_style) {
 	$fvalue = "";
-	if (isset($_GET[f])) $fvalue = 'value="'.$_GET[f].'"';
+	if (isset($_GET['f'])) $fvalue = 'value="'.$_GET['f'].'"';
 	print <<<EOT
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -181,6 +182,7 @@ if ($slitaz_style) {
 		<a href="http://forum.slitaz.org/">Forum</a>
 		<a href="http://bugs.slitaz.org">Bugs</a>
 		<a href="http://hg.slitaz.org/">Hg</a>
+		<a href="http://cook.slitaz.org/">BB</a>
 	</div>
 	<h1><a href="http://mirror.slitaz.org/">SliTaz Mirror</a> /${vpath}</h1>
 </div>
@@ -223,7 +225,7 @@ EOT;
 	<div id="block_info">
 		<h4>Welcome to Open Source!</h4>
 EOT;
-	if ($_SERVER["SERVER_NAME"] == "mirror.slitaz.org") print <<<EOT
+	if (preg_match("/mirror\.slitaz\./",$_SERVER["SERVER_NAME"])) print <<<EOT
 		<p>This is the SliTaz GNU/Linux main mirror. The server runs naturally 
 		SliTaz (stable) in an lguest virtual machine provided by 
 		<a href="http://www.ads-lu.com/">ADS</a>.
@@ -298,6 +300,11 @@ function my_filemtime($path)	// 2G+ file support
 	return rtrim(shell_exec("stat -Lc %Y '".$path."'"));
 }
 
+function my_filemtimeasc($path)	// 2G+ file support
+{
+	return rtrim(shell_exec("date -r '".$path."' '+%Y-%b-%d %H:%M:%S'"));
+}
+
 // Get all of the folders and files. 
 $folderlist = array();
 $filelist = array();
@@ -316,6 +323,7 @@ if($handle = @opendir($path)) {
 				'name' => $item, 
 				'size' => 0, 
 				'modtime'=> filemtime($path.'/'.$item),
+				'modtimeasc'=> my_filemtimeasc($path.'/'.$item),
 				'file_type' => "Directory"
 			);
 		}
@@ -329,6 +337,7 @@ if($handle = @opendir($path)) {
 				'name'=> $item, 
 				'size'=> my_filesize($path.'/'.$item), 
 				'modtime'=> my_filemtime($path.'/'.$item),
+				'modtimeasc'=> my_filemtimeasc($path.'/'.$item),
 				'file_type' => get_file_type($path.'/'.$item)
 			);
 		}
@@ -394,7 +403,7 @@ if($path != "./") {
 // Print folder information
 foreach($folderlist as $folder) {
 	print "<tr><td class='n'><a href='" . addslashes($folder['name']). "'>" .htmlentities($folder['name']). "</a>/</td>";
-	print "<td class='m'>" . date('Y-M-d H:m:s', $folder['modtime']) . "</td>";
+	print "<td class='m'>" . $folder['modtimeasc'] . "</td>";
 	print "<td class='s'>- &nbsp;</td>";
 	print "<td class='t'>" . $folder['file_type']                    . "</td></tr>\n";
 }
@@ -403,7 +412,7 @@ foreach($folderlist as $folder) {
 // Print file information
 foreach($filelist as $file) {
 	print "<tr><td class='n'><a href='" . addslashes($file['name']). "'>" .htmlentities($file['name']). "</a></td>";
-	print "<td class='m'>" . date('Y-M-d H:m:s', $file['modtime'])   . "</td>";
+	print "<td class='m'>" . $file['modtimeasc'] . "</td>";
 	print "<td class='s'>" . format_bytes($file['size'])           . "</td>";
 	print "<td class='t'>" . $file['file_type']                      . "</td></tr>\n";
 }
@@ -436,6 +445,12 @@ if ($slitaz_style) { ?>
 		<a href="http://distrowatch.com/slitaz">Distrowatch</a>
 		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a>
 		<a href="http://flattr.com/profile/slitaz">Flattr</a>
+	</p>
+	<p>
+		<a href="http://validator.w3.org/check?uri=referer">
+			<img src="/css/pics/website/xhtml10.png" 
+			     alt="Valid XHTML 1.0" title="Code validé XHTML 1.0"
+			     style="width: 80px; height: 15px;" /></a>
 	</p>
 </div>
 
