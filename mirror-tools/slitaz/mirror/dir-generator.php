@@ -158,16 +158,9 @@ if ($slitaz_style) {
 	<meta name="description" content=">Index of /$vpath" />
 	<meta name="robots" content="index, nofollow" />
 	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="/css/favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="/css/slitaz.css" />
-	<style type='text/css'>
-		div.list { background-color: white; padding-bottom: 14px;}
-		table { width: 100% ;}
-		th, td { font: 90% monospace; text-align: left;}
-		th { font-weight: bold; padding-right: 14px; padding-bottom: 3px;}
-		td {padding-right: 14px;}
-		td.s, th.s {text-align: right;}
-	</style>
+	<link rel="shortcut icon" href="http://mf.slitaz.org//favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="mf.slitaz.org/css/slitaz.css" />
+	<link rel="stylesheet" type="text/css" href="mf.slitaz.org/css/mirror.css" />
 </head>
 <body>
 
@@ -176,10 +169,13 @@ if ($slitaz_style) {
 	<div id="logo"></div>
 	<div id="network">
 		<a href="http://www.slitaz.org/">
-			<img src="/css/pics/network.png" alt="network.png" /></a>
+			<img src="http://mf.slitaz.org/images/home.png" alt="[ Home ]" />
+			Home</a>
 		<a href="http://scn.slitaz.org/">Community</a>
 		<a href="http://doc.slitaz.org/">Doc</a>
 		<a href="http://forum.slitaz.org/">Forum</a>
+		<a href="http://pro.slitaz.org/">Pro</a>
+		<a href="https://slitaz.spreadshirt.net/">Shop</a>
 		<a href="http://bugs.slitaz.org">Bugs</a>
 		<a href="http://hg.slitaz.org/">Hg</a>
 		<a href="http://cook.slitaz.org/">BB</a>
@@ -194,24 +190,6 @@ if ($slitaz_style) {
 		<h4><img src="/css/pics/network.png" alt=".png" />Mirrors</h4>
 		<div>
 EOT;
-
-	// Mirror list
-	$mirrors = array();
-	$fp = @fopen(dirname($_SERVER["SCRIPT_FILENAME"])."/mirrors","r");
-	if ($fp) {
-		while (($line = fgets($fp)) !== false) {
-			$line = chop($line);
-			$url = parse_url($line);
-			if ($_SERVER["SERVER_NAME"] == $url['host']) continue;
-			$host = explode('.',$url['host']);
-			$mirrors[$host[count($host)-2].".".
-			         $host[count($host)-1]] = $line;
-		}
-	}
-	fclose($fp);
-	foreach($mirrors as $name => $url) {
-		echo "<a href=\"$url$vpath\" title=\"$name mirror\">$name</a>\n";
-	}
 	
 	print <<<EOT
 		</div>
@@ -237,6 +215,30 @@ EOT;
 				style="height: 14px; border-radius: 4px;" /></p>
 		</form>
 	</div>
+</div>
+
+<div id="lang">
+EOT
+
+// Mirror list
+$mirrors = array();
+$fp = @fopen(dirname($_SERVER["SCRIPT_FILENAME"])."/mirrors","r");
+if ($fp) {
+	while (($line = fgets($fp)) !== false) {
+		$line = chop($line);
+		$url = parse_url($line);
+		if ($_SERVER["SERVER_NAME"] == $url['host']) continue;
+		$host = explode('.',$url['host']);
+		$mirrors[$host[count($host)-2].".".
+		         $host[count($host)-1]] = $line;
+	}
+}
+fclose($fp);
+foreach($mirrors as $name => $url) {
+	echo "<a href=\"$url$vpath\" title=\"$name mirror\">$name</a>\n";
+}
+
+print <<<EOT
 </div>
 
 <!-- Content -->
