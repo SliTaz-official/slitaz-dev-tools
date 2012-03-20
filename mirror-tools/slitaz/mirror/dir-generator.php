@@ -218,7 +218,7 @@ EOT;
 </div>
 
 <div id="lang">
-EOT
+EOT;
 
 // Mirror list
 $mirrors = array();
