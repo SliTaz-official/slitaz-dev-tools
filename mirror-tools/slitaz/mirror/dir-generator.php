@@ -159,8 +159,8 @@ if ($slitaz_style) {
 	<meta name="robots" content="index, nofollow" />
 	<meta name="author" content="SliTaz Contributors" />
 	<link rel="shortcut icon" href="http://mf.slitaz.org//favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="mf.slitaz.org/css/slitaz.css" />
-	<link rel="stylesheet" type="text/css" href="mf.slitaz.org/css/mirror.css" />
+	<link rel="stylesheet" type="text/css" href="http://mf.slitaz.org/css/slitaz.css" />
+	<link rel="stylesheet" type="text/css" href="http://mf.slitaz.org/css/mirror.css" />
 </head>
 <body>
 
