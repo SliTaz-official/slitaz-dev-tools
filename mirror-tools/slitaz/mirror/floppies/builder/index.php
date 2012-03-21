@@ -46,8 +46,8 @@ if (isset($_GET['id']) && is_file("/tmp/".$_GET['id']."/fd")) {
 	<meta name="description" content="slitaz boot floppies builder" />
 	<meta name="robots" content="index, nofollow" />
 	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="../../css/favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="../../css/slitaz.css" />
+	<link rel="shortcut icon" href="/static/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/static/slitaz.css" />
 	<style type="text/css">
 	
 input[type=text] {
@@ -80,7 +80,7 @@ input[type=text] {
 	<div id="logo"></div>
 	<div id="network">
 		<a href="http://www.slitaz.org/">
-		<img src="/css/pics/network.png" alt="network.png" /></a>
+		<img src="/static/network.png" alt="[ home ]" /></a>
 		<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a> |
 		<a href="../../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
 	</div>
@@ -442,7 +442,7 @@ Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.slitaz.org/">SliTa
 <!-- Bottom and logo's -->
 <div id="bottom">
 <p>
-<a href="http://validator.w3.org/check?uri=referer"><img src="../../css/pics/website/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
+<a href="http://validator.w3.org/check?uri=referer"><img src="/static/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
 </p>
 </div>
 
