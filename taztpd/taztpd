@@ -7,7 +7,7 @@
 # AUTHOR: Christophe Lincoln
 #
 
-# Personnal configuration overwrite system wide config.
+# Personal configuration overwrites system wide config.
 [ -f "/etc/slitaz/taztpd.conf" ] && . /etc/slitaz/taztpd.conf
 [ -f "taztpd.conf" ] && . taztpd.conf
 

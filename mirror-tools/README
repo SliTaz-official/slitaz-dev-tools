@@ -2,9 +2,9 @@ SliTaz Mirror Tools
 ===============================================================================
 
 
-This package provids tools for a SliTaz mirror such as helper scripts.
+This package provides tools for a SliTaz mirror such as helper scripts.
 These tools are used on our official SliTaz mirror and should help other
-mirrors admin to get a custom mirror with SliTaz branding, backup, etc.
+mirror admins to get a custom mirror with SliTaz branding, backup, etc.
 
 The configuration files used on mirror.slitaz.org are in the slitaz-forge
 repository.

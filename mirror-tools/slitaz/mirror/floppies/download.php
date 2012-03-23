@@ -150,7 +150,7 @@ Copyright &copy; <span class="year"></span> <a href="http://www.slitaz.org/">Sli
 <!-- End of copy -->
 </div>
 
-<!-- Bottom and logo's -->
+<!-- Bottom and logos -->
 <div id="bottom">
 <p>
 <a href="http://validator.w3.org/check?uri=referer"><img src="../css/pics/website/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
