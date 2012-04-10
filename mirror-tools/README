@@ -6,6 +6,11 @@ This package provides tools for a SliTaz mirror such as helper scripts.
 These tools are used on our official SliTaz mirror and should help other
 mirror admins to get a custom mirror with SliTaz branding, backup, etc.
 
+****
+Move dvd and floppies to slitaz-forge/dvd and slitaz-forge/floppies since
+ther are virtual full hosts.
+****
+
 The configuration files used on mirror.slitaz.org are in the slitaz-forge
 repository.
 
