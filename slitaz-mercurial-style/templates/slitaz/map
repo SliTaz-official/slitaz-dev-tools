@@ -1,6 +1,6 @@
 default = 'shortlog'
 
-mimetype = 'text/html; charset={encoding}'
+mimetype = 'text/html; charset=utf-8'
 header = header.tmpl
 footer = footer.tmpl
 search = search.tmpl
