@@ -11,20 +11,22 @@
 #     Christophe Lincoln <pankso@slitaz.org>
 #     Pascal Bellard <bellard@slitaz.org>
 #
+. /lib/libtaz.sh
 
 [ -f /etc/slitaz/tazdev.conf ] && . /etc/slitaz/tazdev.conf
 [ -f tazdev.conf ] && . ./tazdev.conf
 
-if [ -z "$SLITAZ" ]; then
+if [ -z "$SLITAZ_HOME" ]; then
 	echo -e "\nNo config file found\n" && exit 1
 fi
 
 usage()
 {
 	echo -e "\nSliTaz developers and build host tool\n
-\033[1mUsage: \033[0m `basename $0` [command] [user] [stable|cooking|undigest|path]
-\033[1mCommands: \033[0m\n
+$(boldify "Usage:") $(basename $0) [command] [user|tool] [release|path]
+$(boldify "Commands:")
  usage               Print this short usage and command list
+ help                Give help on a SliTaz tool or library.
  projects-stats|-ps  Display statistics about your projects
  chroot              Mount virtual fs if needed and chroot into the build env
  gen-chroot|-gs      Generate a chroot using the last cooking base rootfs
@@ -41,26 +43,6 @@ usage()
  reliso|-ri          Create all main flavors (not loram)\n"
 }
 
-# Be sure we root.
-check_root() {
-	[ $(id -u) != 0 ] && \
-		echo -e "\nYou must be root to use: $(basename $0) $@\n" && exit 0
-}
-
-separator() {
-	echo "================================================================================"
-}
-
-status() {
-	echo -en "\\033[70G[ "
-	if [ $? = 0 ]; then
-		echo -en "\\033[1;32mOK"
-	else
-		echo -en "\\033[1;31mFailed"
-	fi
-	echo -e "\\033[0;39m ]"
-}
-
 get_version()
 {
 	if [ "$2" = "stable" ]; then
@@ -69,7 +51,7 @@ get_version()
 	elif [ -n "$2" ]; then
 		# Undigest - custom ?
 		version=$2
-		slitaz=$SLITAZ/$2
+		slitaz=$SLITAZ_HOME/$2
 	else
 		version=cooking
 		slitaz=$COOKING
@@ -129,7 +111,7 @@ mount_chroot()
 	# But do it only if it's a slitaz developement chroot.
 	fs=$rootfs/home/slitaz
 	if [ -d "$slitaz" ]; then
-		bind_chroot_dir $SLITAZ/src $fs/src
+		bind_chroot_dir $SLITAZ_HOME/src $fs/src
 		# Now mount package dir so they are in /home/slitaz/$version
 		# We may not mount cache wok or others it has no point and if
 		# one wants to use a shared wok he can bind it manually.
@@ -365,8 +347,10 @@ case "$1" in
 		echo -n "Do you wish to update $pkg in wok [N/y] ? "
 		read update
 		if [ "$update" = "y" ]; then
+			echo "Updating $pkg: $version"
 			cd $PROJECTS/wok
 			sed -i s"/VERSION=.*/VERSION=\"$version\"/" $pkg*/receipt
+			status
 		fi ;;
 	reliso|-ri)
 		# Generate all official images iso at once for a specific version.
@@ -389,6 +373,19 @@ case "$1" in
 		done
 		# Clean up slitaz working directory.
 		rm *.flavor tazlito.conf ;;
+	help)
+		[ ! "$2" ] && echo "Missing tool/library name" && exit 0
+		echo ""
+		boldify "Help for: $2"
+		separator
+		case $2 in
+			libtaz.sh) libtaz ;;
+			httphelper.sh) 
+				. /usr/lib/slitaz/httphelper.sh 
+				httphelper ;;
+			*) echo "No help found" ;;
+		esac
+		separator && echo "" ;;
 	usage|*)
 		usage ;;
 esac
