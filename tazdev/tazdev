@@ -347,7 +347,7 @@ case "$1" in
 		echo -n "Do you wish to update $pkg in wok [N/y] ? "
 		read update
 		if [ "$update" = "y" ]; then
-			echo "Updating $pkg: $version"
+			echo -n "Updating $pkg: $version"
 			cd $PROJECTS/wok
 			sed -i s"/VERSION=.*/VERSION=\"$version\"/" $pkg*/receipt
 			status
