@@ -378,13 +378,11 @@ case "$1" in
 		echo ""
 		boldify "Help for: $2"
 		separator
-		case $2 in
-			libtaz.sh) libtaz ;;
-			httphelper.sh) 
-				. /usr/lib/slitaz/httphelper.sh 
-				httphelper ;;
-			*) echo "No help found" ;;
-		esac
+		if [ -f "/usr/share/doc/slitaz/$2.txt" ]; then
+			less -M /usr/share/doc/slitaz/$2.txt
+		else
+			echo "No help found"
+		fi
 		separator && echo "" ;;
 	usage|*)
 		usage ;;

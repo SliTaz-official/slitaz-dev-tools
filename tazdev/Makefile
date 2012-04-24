@@ -7,7 +7,7 @@ DESTDIR?=
 all:
 
 install:
-	install -m 0777 tazdev $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 tazdev $(DESTDIR)$(PREFIX)/bin
 	install -m 0644 tazdev.conf $(DESTDIR)/etc/slitaz
 
 uninstall:
