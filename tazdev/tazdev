@@ -142,7 +142,7 @@ umount_chroot()
 gen_new_chroot()
 {
 	echo -e "\nGenerating new chroot in : $rootfs"
-	separator	
+	separator
 	mkdir -p $rootfs
 	if [ "$ROOTFS_PKG" == "yes" ]; then
 		for pkg in $CHROOT_PKGS
@@ -282,7 +282,7 @@ case "$1" in
 		cd $rootfs || exit 1
 		echo -e "\nCleaning chroot in: $rootfs"
 		separator
-		for i in bin dev etc init lib media mnt proc sbin sys tmp usr var
+		for i in bin dev etc lib media mnt proc sbin sys tmp usr var
 		do
 			echo -n "Removing: $i (`du -sh $i | awk '{ print $1 }'`)... "
 			rm -rf $i
@@ -320,20 +320,20 @@ case "$1" in
 		pkg=$2
 		version=$3
 		echo "" && cd $PROJECTS/$pkg
-		
+
 		# Sanity check
 		if ! grep -q $version$ .hgtags; then
 			echo "Missing Hg tag for version: $version"
 			echo -e "You may want to: hg tag $version && hg push\n"
 			exit 0
 		fi
-		
+
 		# Archive
 		echo -n "Creating tarball and md5sum for: $pkg-$version... "
 		hg archive -t tgz $pkg-$version.tar.gz
 		md5sum $pkg-$version.tar.gz > $pkg-$version.md5
 		echo "Done"
-		
+
 		# Upload
 		echo -n "Do you wish to upload tarball to the mirror [N/y] ? "
 		read upload
@@ -341,8 +341,8 @@ case "$1" in
 			echo "Uploading to: $MIRROR/sources/${pkg#slitaz-}"
 			scp $pkg-$version.tar.gz $pkg-$version.md5 \
 				$user@$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
-		fi 
-		
+		fi
+
 		# Update pkg in wok
 		echo -n "Do you wish to update $pkg in wok [N/y] ? "
 		read update
