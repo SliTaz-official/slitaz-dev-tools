@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# Small Qemu front end powered by Yad/GTK.
+#
+# Copyright (C) 2012 SliTaz GNU/Linux - BSD License
+#
+# Author: Christophe Lincoln <pankso@slitaz.org>
+#
+
+# TODO: Handle vdisk image and kernel. Store virtual machine in $config
+#config=$HOME/.config/qemu-box
+
+# Common boxes options.
+opts=" --height=240 --width=500 --image=computer --image-on-top"
+title="Qemu Box"
+
+# Main GUI box function with pure Yad spec
+qemubox_main() {
+	yad --form $opts --window-icon=computer \
+		--text="<b>$title</b> - A Small Qemulator Helper" \
+		--title="$title" \
+		--field="$(gettext "ISO Image:")":FL \
+		--field="$(gettext "Memory:")":NUM \
+		--field="$(gettext "Options:")" \
+		--button="Emulate":0 \
+		--button="gtk-close":1 \
+		" " "512" ""
+}
+
+# Main function
+qemubox() {
+	# Store box results
+	main=$(qemubox_main)
+
+	# Deal with --button values
+	case $? in
+		0) continue ;;
+		*) exit 0 ;;
+	esac
+
+	# Deal with $main values. File can be: .iso or vdisk .img
+	file=$(echo $main | cut -d "|" -f 1)
+	mem=$(echo $main | cut -d "|" -f 2 | cut -d "," -f 1)
+	opts=$(echo $main | cut -d "|" -f 3)
+
+	case $file in
+		*.iso) exec qemu -m $mem $opts -cdrom $file & ;;
+		*.img) echo "TODO" ;;
+		*) yad $opts --title="$title Error" \
+			--text "<b>$title Error</b> $file" ;;
+	esac
+}
+
+#
+# Script commands
+#
+
+case "$1" in
+	usage)
+		echo "Usage: $(basename $0) [command]" ;;
+	*)
+		qemubox ;;
+esac
+
+exit 0
+

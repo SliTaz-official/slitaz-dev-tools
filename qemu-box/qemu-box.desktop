@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Qemu Emulator
+Name[fr]=Emulateur Qemu
+Exec=qemu-box
+Icon=computer
+Type=Application
+Categories=Application;Development;
