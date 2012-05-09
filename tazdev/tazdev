@@ -103,7 +103,6 @@ mount_chroot()
 		# We may not mount cache wok or others it has no point and if
 		# one wants to use a shared wok he can bind it manually.
 		if [ "$arch" ]; then
-			fs=$rootfs/home/slitaz/$arch
 			slitaz=$slitaz/$arch
 		fi
 		[ -d "$fs/packages" ] || mkdir -p $fs/packages
@@ -123,9 +122,6 @@ umount_chroot() {
 	umount $rootfs/proc
 	if mount | fgrep -q $fs/src; then
 		umount $fs/src
-		if [ "$arch" ]; then
-			fs=$rootfs/home/slitaz/$arch
-		fi
 		umount $fs/packages
 	fi
 	status && echo ""
