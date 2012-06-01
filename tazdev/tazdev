@@ -16,28 +16,44 @@
 [ -f /etc/slitaz/tazdev.conf ] && . /etc/slitaz/tazdev.conf
 [ -f tazdev.conf ] && . ./tazdev.conf
 
-if [ -z "$SLITAZ_HOME" ]; then
+if [ ! "$SLITAZ_HOME" ]; then
 	echo -e "\nNo config file found\n" && exit 1
 fi
 
 usage() {
-	echo -e "\nSliTaz developers and build host tool\n
-$(boldify "Usage:") $(basename $0) [command] [user|tool] [release|path]
+	cat << EOT
+
+$(boldify "Usage:") $(basename $0) [command] [vers|user|tool] [vers|--opts]
+
+SliTaz developers and build host tool
+
 $(boldify "Commands:")
- usage               Print this short usage and command list
- help                Give help on a SliTaz tool or library.
- projects-stats|-ps  Display statistics about your projects
- chroot|-c           Mount virtual fs if needed and chroot into the build env
- gen-chroot|-gc      Generate a chroot using packages from config file
- umount-chroot|-uc   Unmount chroot specified on cmdline
- clean-chroot        Clean a chroot environment (skip root/ and home/)
- purge               Remove obsolete packages and obsolete source tarballs
- dry-purge           Show obsolete packages and obsolete source tarballs
- push|-p             Upload new packages to the main mirror
- dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
- pull                Download new packages from the main mirror
- dry-pull            Show what will be downloaded from the mirror. Does nothing
- relpkg|-rp          Archive and upload new package/project version\n"
+  usage               Print this short usage and command list
+  help                Give help on a SliTaz tool or library.
+  stats|-s           Display statistics about your projects
+  chroot|-c           Mount virtual fs and chroot into the build env
+  gen-chroot|-gc      Generate a chroot using packages from config file
+  umount-chroot|-uc   Unmount chroot specified on cmdline
+  clean-chroot|-cc    Clean a chroot environment (skip root/ and home/)
+  !purge              Remove obsolete packages and obsolete source tarballs
+  !dry-purge          Show obsolete packages and obsolete source tarballs
+  push|-p             Upload new packages to the main mirror
+  dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
+  pull                Download new packages from the main mirror
+  dry-pull            Show what will be downloaded from the mirror. Does nothing
+  relpkg|-rp          Archive and upload new package/project version
+
+$(boldify "Options:")
+  --rootfs=           Path to the chroot to generate or clean
+  --arch=             Specify the architecture type for cross-chroot
+  --clean             Clean chroot before generation a new one
+
+$(boldify "Options:")
+  $(basename $0) gen-chroot undigest --clean
+  $(basename $0) chroot stable
+  $(basename $0) -c --arch=arm
+
+EOT
 }
 
 get_version() {
@@ -47,7 +63,7 @@ get_version() {
 		slitaz=$SLITAZ_HOME/$2
 	else
 		version=cooking
-		slitaz=$COOKING
+		slitaz=$SLITAZ_HOME/cooking
 	fi
 	if [ "$arch" ]; then
 		rootfs=$slitaz/$arch/chroot
@@ -65,13 +81,13 @@ check_mirror() {
 	fi
 	if [ "$2" = "stable" ] || [ "$3" = "stable" ]; then
 		remote=$MIRROR_PKGS/stable/
-		local=$STABLE/packages/
+		local=$SLITAZ_HOME/stable/packages/
 	elif [ "$2" = "undigest" ] || [ "$3" = "undigest" ]; then
 		remote=$MIRROR_PKGS/undigest/
-		local=$UNDIGEST/packages/
+		local=$SLITAZ_HOME/undigest/packages/
 	else
 		remote=$MIRROR_PKGS/cooking/
-		local=$COOKING/packages/
+		local=$SLITAZ_HOME/cooking/packages/
 	fi
 }
 
@@ -132,19 +148,42 @@ gen_chroot() {
 	echo -e "\nGenerating new chroot in: $rootfs"
 	separator
 	mkdir -p $rootfs
+	# We my gen cooking chroot from a stable version or invers
+	case "$version" in
+		cooking|undigest) url="http://$MIRROR/packages/cooking/" ;;
+		stable|4.0) url="http://$MIRROR/packages/stable/" ;;
+	esac
+	# --mirror=
+	[ "$mirror" ] && url="$mirror"
+	mpath=/var/lib/tazpkg/mirror
+	cp $mpath ${mpath}.tazdev
+	echo "$url" > $mpath
+	echo -n "Mirror URL: ${url#http://}"
+	tazpkg recharge 2>/dev/null 1>/dev/null
+	status
 	for pkg in $CHROOT_PKGS
 	do
-		tazpkg get-install $pkg --root=$rootfs
+		echo -n "Installing: $pkg $vers"
+		tazpkg -gi $pkg --root=$rootfs 2>/dev/null 1>/dev/null
+		status
 	done
 	echo -n "Creating resolv.conf..."
 	cat /etc/resolv.conf > $rootfs/etc/resolv.conf
 	status
+	echo -n "Restoring host packages list..."
+	mv -f ${mpath}.tazdev $mpath
+	tazpkg recharge 2>/dev/null 1>/dev/null >/dev/null
+	status
 	separator
-	echo -e "Ready to chroot. Use 'tazdev chroot [version|path]'"
-	echo -e "Example: tazdev chroot $rootfs\n"
+	case "$version" in
+		cooking) version="" ;;
+	esac
+	[ "$arch" ] && version="$version --arch=$arch"
+	echo -n "Ready to chroot with:"; colorize 34 " tazdev -c $version"
+	newline
 }
 
-# Remove obsolate slitaz packages
+# Remove obsolate slitaz packages --> in cooker ???
 purge_packages() {
 	arg=$1
 	tmp=/tmp/tazdev.$$
@@ -166,7 +205,8 @@ purge_packages() {
 	rm -f $tmp
 }
 
-# Remove obsolete source tarballs
+# Remove obsolete source tarballs --> in cooker ??? but we share $src
+# between cooking and stable to we must scan all versions, all arch
 purge_sources() {
 	arg=$1
 	wok=$slitaz/chroot/home/slitaz/wok
@@ -193,14 +233,7 @@ purge_sources() {
 }
 
 case "$1" in
-	info)
-		get_version $@
-		echo ""
-		echo "Version: $version"
-		[ "$arch" ] && echo "Arch   : $arch"
-		echo "Chroot : $rootfs"
-		echo "" ;;
-	projects-stats|-ps)
+	stats|-s)
 		echo -e "\nStatistics for: $PROJECTS\n"
 		echo -n "Project" && echo -ne "\033[24G Size" && echo -ne "\033[38G Revision"
 		echo -ne "\033[48G Version" && echo -e "\033[64G Files"
@@ -236,15 +269,16 @@ case "$1" in
 	umount-chroot|-uc)
 		check_root
 		get_version $@
-		[ "$2" ] && rootfs=$2
+		[ -d "$2" ] && rootfs=$2
 		umount_chroot $rootfs ;;
 	gen-chroot|-gc)
 		check_root
 		# We can use: --rootfs=/path/to/chroot
-		if [ "$rootfs" ]; then
-			continue
-		else
+		if [ ! "$rootfs" ]; then
 			get_version $@
+		fi
+		if [ "$clean" ] || [ "$forced" ]; then
+			$0 -cc --rootfs=$rootfs --noline
 		fi
 		# Dont break another env.
 		if [ -d $rootfs/bin ]; then
@@ -252,27 +286,25 @@ case "$1" in
 			exit 1
 		fi
 		gen_chroot ;;
-	clean-chroot)
-		# Keep root/ and /home they may have a build wok, custom scripts, etc.
+	clean-chroot|-cc)
 		check_root
-		if [ -z "$2" ]; then
-			echo -e "\nPlease specify the path to the chroot environment to clean.\n"
-			exit 0
-		else
-			rootfs=$2
-			if [ ! -d "$rootfs" ]; then
-				echo -e "\nWarning : $rootfs doesn't exist!\n"
-				exit 1
-			fi
+		# We can use: --rootfs=/path/to/chroot
+		if [ ! "$rootfs" ]; then
+			get_version $@
+		fi
+		if [ ! -d "$rootfs" ]; then
+			echo -e "\nChroot doesn't exist: $rootfs\n"
+			exit 1
 		fi
 		if [ -d $rootfs/proc/1 ]; then
-			echo -e "\nWarning : $rootfs/proc mounted!\n"
+			echo -e "\nWARNING: $rootfs/proc mounted!\n"
 			exit 1
 		fi
 		cd $rootfs || exit 1
 		echo ""
 		boldify "Cleaning chroot: $rootfs"
 		separator
+		# Keep root/ and /home they may have a build wok, custom scripts, etc.
 		for i in boot bin dev etc lib media mnt proc sbin sys tmp usr var run
 		do
 			if [ -d "$i" ]; then
@@ -281,7 +313,8 @@ case "$1" in
 			fi
 		done
 		rm -f init
-		separator && echo "" ;;
+		separator
+		[ "$noline" ] || newline ;;
 	push|-p)
 		check_mirror $@
 		rsync -r -t -O -l -v -z --delete \
