@@ -5,7 +5,7 @@
 # Copyright (C) Pascal Bellard
 # Based on WiKiss - http://wikiss.tuxfamily.org/
 
-. /usr/bin/httpd_helper.sh
+. /usr/lib/slitaz/httphelper.sh
 
 cd $(dirname $0)
 CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%,*}.sh
