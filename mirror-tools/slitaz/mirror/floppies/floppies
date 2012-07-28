@@ -1,0 +1,31 @@
+#!/bin/sh
+
+read32()
+{
+	dd if=kernel bs=1 skip=$((0x$1)) count=4 2> /dev/null | \
+		hexdump -e '"" 1/4 "%d" "\n"'
+}
+
+case "$1" in
+extract)
+	dd bs=512 count=2 > kernel 2> /dev/null
+	setupsz=$(($(read32 1F1) & 255))
+	dd bs=512 count=$(($setupsz - 1)) >> kernel 2> /dev/null
+	[ $(read32 228) -ne 0 ] &&
+	dd bs=512 count=1 2> /dev/null | strings > cmdline
+	syssz=$(read32 1F4)
+	syssz=$(( ($syssz + 31) / 32 ))
+	dd bs=512 count=$syssz >> kernel 2> /dev/null
+	ramsz=$(read32 21C)
+	dd bs=512 count=$((($ramsz + 511) / 512)) of=rootfs 2> /dev/null
+	dd bs=1 seek=$ramsz count=0 of=rootfs 2> /dev/null
+	;;
+*)	cat <<EOT
+usage: 
+# cat fd0*.img | $0 extract
+	creates kernel, rootfs and cmdline files
+# cat fd1*.img | unlzma | cpio -i
+# cat fd2*.img | unlzma | cpio -i
+...
+EOT
+esac

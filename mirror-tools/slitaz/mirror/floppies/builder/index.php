@@ -496,7 +496,7 @@ time but the keyboard is not mandatory.
 A <a href="bootloader"> standalone version</a> is available.
 </p>
 <p>
-Each part (boot, setup, cmdline, kernel, initramfs) is aligned to 512 bytes.
+Each part (boot, setup, boot message, cmdline, kernel, initramfs) is aligned to 512 bytes.
 The result is split to fit the floppy size.
 The last floppy image is padded with zeros.
 </p>
