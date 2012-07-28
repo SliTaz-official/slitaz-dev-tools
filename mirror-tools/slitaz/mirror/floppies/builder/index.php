@@ -46,8 +46,8 @@ if (isset($_GET['id']) && is_file("/tmp/".$_GET['id']."/fd")) {
 	<meta name="description" content="slitaz boot floppies builder" />
 	<meta name="robots" content="index, nofollow" />
 	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="/static/favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="/static/slitaz.css" />
+	<link rel="shortcut icon" href="../static/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="../static/slitaz.css" />
 	<style type="text/css">
 	
 input[type=text] {
@@ -80,9 +80,9 @@ input[type=text] {
 	<div id="logo"></div>
 	<div id="network">
 		<a href="http://www.slitaz.org/">
-		<img src="/static/network.png" alt="[ home ]" /></a>
+		<img src="../static/home.png" alt="[ home ]" /></a>
 		<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a> |
-		<a href="../../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
+		<a href="../floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
 	</div>
 	<h1><a href="http://www.slitaz.org/">Boot floppies builder</a></h1>
 </div>
@@ -129,11 +129,12 @@ EOT;
 
 	$size = 0;
 	$initrd_size = 0;
+	$info_size = 0;
 	
 	// Upload kernel
 	
 	foreach($_FILES as $data) {
-		$msg="The file ".$_FILES["kernel"]['name']." ";
+		$msg="The file ".$data['name']." ";
 		switch ($data["error"]) {
 		case UPLOAD_ERR_INI_SIZE   : 
 			error($msg."exceeds upload_max_filesize.");
@@ -162,23 +163,20 @@ EOT;
 				   $tmp_dir."kernel");
 		$kernel = $tmp_dir."kernel";
 		$boot_version = get_long($kernel,0x206) & 255;
+		if (get_long($kernel,0x202) != 0x53726448) // 'HdrS' magic
+			$boot_version = 0;
 		$size = get_long($kernel,0x1F4);	// syssize paragraphs
 		if ($boot_version < 4) $size &= 0xFFFF;	// 16 bits before 2.4
 		$size = ($size + 0xFFF) & 0xFFFF000;	// round up to 64K
 		$size <<= 4;				// paragraphs -> bytes
-		if (get_long($kernel,0x202) != 0x53726448 ||	// 'HdrS' magic
-		    (get_long($kernel,0x211) & 1 != 1)) {	// bzImage flag
-			error("The file ".$_FILES["kernel"]['name'].
-			      " is not a bzImage Linux kernel.");
-			$size = 0;
-		}
-		else if ($boot_version < 2 && $_POST['cmdline']) { // before 2.2
-			unset($_POST['cmdline']);
-			error("This boot loader does not support Linux kernel ".
-			      "prior 2.4.0-test3-pre3 command line.",
-			      "Warning");
-		}
 		$msg = "The size of the file ".$_FILES["kernel"]['name'];
+	}
+
+	if ($size && isset($_FILES["info"]['tmp_name']) &&
+	    is_uploaded_file($_FILES["info"]['tmp_name'])) {
+		move_uploaded_file($_FILES["info"]['tmp_name'],
+				   $tmp_dir."info");
+		$info_size = $_FILES["info"]['size'];
 	}
 	
 	// Upload initrd
@@ -213,9 +211,13 @@ EOT;
 	else {
 		$cmd = "./bootloader ".$tmp_dir."kernel --prefix "
 		     . $tmp_dir."fd --format 0 --flags ".$_POST['flags']
-		     . " --video ".$_POST['video'];
+		     . " --video ".$_POST['video']." --mem ".$_POST['ram'];
+		if ($_POST['edit'] == "")
+			$cmd .= " --dont-edit-cmdline";
 		if ($_POST['cmdline'])
 			$cmd .= " --cmdline '".$_POST['cmdline']."'";
+		if ($info_size)
+			$cmd .= " --info ".$tmp_dir."info";
 		if (file_exists($_POST['rdev']))
 			$cmd .= " --rdev ".$_POST['rdev'];
 		if ($initrd_size)
@@ -286,21 +288,26 @@ function show_size($size)
 <table>
 	<tr>
 	<td>Linux kernel:</td>
-	<td><input type="file" name="kernel" size="25" /> <i>required</i></td>
+	<td><input type="file" name="kernel" size="37" /> <i>required</i></td>
 	</tr>
 	<tr>
 	<td>Initramfs / Initrd:</td>
-	<td><input type="file" name="initrd" size="25" /> <i>optional</i></td>
+	<td><input type="file" name="initrd" size="37" /> <i>optional</i></td>
 	</tr>
 	<tr>
 	<td>Extra initramfs:</td>
-	<td><input type="file" name="initrd2" size="25" /> <i>optional</i></td>
+	<td><input type="file" name="initrd2" size="37" /> <i>optional</i></td>
+	</tr>
+	<tr>
+	<td>Boot message:</td>
+	<td><input type="file" name="info" size="37" /> <i>optional</i></td>
 	</tr>
 	<tr>
 	<td>Default cmdline:</td>
 	<td><input type="text" name="cmdline" size="36" <?php 
 		if (isset($_GET['cmdline'])) echo 'value="'.$_GET['cmdline'].'"';
-	?>/> <i>optional</i></td>
+	?>/> <input type="checkbox" name="edit" checked="checked" />edit
+	<i>optional</i></td>
 	</tr>
 	<tr>
 	<td>Root device:</td>
@@ -308,22 +315,85 @@ function show_size($size)
 		if (isset($_GET['rdev'])) echo $_GET['rdev'];
 		else echo "/dev/fd0";
 	?>" />
-	&nbsp;&nbsp;Root flags: <select name="flags">
+	&nbsp;&nbsp;Flags: <select name="flags">
 		<option value="1">R/O</option>
 		<option value="0" <?php
 			if (isset($_GET['rdev']) && $_GET['rdev'] == "0")
 				echo ' selected="selected"'
 		?>>R/W</option>
 	</select>
-	&nbsp;&nbsp;VGA mode: <select name="video">
+	&nbsp;&nbsp;VESA: <select name="video">
 		<?php
 			$selected=-1;
 			if (isset($_GET['video'])) $selected = $_GET['video'];
 			$options = array();
 			$options[-3] = "Ask";
-			$options[-2] = "Ext";
-			$options[-1] = "Std";
-			for ($i = 0; $i < 64; $i++) $options[$i] = $i;
+			$options[-2] = "Extended";
+			$options[-1] = "Standard";
+			for ($i = 0; $i < 16; $i++) $options[$i] = $i;
+			$options[0xF00] = "80x25";
+			$options[0xF01] = "80x50";
+			$options[0xF02] = "80x43";
+			$options[0xF03] = "80x28";
+			$options[0xF05] = "80x30";
+			$options[0xF06] = "80x34";
+			$options[0xF07] = "80x60";
+			$options[0x30A] = "132x43";
+			$options[0x309] = "132x25";
+			$options[0x338] = "320x200x8"; // 382?
+			$options[0x30D] = "320x200x15";
+			$options[0x30E] = "320x200x16";
+			$options[0x30F] = "320x200x24";
+			$options[0x320] = "320x200x32";
+			$options[0x332] = "320x240x8"; // 392?
+			$options[0x393] = "320x240x15";
+			$options[0x335] = "320x240x16";// 394?
+			$options[0x395] = "320x240x24";
+			$options[0x396] = "320x240x32";
+			$options[0x333] = "400x300x8";// 3A2?
+			$options[0x3A3] = "400x300x15";
+			$options[0x336] = "400x300x16";// 3A4?
+			$options[0x3A5] = "400x300x24";
+			$options[0x3A6] = "400x300x32";
+			$options[0x334] = "512x384x8";// 3B2?
+			$options[0x3B3] = "512x384x15";
+			$options[0x337] = "512x384x16";// 3B4?
+			$options[0x3B5] = "512x384x24";
+			$options[0x3B6] = "512x384x32";
+			$options[0x3C2] = "640x350x8";
+			$options[0x3C3] = "640x350x15";
+			$options[0x3C4] = "640x350x16";
+			$options[0x3C5] = "640x350x24";
+			$options[0x3C6] = "640x350x32";
+			$options[0x300] = "640x400x8";
+			$options[0x383] = "640x400x15";
+			$options[0x339] = "640x400x16";// 384?
+			$options[0x385] = "640x400x24";
+			$options[0x386] = "640x400x32";
+			$options[0x301] = "640x480x8";
+			$options[0x310] = "640x480x15";
+			$options[0x311] = "640x480x16";
+			$options[0x312] = "640x480x24";
+			$options[0x33A] = "640x480x32";// 321?
+			//$options[770] = "800x600x4";
+			$options[0x303] = "800x600x8";
+			$options[0x313] = "800x600x15";
+			$options[0x314] = "800x600x16";
+			$options[0x315] = "800x600x24";
+			$options[0x33B] = "800x600x32";//322?
+			//$options[772] = "1024x768x4";
+			$options[0x305] = "1024x768x8";
+			$options[0x316] = "1024x768x15";
+			$options[0x317] = "1024x768x16";
+			$options[0x318] = "1024x768x24";
+			$options[0x33C] = "1024x768x32";//323?
+			$options[0x307] = "1280x1024x8";
+			$options[0x319] = "1280x1024x15";
+			$options[0x31A] = "1280x1024x16";
+			$options[0x31B] = "1280x1024x24";
+			$options[0x33D] = "1280x1024x32";
+			$options[0x330] = "1600x1200x8";
+			$options[0x331] = "1600x1200x16";
 			foreach ($options as $key => $value) {
 				echo '<option value="'.$key.'"';
 				if ($key == $selected || $value == $selected)
@@ -344,7 +414,13 @@ function show_size($size)
 		echo ">$value</option>\n";
 	}
 ?>
-	</select>
+	</select>&nbsp;
+	RAM used&nbsp;<select name="ram">
+<?php
+	for ($i = 16; $i >= 4; $i--)
+		echo "		<option value=\"$i\">$i MB</option>\n";
+?>
+	</select>&nbsp;
 		<input name="build" value="Build floppy set" type="submit" />
 	</td>
 	</tr>
@@ -357,6 +433,9 @@ Note 1: $msg of files (kernel and initramfs) in memory.
 </p>
 <p>
 Note 2: the extra initramfs may be useful to add your own configuration files.
+</p>
+<p>
+Note 3: the keyboard is read for ESC or ENTER on every form feed (ASCII 12) in the boot message.
 </p>
 EOT;
 	}
@@ -411,7 +490,7 @@ Good luck.
 <h4>How does it work ?</h4>
 <p>
 This tool updates the boot sector of your kernel with
-<a href="http://hg.slitaz.org/wok/raw-file/b84ff32e3457/linux/stuff/linux-header-2.6.34.u">this patch</a>.
+<a href="http://hg.slitaz.org/wok/raw-file/66e38bd6a132/linux/stuff/linux-header.u">this patch</a>.
 You may add a default cmdline and an initramfs. The cmdline can be edited at boot
 time but the keyboard is not mandatory.
 A <a href="bootloader"> standalone version</a> is available.
@@ -420,6 +499,10 @@ A <a href="bootloader"> standalone version</a> is available.
 Each part (boot, setup, cmdline, kernel, initramfs) is aligned to 512 bytes.
 The result is split to fit the floppy size.
 The last floppy image is padded with zeros.
+</p>
+<p>
+You can extract the <u>kernel</u>, <u>cmdline</u> and <u>rootfs</u> files with 
+<a href="../floppies">this tool</a> from the floppy images.
 </p>
 </div>
 
@@ -439,10 +522,10 @@ Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.slitaz.org/">SliTa
 <!-- End of copy -->
 </div>
 
-<!-- Bottom and logos -->
+<!-- Bottom and logo's -->
 <div id="bottom">
 <p>
-<a href="http://validator.w3.org/check?uri=referer"><img src="/static/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
+<a href="http://validator.w3.org/check?uri=referer"><img src="../static/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
 </p>
 </div>
 

@@ -114,7 +114,7 @@ if [ -n "$content" ]; then	# content => page
 	if authentified; then
 		CR="$(echo -en '\r')"
 		sed 's/</\&lt;/g;s/'$CR' /'$CR'\n/g' > $PAGE_txt <<EOT
-$content
+$POST_content_1
 EOT
 		if [ -n "$BACKUP_DIR" ]; then
 			complete_dir_s="$BACKUP_DIR$PAGE_TITLE/"
@@ -178,6 +178,10 @@ case "$action" in
 edit)
 	editable=false
 	HISTORY="<a href=\"$urlbase?page=$(urlencode $PAGE_TITLE)\&amp;action=history\" accesskey=\"6\" rel=\"nofollow\">$HISTORY_BUTTON</a><br />"
+	CONTENT="$(sed 's/%/\&#37;/g' <<EOT
+$CONTENT
+EOT
+)"
 	CONTENT="<form method=\"post\" action=\"$urlbase\">
 <textarea name=\"content\" cols=\"83\" rows=\"30\" style=\"width: 100%;\">
 $CONTENT

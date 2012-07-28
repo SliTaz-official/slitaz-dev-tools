@@ -66,7 +66,7 @@ if (isset($_GET['file']))
 	<div id="network">
 		<a href="http://www.slitaz.org/">
 		<img src="/css/pics/network.png" alt="network.png" /></a>
-		<a href="../boot/floppy-grub4dos" title="Boot tools">Generic boot floppy</a> |
+		<a href="floppy-grub4dos" title="Boot tools">Generic boot floppy</a> |
 		<a href="http://tiny.slitaz.org/" title="SliTaz in one floppy !">Tiny SliTaz</a> |
 		<a href="index-loram.html" title="Floppy image sets for low ram systems">Loram floppies</a> |
 		<a href="builder/index.php" title="Build floppies with your own kernel and initramfs">Floppy set web builder</a> |
@@ -104,6 +104,8 @@ echo "	<td><a href=\"download.php?file=md5sum&amp;iso=".
 	<div id="block_info">
 		<h4>Available boot floppies</h4>
 		<ul>
+	<li><a href="index-4.0.html">SliTaz 4.0</a></li>
+	<li><a href="index-loram-4.0.html">SliTaz loram 4.0</a></li>
 	<li><a href="index-3.0.html">SliTaz 3.0</a></li>
 	<li><a href="index-loram-3.0.html">SliTaz loram 3.0</a></li>
 	<li><a href="index-2.0.html">SliTaz 2.0</a></li>
@@ -150,7 +152,7 @@ Copyright &copy; <span class="year"></span> <a href="http://www.slitaz.org/">Sli
 <!-- End of copy -->
 </div>
 
-<!-- Bottom and logos -->
+<!-- Bottom and logo's -->
 <div id="bottom">
 <p>
 <a href="http://validator.w3.org/check?uri=referer"><img src="../css/pics/website/xhtml10.png" alt="Valid XHTML 1.0" title="Code validé XHTML 1.0" style="width: 80px; height: 15px;" /></a>
