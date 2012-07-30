@@ -84,7 +84,7 @@ done )
 <!-- Block -->
 <div id="block">
 	<!-- Navigation -->
-	<div id="block_nav">
+	<div id="block_nav" style="height: 146px;">
 		<h4><img src="pics/floppy.png" alt="@" />1.44Mb SliTaz$LORAM $VERSION floppy images</h4>
 <table width="100%">
 $(
