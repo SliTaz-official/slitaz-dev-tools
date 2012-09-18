@@ -45,7 +45,7 @@ $(boldify "Commands:")
 
 $(boldify "Options:")
   --rootfs=           Path to the chroot to generate or clean
-  --arch=             Specify the architecture type for cross-chroot
+  --arch=             Specify the architecture type for cross-chroot, push/pull
   --clean             Clean chroot before generation a new one
 
 $(boldify "Options:")
@@ -88,6 +88,10 @@ check_mirror() {
 	else
 		remote=$MIRROR_PKGS/cooking/
 		local=$SLITAZ_HOME/cooking/packages/
+	fi
+	if [ "$arch" ]; then
+		remote=${remote}$arch/
+		local=${local}$arch/
 	fi
 }
 
