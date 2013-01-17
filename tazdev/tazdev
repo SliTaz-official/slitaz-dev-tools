@@ -11,6 +11,9 @@
 #     Christophe Lincoln <pankso@slitaz.org>
 #     Pascal Bellard <bellard@slitaz.org>
 #
+
+VERSION=1.8
+
 . /lib/libtaz.sh
 
 [ -f /etc/slitaz/tazdev.conf ] && . /etc/slitaz/tazdev.conf
@@ -25,7 +28,7 @@ usage() {
 
 $(boldify "Usage:") $(basename $0) [command] [vers|user|tool] [vers|--opts]
 
-SliTaz developers and build host tool
+SliTaz developers and build host tool v$VERSION
 
 $(boldify "Commands:")
   usage               Print this short usage and command list
