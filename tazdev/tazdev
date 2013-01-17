@@ -12,7 +12,7 @@
 #     Pascal Bellard <bellard@slitaz.org>
 #
 
-VERSION=1.8
+VERSION=1.9
 
 . /lib/libtaz.sh
 
@@ -346,12 +346,19 @@ case "$1" in
 	relpkg|-rp)
 		# Release a slitaz sub-project and upload tarball to mirror
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
-		if [ -z $2 ] || [ -z $3 ]; then
-			echo -e "\nUsage: $0 relpkg package version\n"
+		if [ -z $2 ]; then
+			echo -e "\nUsage: $0 relpkg package [version]\n"
 			exit 0
 		fi
 		pkg=$2
-		version=$3
+		
+		# We can get the last found version in .hgtags
+		if [ -z $3 ]; then
+			version=$(tail -n 1 $PROJECTS/$pkg/.hgtags | awk '{print $2'})
+		else
+			version=$3
+		fi
+
 		echo "" && cd $PROJECTS/$pkg
 
 		# Sanity check
@@ -363,8 +370,8 @@ case "$1" in
 
 		# Archive
 		echo -n "Creating tarball and md5sum for: $pkg-$version... "
-		hg archive -t tgz $pkg-$version.tar.gz
-		md5sum $pkg-$version.tar.gz > $pkg-$version.md5
+		hg archive -t tgz $SOURCE/$pkg-$version.tar.gz
+		( cd $SOURCE; md5sum $pkg-$version.tar.gz > $pkg-$version.md5 )
 		echo "Done"
 
 		# Upload
@@ -373,7 +380,7 @@ case "$1" in
 		if [ "$upload" = "y" ]; then
 			echo "Uploading to: $MIRROR/sources/${pkg#slitaz-}"
 			scp $pkg-$version.tar.gz $pkg-$version.md5 \
-				$user@$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
+				$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
 		fi
 
 		# Update pkg in wok
