@@ -1,9 +1,8 @@
 [Desktop Entry]
-Encoding=UTF-8
+Type=Application
 Name=Wiki documents
 Name[fr]=Documents Wiki
-Icon=html
+Name[ru]=Персональная Wiki
 Exec=browser http://localhost/wiki/index.sh
-Type=Application
-Categories=Office;
-
+Icon=html
+Categories=Utility;TextTools;
