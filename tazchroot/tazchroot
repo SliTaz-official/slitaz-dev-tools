@@ -10,7 +10,7 @@
 #
 
 # Get main SliTaz configuration file.
-. /usr/lib/slitaz/libtaz
+. /lib/libtaz.sh
 source_lib commons
 
 # Create chroot if needed
