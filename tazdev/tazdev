@@ -177,6 +177,9 @@ gen_chroot() {
 	echo -n "Creating resolv.conf..."
 	cat /etc/resolv.conf > $rootfs/etc/resolv.conf
 	status
+	echo -n "Creating TZ..."
+	cat /etc/TZ > $rootfs/etc/TZ
+	status
 	echo -n "Restoring host packages list..."
 	mv -f ${mpath}.tazdev $mpath
 	tazpkg recharge 2>/dev/null 1>/dev/null >/dev/null
