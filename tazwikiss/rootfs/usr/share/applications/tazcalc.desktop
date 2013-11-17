@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Spreadsheet
+Name[fr]=Feuille de calcul
+Exec=browser http://localhost/wiki/index.sh?page=Calc
+Icon=html
+Categories=Utility;TextTools;
