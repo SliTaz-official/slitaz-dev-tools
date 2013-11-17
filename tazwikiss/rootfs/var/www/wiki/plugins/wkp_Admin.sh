@@ -1,4 +1,4 @@
-plugin="<a href=\"?action=admin\">Administration</a>"
+plugin="<a href=\"?action=admin\" title=\"Wiki administration\">Administration</a>"
 description_fr="Administration du Wiki"
 description="Wiki administration"
       
@@ -97,7 +97,7 @@ $hr
 				alt="$(grep ^help_$lang= $i)"
 				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
 				name="$(basename $i .sh)"
-				[ -n "$help" ] && description=" <a href='?page=$help'>$description</a>"
+				[ -n "$help" ] && description=" <a href='?page=$help' title='$plugin help page'>$description</a>"
 				;;
 			Locales)
 				j=${i#config-}

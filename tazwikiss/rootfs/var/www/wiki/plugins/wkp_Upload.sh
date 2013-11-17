@@ -1,4 +1,4 @@
-plugin="<a href=\"?action=upload\">Upload</a>"
+plugin="<a href=\"?action=upload\" title=\"Upload a file\">Upload</a>"
 description_fr="Télécharge des fichiers complémentaires (ex: images)"
 description="Upload page extra files (ex: images)"
       

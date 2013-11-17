@@ -8,6 +8,7 @@ case "$1" in
 showhead) cat <<EOT
 <!-- Based on http://jsfiddle.net/ondras/hYfN3/ by Ondřej Žára -->
 <script type="text/javascript">
+<!--
 function csv(id,rows,cols) {
     var data = "";
     for (var i=1; i<=rows; i++) {
@@ -56,12 +57,14 @@ function setCell(e, v)
 	(isNaN(parseFloat(v)) && v.charAt(0) != "=") ? "left" : "right";
     e.title = v;
 }
+//-->
 </script>
 <span id="widthcalc" class="cellcalc" style="visibility:hidden;"></span>
 EOT
 	exit 0 ;;
 showtail) cat <<EOT
 <script type="text/javascript">
+<!--
 var INPUTS=[].slice.call(document.getElementsByClassName("inputcalc"));
 INPUTS.forEach(function(elm) {
     elm.onfocus = function(e) {
@@ -86,6 +89,7 @@ INPUTS.forEach(function(elm) {
 	var calcid = elm.id.substring(0,4), cellid = elm.id.substring(4);
 	try { elm.value = DATA[calcid][cellid]; } catch(e) {} });
 })();
+//-->
 </script>
 EOT
 	exit 0 ;;
@@ -101,6 +105,7 @@ function showcalc()
 		print "<noscript><u>Enable javascript to see the spreadsheet " id "</u></noscript>"
 		print "<table id=\"" id "\" class=\"tablecalc\"></table>"
 		print "<script type=\"text/javascript\">"
+		print "<!--"
 		print "buildCalc(\"" id "\"," lines "," rows ");"
 		for (i = 1; i <= lines; i++) {
 			gsub("&lt;","<",line[i])
@@ -112,6 +117,7 @@ function showcalc()
 				print s c i "\"), \"" tmp[j] "\")";
 			}
 		}
+		print "//-->"
 		print "</script>"
 	}
 	else for (i = 1; i <= lines; i++) print line[i]
