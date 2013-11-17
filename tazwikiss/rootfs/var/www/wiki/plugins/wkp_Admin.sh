@@ -92,7 +92,12 @@ $hr
 				eval $(grep ^description= $i)
 				alt="$(grep ^description_$lang= $i)"
 				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
+				help=
+				eval $(grep ^help= $i)
+				alt="$(grep ^help_$lang= $i)"
+				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
 				name="$(basename $i .sh)"
+				[ -n "$help" ] && description=" <a href='?page=$help'>$description</a>"
 				;;
 			Locales)
 				j=${i#config-}

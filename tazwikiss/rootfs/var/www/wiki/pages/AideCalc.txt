@@ -1,0 +1,26 @@
+!Aide sur le tableur CSV
+!!Creation
+Les tableaux sont créés à partir de données CSV avec au moins 2 lignes de 2 colonnes :
+* Les lignes CSV doivent se terminer avec un ''';'''
+* Les lignes CSV ont 2 ''';''' ou plus
+* Chaque ligne CSV a le même nombre de ''';'''
+* Chaque case est accessible par une lettre et un nombre, et peut contenir
+** Du texte
+** Un nombre
+** Une expression ''javascript'' débutant par '''='''
+!!Usage
+* Déplacer la souris au dessus des cases pour voir le contenu
+* Cliquer et modifier les case blanches
+** Cliquer en dehors de la case pour tout recalculer
+* Cliquer sur une case grise pour voir le CSV à jour
+!!Exemples
+{{Pommes;12;=parseInt((100*B1)/B3)+'%'; 
+Poires;7;=parseInt((100*B2)/B3)+"%"; 
+Total :;=B1+B2;;}}
+Pommes;12;=parseInt((100*B1)/B3)+'%';
+Poires;7;=parseInt((100*B2)/B3)+"%";
+Total :;=B1+B2;;
+{{Un nombre;sa racine carré; 
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);}}
+Un nombre;sa racine carré;
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);

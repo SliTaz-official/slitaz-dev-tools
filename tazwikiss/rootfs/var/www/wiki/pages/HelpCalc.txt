@@ -1,0 +1,26 @@
+!Help on the CSV spreadsheet
+!!Creation
+Spreadsheets are created from inlined CSV data with at least 2 rows and 2 lines :
+* The CSV lines must end with a ''';'''
+* The CSV lines have 2 or more ''';'''
+* Each CSV line have the same count of ''';'''
+* Each cell is addressed by a letter and a number, and may hold
+** Some text
+** A number
+** A ''javascript'' formula starting with '''='''
+!!Usage
+* Move the mouse over the cells to see the contents
+* click and modify the white cells
+** click anywhere outside the cell to recompute everything
+* click to a gray cell to see the CSV update
+!!Examples
+{{Apples;12;=parseInt((100*B1)/B3)+'%'; 
+Pears;7;=parseInt((100*B2)/B3)+"%"; 
+Total :;=B1+B2;;}}
+Apples;12;=parseInt((100*B1)/B3)+'%';
+Pears;7;=parseInt((100*B2)/B3)+"%";
+Total :;=B1+B2;;
+{{A number;its square root; 
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);}}
+A number;its square root;
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);
