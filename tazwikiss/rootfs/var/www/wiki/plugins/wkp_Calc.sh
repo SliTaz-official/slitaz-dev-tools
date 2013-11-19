@@ -1,5 +1,5 @@
 plugin="Calc"
-description_fr="Tableur format CSV"
+description_fr="Feuille de calcul au format CSV"
 description="CSV format spreadsheet"
 help_fr="AideCalc"
 help="HelpCalc"
@@ -24,6 +24,19 @@ function csv(id,rows,cols) {
 var DATA={};
 function buildCalc(id, rows, cols) {
     DATA[id] = {};
+    var maths = [ "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "exp",
+		  "floor", "log", "max", "min", "pow", "random", "round", "sin",
+		  "tan", "sqrt", "PI", "E" ];
+    for (var i=0; v = maths[i]; i++)
+	eval("DATA[id]."+v+" = DATA[id]."+v.toUpperCase()+" = Math."+v);
+    DATA[id].rand = DATA[id].RAND = Math.random;
+    DATA[id].ln   = DATA[id].LN   = Math.log;
+    DATA[id].log10= DATA[id].LOG10= function(n){return Math.log(n)/Math.LN10;};
+    DATA[id].log2 = DATA[id].LOG2 = function(n){return Math.log(n)/Math.LN2;};
+    DATA[id].fact = DATA[id].FACT = 
+	function(n){var x=1;while(n>0)x*=n--;return x;};
+    DATA[id].fib  = DATA[id].FIB  = 
+	function(n){var c=0,p=1;while(n-->0){var x=c;c+=p;p=x};return c;};
     for (var i=0; i<=rows; i++) {
         var row = document.getElementById(id).insertRow(-1);
         for (var j=0; j<=cols && j<=26; j++) {
@@ -102,7 +115,7 @@ function showcalc()
 {
 	if (lines > 1 && rows > 1) {
 		id="C" (100+cnt++)
-		print "<noscript><u>Enable javascript to see the spreadsheet " id "</u></noscript>"
+		print "<noscript><a href=\"http://www.enable-javascript.com/\" target=\"_blank\">Enable javascript to see the spreadsheet " id "</a></noscript>"
 		print "<table id=\"" id "\" class=\"tablecalc\"></table>"
 		print "<script type=\"text/javascript\">"
 		print "<!--"
@@ -130,7 +143,6 @@ function showcalc()
 			headdone = 1
 			showtail = 1
 			system("/bin/sh " prg " showhead")
-			#print "system(" prg " showhead)"
 		}
 		line[++lines] = $0
 		gsub("&lt;","<",$0)

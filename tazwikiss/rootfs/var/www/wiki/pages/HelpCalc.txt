@@ -21,6 +21,6 @@ Apples;12;=parseInt((100*B1)/B3)+'%';
 Pears;7;=parseInt((100*B2)/B3)+"%";
 Total :;=B1+B2;;
 {{A number;its square root; 
-2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);}}
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
 A number;its square root;
-2;=(A2&lt;0)?alert('A2 &lt; 0 !'):Math.sqrt(A2);
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);
