@@ -34,7 +34,7 @@ function buildCalc(id, rows, cols) {
     DATA[id].log10= DATA[id].LOG10= function(n){return Math.log(n)/Math.LN10;};
     DATA[id].log2 = DATA[id].LOG2 = function(n){return Math.log(n)/Math.LN2;};
     DATA[id].fact = DATA[id].FACT = 
-	function(n){var x=1;while(n>0)x*=n--;return x;};
+	function(n){var x=1;while(n>1)x*=n--;return x;};
     DATA[id].fib  = DATA[id].FIB  = 
 	function(n){var c=0,p=1;while(n-->0){var x=c;c+=p;p=x};return c;};
     for (var i=0; i<=rows; i++) {

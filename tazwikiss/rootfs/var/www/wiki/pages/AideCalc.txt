@@ -14,12 +14,12 @@ Les tableaux sont créés à partir de données CSV avec au moins 2 lignes de 2 
 ** Cliquer en dehors de la case pour tout recalculer
 * Cliquer sur une case grise pour voir le CSV à jour
 !!Exemples
-{{Pommes;12;=parseInt((100*B1)/B3)+'%'; 
-Poires;7;=parseInt((100*B2)/B3)+"%"; 
-Total :;=B1+B2;;}}
-Pommes;12;=parseInt((100*B1)/B3)+'%';
-Poires;7;=parseInt((100*B2)/B3)+"%";
-Total :;=B1+B2;;
+{{Pommes;12;=round((100*B1)/B3)+'%'; 
+Poires;7;=round((100*B2)/B3)+"%"; 
+Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';}}
+Pommes;12;=round((100*B1)/B3)+'%';
+Poires;7;=round((100*B2)/B3)+"%";
+Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';
 {{Un nombre;sa racine carré; 
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
 Un nombre;sa racine carré;
