@@ -17,6 +17,12 @@ var changeHandler = function() {
 	var t = document.getElementById("mainTable");
 	t.rows[0].style.display = t.rows[1].style.display = 
 	t.rows[3].style.display = (isInFullScreen()) ? "none" : "";
+t.rows[2].style.transform = (isInFullScreen()) ? "scale(2)" : "";
+t.style.height = (isInFullScreen()) ? "100%" : "";
+t.style.width = (isInFullScreen()) ? "85%" : "";
+t.style.padding = (isInFullScreen()) ? "0 0 0 30%": "";
+//t.style.height = t.style.width = (isInFullScreen()) ? "50%" : "100%";
+//t.rows[2].style.transform = "matrix(2,0,0,2,'50%',0)";
 }
 
 function doFullScreen() {
