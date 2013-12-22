@@ -158,7 +158,7 @@ gen_chroot() {
 	# We my gen cooking chroot from a stable version or invers
 	case "$version" in
 		cooking|undigest) url="http://$MIRROR/packages/cooking/" ;;
-		stable|4.0) url="http://$MIRROR/packages/stable/" ;;
+		stable*|4.0*) url="http://$MIRROR/packages/stable/" ;;
 	esac
 	# --mirror=
 	[ "$mirror" ] && url="$mirror"
