@@ -13,7 +13,7 @@
 #     Eric Joseph-Alexandre <erjo@slitaz.org>
 #
 
-VERSION=1.9
+VERSION=2.0
 
 . /lib/libtaz.sh
 
@@ -34,7 +34,7 @@ SliTaz developers and build host tool v$VERSION
 $(boldify "Commands:")
   usage               Print this short usage and command list
   help                Give help on a SliTaz tool or library.
-  stats|-s           Display statistics about your projects
+  stats|-s            Display statistics about your projects
   chroot|-c           Mount virtual fs and chroot into the build env
   gen-chroot|-gc      Generate a chroot using packages from config file
   umount-chroot|-uc   Unmount chroot specified on cmdline
@@ -43,6 +43,7 @@ $(boldify "Commands:")
   dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
   pull                Download new packages from the main mirror
   dry-pull            Show what will be downloaded from the mirror. Does nothing
+  up-repos|-upr       Update all your SliTaz projects repos in one command.
   relpkg|-rp          Archive and upload new package/project version
 
 $(boldify "Options:")
@@ -300,6 +301,19 @@ case "$1" in
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
 			-e ssh $user@$MIRROR:$remote $local ;;
+	up-repos|-upr)
+		# Update all at once.
+		newline
+		boldify "Update all SliTaz Hg repos"
+		separator
+		for p in $(ls $PROJECTS)
+		do
+			echo -n $(boldify Project:) && colorize 36 " $p"
+			cd ${PROJECTS}/${p}
+			hg pull -u
+		done
+		separator
+		newline ;;
 	relpkg|-rp)
 		# Release a slitaz sub-project and upload tarball to mirror
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
