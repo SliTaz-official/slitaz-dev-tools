@@ -335,6 +335,7 @@ case "$1" in
 		echo -n "Do you wish to upload tarball to the mirror [N/y] ? "
 		read upload
 		if [ "$upload" = "y" ]; then
+			cd ${SOURCE}
 			echo "Uploading to: $MIRROR/sources/${pkg#slitaz-}"
 			scp $pkg-$version.tar.gz $pkg-$version.md5 \
 				$MIRROR:$MIRROR_SOURCES/${pkg#slitaz-}
