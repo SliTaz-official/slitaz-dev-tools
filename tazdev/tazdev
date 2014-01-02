@@ -5,11 +5,12 @@
 # well commented please, also: configuration variables are $UPPERCASE
 # and variables initialized by tazdev itself are $lowerspace
 #
-# (c) 2011 SliTaz GNU/Linux - GNU gpl v3
+# (c) 2014 SliTaz GNU/Linux - GNU gpl v3
 #
 # AUTHORS
 #     Christophe Lincoln <pankso@slitaz.org>
 #     Pascal Bellard <bellard@slitaz.org>
+#     Eric Joseph-Alexandre <erjo@slitaz.org>
 #
 
 VERSION=1.9
@@ -38,8 +39,6 @@ $(boldify "Commands:")
   gen-chroot|-gc      Generate a chroot using packages from config file
   umount-chroot|-uc   Unmount chroot specified on cmdline
   clean-chroot|-cc    Clean a chroot environment (skip root/ and home/)
-  !purge              Remove obsolete packages and obsolete source tarballs
-  !dry-purge          Show obsolete packages and obsolete source tarballs
   push|-p             Upload new packages to the main mirror
   dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
   pull                Download new packages from the main mirror
@@ -198,54 +197,9 @@ gen_chroot() {
 	newline
 }
 
-# Remove obsolate slitaz packages --> in cooker ???
-purge_packages() {
-	arg=$1
-	tmp=/tmp/tazdev.$$
-	ls $wok| while read pkg; do
-		[ -f $wok/$pkg/taz/*/receipt ] || continue
-		unset VERSION EXTRAVERSION
-		. $wok/$pkg/taz/*/receipt
-		echo $pkg-${VERSION}$EXTRAVERSION.tazpkg
-	done > $tmp
-	ls $slitaz/chroot/home/slitaz/packages | while read pkg; do
-		case "$pkg" in
-			*.tazpkg)
-				grep -q ^$pkg$ $tmp && continue
-				echo "Removing pkg: $pkg"
-				[ "$arg" == "purge" ] &&
-				rm -f $slitaz/chroot/home/slitaz/packages/$pkg ;;
-		esac
-	done
-	rm -f $tmp
-}
-
-# Remove obsolete source tarballs --> in cooker ??? but we share $src
-# between cooking and stable to we must scan all versions, all arch
-purge_sources() {
-	arg=$1
-	wok=$slitaz/chroot/home/slitaz/wok
-	tmp=/tmp/tazdev.$$
-	ls $wok| while read pkg; do
-		[ -f $wok/$pkg/receipt ] || continue
-		TARBALL=""
-		. $wok/$pkg/receipt
-		[ -n "$TARBALL" ] && echo $TARBALL
-		grep SOURCES_REPOSITORY/ $wok/$pkg/receipt | sed \
-		-e 's|.*SOURCES_REPOSITORY/\([^ ]*\)\( .*\)$|\1|' \
-		-e 's|.*SOURCES_REPOSITORY/\([^ ]*\)$|\1|' | sort | uniq | \
-		sed "s|['\"/]||g" | while read file ; do
-			eval echo $file 2> /dev/null
-		done
-	done > $tmp
-	ls $slitaz/chroot/home/slitaz/src | while read pkg; do
-		grep -q ^$pkg$ $tmp && continue
-		echo "Removing src: $pkg"
-		[ "$arg" == "purge" ] &&
-			rm -f $slitaz/chroot/home/slitaz/src/$pkg
-	done
-	rm -f $tmp
-}
+#
+# Commands
+#
 
 case "$1" in
 	stats|-s)
@@ -346,11 +300,6 @@ case "$1" in
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
 			-e ssh $user@$MIRROR:$remote $local ;;
-	purge|dry-purge)
-		check_root
-		get_version $@
-		purge_packages $1
-		purge_sources $1 ;;
 	relpkg|-rp)
 		# Release a slitaz sub-project and upload tarball to mirror
 		[ -z "$MIRROR_SOURCES" ] && MIRROR_SOURCES="/var/www/slitaz/mirror/sources"
