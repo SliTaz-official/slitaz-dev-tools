@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# TazU - SliTaz Users account utility
+#
+# Copyright 2014 (C) SliTaz GNU/Linux - BSD License
+# Author: Christophe Lincoln <pankso@slitaz.org>
+#
+. /lib/libtaz.sh
+check_root
+
+authfile="/var/lib/slitaz/auth/people"
+people="/var/lib/slitaz/people"
+user="$1"
+
+#
+# Functions
+#
+
+usage() {
+	cat << EOT
+
+Usage: $(basename $0) [user|command] [--option]
+
+Commands:
+  count    Count all users
+  list     List all users
+
+Options:
+  --admin  Make user admin
+  --del    Delete a user
+
+EOT
+}
+
+no_account() {
+	echo "No user account for: $user"
+}
+
+#
+# Commands
+#
+
+case "$1" in
+	"") usage ;;
+	count)
+		echo -n "Users: "
+		colorize 34 "$(ls $people | wc -l)" ;;
+	list)
+		# List all users
+		newline
+		boldify "SliTaz users list"
+		separator
+		for user in $(ls $people)
+		do
+			. $people/$user/account.conf
+			echo -n "$(colorize 34 "$user")"
+			echo -e "\\033[16G${NAME}"
+		done 
+		separator && newline ;;
+	*)
+		# Handle general: --options
+		case " $@ " in
+			*\ --admin\ *)
+				# Admin user
+				if fgrep -q ADMIN_USER= ${people}/${user}/account.conf; then
+					echo -n "User is already admin: " && colorize 34 "$user" 
+				else
+					echo -n "Adding $user to admin users..."
+					echo 'ADMIN_USER="yes"' >> ${people}/${user}/account.conf
+					status
+				fi ;;
+			
+			*\ --del\ *)
+				# Delete a user
+				if [ -d "${people}/${user}" ]; then
+					echo -n "Deleting user: $(colorize 34 "$user")" 
+					rm -rf "${people}/${user}"
+					sed -i "/^${user}:/"d $authfile
+					status
+				else
+					no_account
+				fi ;;
+			
+			*)
+				# Show user info
+				if [ -d "${people}/${user}" ]; then	
+					newline
+					echo "$(boldify "User:") $(colorize 34 "$user")"
+					separator
+					cat $people/$user/account.conf | grep "="
+					separator && newline
+				else
+					no_account
+					echo ${people}/${user}
+				fi ;;
+		esac ;;
+esac
+
+exit 0
