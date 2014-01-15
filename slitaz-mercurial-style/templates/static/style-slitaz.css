@@ -46,7 +46,7 @@ pre {
 	font-style: italic;
 }
 
-#header h1 a:hover, #network a:hover { 
+#header h1 a:hover, #network a:hover, #block_nav a:hover, #network span { 
 	color: #afafaf;
 }
 
@@ -70,7 +70,8 @@ pre {
 	font-size: 12px;
 }
 
-#network a { padding: 0 4px; }
+#network a, #network span { padding: 0 4px; }
+#network span { color: #afafaf; font-weight: bold; }
 
 /* Block */
 
