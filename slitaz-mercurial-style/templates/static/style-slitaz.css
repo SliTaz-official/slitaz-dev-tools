@@ -106,7 +106,6 @@ pre {
 #block_info p { margin: 6px 0; padding: 0 12px 0 0; }
 #block_info a { font-weight: normal; }
 #block ul { list-style-type: square; }
-#block a:hover { color: #351a0a; }
 
 /* Navigation */
 
