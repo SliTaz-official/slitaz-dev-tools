@@ -75,12 +75,12 @@ pre {
 /* Block */
 
 #block { 
-	min-height: 150px; 
+	min-height: 148px; 
 	background: #ccc; 
 	padding: 20px 10% 0px;
 	text-align: center;
 	color: #222;
-	border-bottom: 1px solid #f5f5f5;
+	border-bottom: 1px solid #afafaf;
 }
 
 #block_info {
@@ -89,14 +89,14 @@ pre {
 	padding: 10px 10px 0 0;
 }
 
-#network a { 
+#network a, #block_nav a { 
 	color: #fff; 
 	font-weight: bold;
 	text-decoration: none;
 }
 
 #block h4 {
-	color: #351a0a;
+	color: #111;
 	margin: 0 0 6px;
 	font-weight: bold;
 	font-size: 110%;
@@ -110,8 +110,8 @@ pre {
 /* Navigation */
 
 #block_nav {
-	background: #cc5b17;
-	padding: 10px 10px 15px;
+	background: #666;
+	padding: 10px;
 	text-align: justify;
 	width: 48%;
 	float: right;
