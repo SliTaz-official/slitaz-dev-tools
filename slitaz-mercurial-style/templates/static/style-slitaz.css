@@ -30,7 +30,7 @@ pre {
 
 #header { 
 	height: 40px; 
-	background: #351a0a;
+	background: #222;
 }
 
 #header h1 {
@@ -46,8 +46,8 @@ pre {
 	font-style: italic;
 }
 
-#header h1 a:hover { 
-	color: #d66018;
+#header h1 a:hover, #network a:hover { 
+	color: #afafaf;
 }
 
 /* Logo */
@@ -66,19 +66,18 @@ pre {
 
 #network { 
 	float: right; 
-	padding: 12px 5px 0; 
+	padding: 14px 5px 0; 
 	font-size: 12px;
 }
 
 #network a { padding: 0 4px; }
-#network a:hover { color: #cfcfcf; }
 
 /* Block */
 
 #block { 
 	min-height: 150px; 
-	background: #d66018; 
-	padding: 26px 10% 0px;
+	background: #ccc; 
+	padding: 20px 10% 0px;
 	text-align: center;
 	color: #222;
 	border-bottom: 1px solid #f5f5f5;
@@ -90,7 +89,7 @@ pre {
 	padding: 10px 10px 0 0;
 }
 
-#block a, #network a { 
+#network a { 
 	color: #fff; 
 	font-weight: bold;
 	text-decoration: none;
