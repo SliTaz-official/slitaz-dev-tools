@@ -51,12 +51,17 @@ fi
 
 # Update hg repos
 if [ "$PKG_VER" == "update-hg" ]; then
-	for i in $1/* ; do
-		grep -qs '\[paths]' $i/.hg/hgrc || continue
-		cd $i
-		hg pull
-		hg update
-		cd - > /dev/null
+	for repos in $@ ; do
+		for i in $repos/* ; do
+			grep -qs '\[paths]' $i/.hg/hgrc || continue
+			cd $i
+			hg pull
+			hg update
+			cd - > /dev/null
+			case "$i" in
+			*/get-scripts) cp $i/* /var/www/slitaz/mirror/packages/get
+			esac
+		done
 	done
 	exit 1
 fi
