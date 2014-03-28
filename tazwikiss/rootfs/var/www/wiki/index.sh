@@ -70,7 +70,7 @@ plugin_call_method()
 		. $i
 		eval $name "$@"
 		[ $? == 0 ] && status=true
-	done
+	done 2> /dev/null
 	$status
 }
 
