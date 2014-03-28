@@ -74,5 +74,5 @@ pagepass_sedexpr()
 
 writedPage()
 {
-	eval sed -i $(pagepass_sedexpr $1) $1 $BACKUP_DIR$PAGE_TITLE/*.bak
+	eval sed -i $(pagepass_sedexpr $1) $1 $BACKUP_DIR$PAGE_TITLE/\*.bak
 }
