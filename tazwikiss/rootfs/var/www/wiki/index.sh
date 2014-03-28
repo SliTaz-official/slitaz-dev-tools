@@ -70,7 +70,7 @@ plugin_call_method()
 		. $i
 		eval $name "$@"
 		[ $? == 0 ] && status=true
-	done 3>&1 1>&2 2>&3 | logger
+	done 3>&1 1>&2 2>&3 | logger -t "httpd/wiki/plugin"
 	$status
 }
 
