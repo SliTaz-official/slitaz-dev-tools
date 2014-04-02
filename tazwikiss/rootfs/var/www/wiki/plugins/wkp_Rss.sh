@@ -21,7 +21,6 @@ EOT
 		timestamp=$(filedate $file)
 		CONTENT="$CONTENT<a href=\"?page=$filename\">$filename</a> ($timestamp - <a href=\"./?page=$filename&amp;action=diff\">diff</a>)<br />"
 		cat >> rss.xml <<EOT
-EOT
 <item>
 <title>$filename</title>
 <pubDate>$timestamp</pubDate>
