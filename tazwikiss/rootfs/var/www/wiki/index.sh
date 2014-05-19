@@ -70,7 +70,10 @@ plugin_call_method()
 		. $i
 		eval $name "$@"
 		[ $? == 0 ] && status=true
-	done 3>&1 1>&2 2>&3 | logger -t "httpd/wiki/plugin"
+	done 2> /tmp/tazwiki$$stderr
+	[ -s /tmp/tazwiki$$stderr ] &&
+		logger -t "httpd/wiki/plugin" < /tmp/tazwiki$$stderr
+	rm -f /tmp/tazwiki$$stderr 2> /dev/null
 	$status
 }
 
