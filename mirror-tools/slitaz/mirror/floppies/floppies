@@ -1,31 +1,30 @@
 #!/bin/sh
 
-read32()
+rd()
 {
-	dd if=kernel bs=1 skip=$((0x$1)) count=4 2> /dev/null | \
-		hexdump -e '"" 1/4 "%d" "\n"'
+	echo $(od -j $((0x$1)) -N ${2:-4} -t u${2:-4} -An kernel)
+}
+
+ds()
+{
+	dd count=$1 bs=${2:-512} 2>/dev/null
 }
 
 case "$1" in
-extract)
-	dd bs=512 count=2 > kernel 2> /dev/null
-	setupsz=$(($(read32 1F1) & 255))
-	dd bs=512 count=$(($setupsz - 1)) >> kernel 2> /dev/null
-	[ $(read32 228) -ne 0 ] &&
-	dd bs=512 count=1 2> /dev/null | strings > cmdline
-	syssz=$(read32 1F4)
-	syssz=$(( ($syssz + 31) / 32 ))
-	dd bs=512 count=$syssz >> kernel 2> /dev/null
-	ramsz=$(read32 21C)
-	dd bs=512 count=$((($ramsz + 511) / 512)) of=rootfs 2> /dev/null
-	dd bs=1 seek=$ramsz count=0 of=rootfs 2> /dev/null
+extract) (
+	ds 1
+	ds $(rd 1F1 1)
+	[ $(rd 228) -ne 0 ] && ds 1 | strings >cmdline
+	ds $(( ($(rd 1F4) +31) /32)) ) >kernel
+	ds $(( ($(rd 21C) +3) /4)) 4 >rootfs
 	;;
 *)	cat <<EOT
 usage: 
 # cat fd0*.img | $0 extract
 	creates kernel, rootfs and cmdline files
-# cat fd1*.img | unlzma | cpio -i
-# cat fd2*.img | unlzma | cpio -i
-...
 EOT
+	for i in 1 2 3; do
+		j=" cat fd$i*.img |"
+		echo "#$j cpio -i 2>/dev/null ||$j unlzma | cpio -idmu"
+	done
 esac
