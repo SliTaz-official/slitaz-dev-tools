@@ -1,7 +1,11 @@
 plugin="FullScreen"
 description="Full screen support"
+description_fr="Affichage plein écran"
  
-FULLSCREEN="Fullscreen"
+case "$HTTP_ACCEPT_LANGUAGE" in
+fr*)	FULLSCREEN="Plein écran" ;;
+*)	FULLSCREEN="Fullscreen" ;;
+esac
 
 case "$1" in
 showjs) cat <<EOT

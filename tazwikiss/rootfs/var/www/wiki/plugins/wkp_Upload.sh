@@ -46,7 +46,7 @@ EOT
 )"
 		PAGE_TITLE_link=false
 		editable=false
-		lang="${HTTP_ACCEPT_LANGUAGE%%,*}"
+		lang="${HTTP_ACCEPT_LANGUAGE%%[,;_-]*}"
 		PAGE_TITLE="$UPLOAD" ;;
 	uploadfile)
 		mkdir -p pages/data 2> /dev/null

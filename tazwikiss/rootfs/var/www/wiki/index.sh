@@ -8,7 +8,7 @@
 . /usr/lib/slitaz/httphelper.sh
 
 cd $(dirname $0)
-CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%,*}.sh
+CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%[,;_-]*}.sh
 [ -x "$CONFIG" ] || CONFIG=config.sh
 . ./$CONFIG
 

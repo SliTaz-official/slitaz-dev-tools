@@ -41,18 +41,19 @@ action()
 	esac
 	PAGE_TITLE_link=false
 	editable=false
-	lang="${HTTP_ACCEPT_LANGUAGE%%,*}"
+	lang="${HTTP_ACCEPT_LANGUAGE%%[,;_-]*}"
 	PAGE_TITLE="Administration"
 	curpass="$(POST curpass)"
 	secret="admin.secret"
 	if [ -n "$(POST setpass)" ]; then
 		if [ -z "$curpass" ]; then	# unauthorized
-			if [ ! -s $secret -o "$(cat $secret)" == \
+			if [ ! -s $secret -o "$(cat $secret 2> /dev/null)" == \
 				  "$(echo $(POST password) | md5sum)" ]; then
 				curpass="$(POST password)"
 			fi
 		fi
-		[ -n "$curpass" ] && echo $curpass | md5sum > $secret
+		[ -n "$curpass" ] && echo $curpass | md5sum > $secret &&
+		chmod 400 $secret
 	fi
 	if [ -n "$(POST save)" ]; then
 		admin_download $(POST file)
