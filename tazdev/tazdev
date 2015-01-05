@@ -91,6 +91,9 @@ check_mirror() {
 	elif [ "$2" = "undigest" ] || [ "$3" = "undigest" ]; then
 		remote=$MIRROR_PKGS/undigest/
 		local=$SLITAZ_HOME/undigest/packages/
+	elif [ "$2" = "rpi" ] || [ "$3" = "rpi" ]; then
+		remote=$MIRROR_PKGS/cross/rpi/
+		local=$SLITAZ_HOME/cooking/arm/packages/
 	else
 		remote=$MIRROR_PKGS/cooking/
 		local=$SLITAZ_HOME/cooking/packages/
