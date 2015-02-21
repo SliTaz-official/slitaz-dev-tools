@@ -16,10 +16,10 @@ Spreadsheets are created from inlined CSV data with at least 2 rows and 2 lines 
 !!Examples
 {{Apples;12;=round((100*B1)/B3)+'%'; 
 Pears;7;=round((100*B2)/B3)+"%"; 
-Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';}}
+Total :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';}}
 Apples;12;=round((100*B1)/B3)+'%';
 Pears;7;=round((100*B2)/B3)+"%";
-Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';
+Total :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';
 {{A number;its square root; 
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
 A number;its square root;

@@ -16,10 +16,10 @@ Les feuilles de calcul sont crées à partir de données CSV avec au moins 2 col
 !!Exemples
 {{Pommes;12;=round((100*B1)/B3)+'%'; 
 Poires;7;=round((100*B2)/B3)+"%"; 
-Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';}}
+Total :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';}}
 Pommes;12;=round((100*B1)/B3)+'%';
 Poires;7;=round((100*B2)/B3)+"%";
-Total :;=B1+B2;=parseInt(C1)+parseInt(C2)+'%';
+Total :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';
 {{Un nombre;sa racine carré; 
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
 Un nombre;sa racine carré;

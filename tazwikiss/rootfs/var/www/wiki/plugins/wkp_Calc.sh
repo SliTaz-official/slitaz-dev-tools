@@ -22,6 +22,18 @@ function csv(id,rows,cols) {
 }
 
 var DATA={};
+function sum(id,from,to) {
+    var result=0
+    for (var l=from.charCodeAt(0);;l++) {
+        for (var n=parseInt(from.substring(1));
+        	 n <= parseInt(to.substring(1));n++) {
+            var e=document.getElementById(id+String.fromCharCode(l)+n)
+            result+=parseFloat(e.value)
+        }
+        if (l == to.charCodeAt(0)) break
+    }
+    return result;
+}
 function buildCalc(id, rows, cols) {
     DATA[id] = {};
     var maths = [ "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "exp",
@@ -37,6 +49,7 @@ function buildCalc(id, rows, cols) {
 	function(n){var x=1;while(n>1)x*=n--;return x;};
     DATA[id].fib  = DATA[id].FIB  = 
 	function(n){var c=0,p=1;while(n-->0){var x=c;c+=p;p=x};return c;};
+    DATA[id].sum  = DATA[id].SUM  = function(a,b){return sum(id,a,b);};
     for (var i=0; i<=rows; i++) {
         var row = document.getElementById(id).insertRow(-1);
         for (var j=0; j<=cols && j<=26; j++) {
