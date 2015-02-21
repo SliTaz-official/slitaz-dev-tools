@@ -59,7 +59,7 @@ function buildCalc(id, rows, cols) {
 function getWidth(s)
 {
 	var e = document.getElementById("widthcalc");
-	e.innerHTML = s+" :";
+	e.innerHTML = s;
 	return (e.offsetWidth < 80 || s.charAt(0) == "=") ? 80 : e.offsetWidth;
 }
 
@@ -92,7 +92,7 @@ INPUTS.forEach(function(elm) {
         var value = elm.title || "";
         if (value.charAt(0) == "=")
 		with (DATA[calcid]) return eval(value.substring(1));
-        else return isNaN(value) ? value : parseFloat(value);
+        else return (value == "" || isNaN(value)) ? value : parseFloat(value);
     };
     Object.defineProperty(DATA[calcid], cellid, {get:getter});
     Object.defineProperty(DATA[calcid], cellid.toLowerCase(), {get:getter});
