@@ -92,7 +92,7 @@ INPUTS.forEach(function(elm) {
         var value = elm.title || "";
         if (value.charAt(0) == "=")
 		with (DATA[calcid]) return eval(value.substring(1));
-        else return isNaN(parseFloat(value)) ? value : parseFloat(value);
+        else return isNaN(value) ? value : parseFloat(value);
     };
     Object.defineProperty(DATA[calcid], cellid, {get:getter});
     Object.defineProperty(DATA[calcid], cellid.toLowerCase(), {get:getter});
