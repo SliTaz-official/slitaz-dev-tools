@@ -21,19 +21,25 @@ function csv(id,rows,cols) {
     alert(data);
 }
 
-var DATA={};
-function sum(id,from,to) {
-    var result=0
+function cnt(from,to) {
+    return (to.charCodeAt(0) - from.charCodeAt(0) + 1) *
+           (parseInt(to.substring(1)) - parseInt(from.substring(1)) + 1)
+}
+
+function zone(id,from,to,init,func) {
+    var result=init
     for (var l=from.charCodeAt(0);;l++) {
         for (var n=parseInt(from.substring(1));
         	 n <= parseInt(to.substring(1));n++) {
             var e=document.getElementById(id+String.fromCharCode(l)+n)
-            result+=parseFloat(e.value)
+            result=func(result,parseFloat(e.value))
         }
         if (l == to.charCodeAt(0)) break
     }
     return result;
 }
+
+var DATA={};
 function buildCalc(id, rows, cols) {
     DATA[id] = {};
     var maths = [ "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "exp",
@@ -49,7 +55,13 @@ function buildCalc(id, rows, cols) {
 	function(n){var x=1;while(n>1)x*=n--;return x;};
     DATA[id].fib  = DATA[id].FIB  = 
 	function(n){var c=0,p=1;while(n-->0){var x=c;c+=p;p=x};return c;};
-    DATA[id].sum  = DATA[id].SUM  = function(a,b){return sum(id,a,b);};
+    DATA[id].sum  = DATA[id].SUM  =
+	function(a,b){return zone(id,a,b,0,function(a,b){return a+b});};
+    DATA[id].min  = DATA[id].MIN  =
+	function(a,b){return zone(id,a,b,Number.MAX_VALUE,Math.min);};
+    DATA[id].max  = DATA[id].MAX  =
+	function(a,b){return zone(id,a,b,Number.MIN_VALUE,Math.max);};
+    DATA[id].cnt  = DATA[id].CNT  = cnt
     for (var i=0; i<=rows; i++) {
         var row = document.getElementById(id).insertRow(-1);
         for (var j=0; j<=cols && j<=26; j++) {
