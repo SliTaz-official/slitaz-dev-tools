@@ -43,7 +43,7 @@ var DATA={};
 function buildCalc(id, rows, cols) {
     DATA[id] = {};
     var maths = [ "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "exp",
-		  "floor", "log", "max", "min", "pow", "random", "round", "sin",
+		  "floor", "log", "pow", "random", "round", "sin",
 		  "tan", "sqrt", "PI", "E" ];
     for (var i=0; v = maths[i]; i++)
 	eval("DATA[id]."+v+" = DATA[id]."+v.toUpperCase()+" = Math."+v);
@@ -85,7 +85,8 @@ function getWidth(s)
 {
 	var e = document.getElementById("widthcalc");
 	e.innerHTML = s;
-	return (e.offsetWidth < 80 || s.charAt(0) == "=") ? 80 : e.offsetWidth;
+	return (e.offsetWidth < e.minWidth || s.charAt(0) == "=") ?
+		 e.minWidth : e.offsetWidth;
 }
 
 function setCell(e, v)

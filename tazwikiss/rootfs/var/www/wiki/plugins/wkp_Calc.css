@@ -8,6 +8,7 @@
 
 .inputcalc {
     border: none;
+    min-width: 80px;
     width: 80px;
     font-size: inherit;
     padding: 2px;
