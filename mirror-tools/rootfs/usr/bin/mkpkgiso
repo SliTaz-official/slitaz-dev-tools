@@ -59,7 +59,15 @@ if [ "$PKG_VER" == "update-hg" ]; then
 			hg update
 			cd - > /dev/null
 			case "$i" in
-			*/get-scripts) cp $i/* /var/www/slitaz/mirror/packages/get
+			*/get-scripts)
+				rsync -a $i/* /var/www/slitaz/mirror/packages/get
+				for j in /var/www/slitaz/mirror/packages/get/* ; do
+					{
+					basename $j
+					head -n 2 $j | sed '/^SHORT_DESC=/!d;s/.*="\([^"]*\).*/|\1/'
+					head -n 2 $j | sed '/^WEB_SITE=/!d;s/.*="\([^"]*\).*/|\1/'
+					} | xargs echo
+				done > /var/www/slitaz/mirror/packages/get.list
 			esac
 		done
 	done
@@ -286,7 +294,7 @@ EOF
 		esac
 		ln -s $i >> $LOG 2>&1
 	done
-	find * -not -type d | grep -v md5sum | xargs md5sum > md5sum
+	find * -not -type d -not -name md5sum -print0 | xargs -0 md5sum > md5sum
 	echo "$(du -hs $SOURCES | awk '{ print $1 }') used by sources." ;;
 esac
 done
