@@ -64,10 +64,12 @@ if [ "$PKG_VER" == "update-hg" ]; then
 				for j in /var/www/slitaz/mirror/packages/get/* ; do
 					{
 					basename $j
-					head -n 2 $j | sed '/^SHORT_DESC=/!d;s/.*="\([^"]*\).*/|\1/'
-					head -n 2 $j | sed '/^WEB_SITE=/!d;s/.*="\([^"]*\).*/|\1/'
-					} | xargs echo
-				done > /var/www/slitaz/mirror/packages/get.list
+					for k in SHORT_DESC WEB_SITE CATEGORY VERSION LICENSE ; do
+						echo "|$(head -n 6 $j | sed \
+							"/^$k=/!d;s/$k=//;s/\"\\([^\"]*\\).*/\\1/")"
+					done
+					} | sed "s/'/\\\\'/" | xargs echo
+				done | sed 's/ |/|/g' > /var/www/slitaz/mirror/packages/get.list
 			esac
 		done
 	done
