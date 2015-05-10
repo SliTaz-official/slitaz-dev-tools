@@ -70,6 +70,7 @@ if [ "$PKG_VER" == "update-hg" ]; then
 					done
 					} | sed "s/'/\\\\'/" | xargs echo
 				done | sed 's/ |/|/g' > /var/www/slitaz/mirror/packages/get.list
+				chmod a+r /var/www/slitaz/mirror/packages/get.list
 			esac
 		done
 	done
