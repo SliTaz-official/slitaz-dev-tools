@@ -180,7 +180,7 @@ htmldiff()
 case "$action" in
 edit)
 	editable=false
-	HISTORY="<a href=\"$urlbase?page=$(urlencode $PAGE_TITLE)\&amp;action=history\" accesskey=\"6\" rel=\"nofollow\">$HISTORY_BUTTON</a><br />"
+	HISTORY="<a href=\"$urlbase?page=$(urlencode $PAGE_TITLE)&amp;action=history\" accesskey=\"6\" rel=\"nofollow\">$HISTORY_BUTTON</a><br />"
 	CONTENT="$(sed 's/%/\&#37;/g' <<EOT
 $CONTENT
 EOT
@@ -201,9 +201,9 @@ $CONTENT
 history)
 	complete_dir="$BACKUP_DIR$PAGE_TITLE/"
 	if [ -n "$gtime" ]; then
-		HISTORY="<a href=\"$urlbase?page=$PAGE_TITLE\&amp;action=history\" rel=\"nofollow\">$HISTORY_BUTTON</a>"
+		HISTORY="<a href=\"$urlbase?page=$PAGE_TITLE&amp;action=history\" rel=\"nofollow\">$HISTORY_BUTTON</a>"
 		if [ -r "$complete_dir$gtime" ]; then
-			HISTORY="$HISTORY <a href=\"$urlbase?page=$PAGE_TITLE\&amp;action=edit\&amp;time=$gtime&amp;restore=1\" rel=\"nofollow\">$RESTORE</a>"
+			HISTORY="$HISTORY <a href=\"$urlbase?page=$PAGE_TITLE&amp;action=edit&amp;time=$gtime&amp;restore=1\" rel=\"nofollow\">$RESTORE</a>"
 			CONTENT="$(cat $complete_dir$gtime | sed -e s/$(echo -ne '\r')//g -e 's|$|<br/>|g')"
 		else
 			HISTORY="$HISTORY -"
@@ -224,7 +224,7 @@ history)
 	fi ;;
 diff)
 	if [ -n "$(GET f1)" ]; then
-		HISTORY="<a href=\"$urlbase?page=$(urlencode "$PAGE_TITLE")\&amp;action=history\">$HISTORY_BUTTON</a>"
+		HISTORY="<a href=\"$urlbase?page=$(urlencode "$PAGE_TITLE")&amp;action=history\">$HISTORY_BUTTON</a>"
 		CONTENT="$(htmldiff "$(GET f1)" "$(GET f2)" )"
 	else
 		# diff auto entre les 2 dernières versions
@@ -316,7 +316,15 @@ EOT
 		 	-e 's/([yY])/\&yen;/g'  -e 's/([tT][mM])/\&trade;/g' \
 		 	-e 's/([cC])/\&copy;/g' -e 's/([rR])/\&reg;/g' \
 		 	-e 's/([dD])/\&deg;/g'  -e 's/(1\/2)/\&frac12;/g' \
-		 	-e 's/(1\/4)/\&frac14;/g'  -e 's/(3\/4)/\&frac34;/g' \
+		 	-e 's/(1\/4)/\&frac14;/g' -e 's/(3\/4)/\&frac34;/g' \
+		 	-e 's/(phone)/\&#9742;/' -e 's/(wphone)/\&#9743;/' \
+		 	-e 's/(skull)/\&#9760;/' -e 's/(radioactive)/\&#9762;/' \
+		 	-e 's/(sad)/\&#9785;/'  -e 's/(smile)/\&#9786;/' \
+		 	-e 's/(recycle)/\&#9742;/' -e 's/(wheelchair)/\&#9755;/' \
+		 	-e 's/(wflag)/\&#9872;/' -e 's/(bflag)/\&#9873;/' \
+		 	-e 's/(anchor)/\&#9875;/' -e 's/(flower)/\&#9880;/' \
+		 	-e 's/(gear)/\&#9881;/' -e 's/(volt)/\&#9889;/' \
+		 	-e 's/(warn)/\&#9888;/' -e 's/(star)/\&#9733;/' \
 		 	-e 's/(&lt;=)/\&le;/g'  -e 's/(>=)/\&ge;/g' \
 		 	-e 's/(!=)/\&ne;/g'     -e 's/(+-)/\&plusmn;/g' <<EOT
 $CONTENT
@@ -482,9 +490,9 @@ fi
 
 header "Content-type: text/html"
 sed	-e "s#{ERROR}#$ERROR#"		-e "s#{WIKI_TITLE}#$WIKI_TITLE#" \
-	-e "s#{\([^}]*\)HISTORY\([^}]*\)}#$HISTORY#" \
-	-e "s#{PAGE_TITLE}#$PAGE_TITLE_str#" \
-	-e "s#{\([^}]*\)EDIT\([^}]*\)}#\1$EDIT\2#" \
+	-e "s|{\([^}]*\)HISTORY\([^}]*\)}|${HISTORY//&/\&}|" \
+	-e "s|{PAGE_TITLE}|${PAGE_TITLE_str//&/\&}|" \
+	-e "s|{\([^}]*\)EDIT\([^}]*\)}|\1${EDIT//&/\&}\2|" \
 	-e "s|{\([^}]*\)TOC\([^}]*\)}|$(awk '{ printf "%s\\n" $0 }' <<EOT | \
 		sed -e 's/&/\\\&/g' -e 's/|/\\|/g'
 $toc
