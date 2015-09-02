@@ -277,7 +277,8 @@ EOT
 		mkdir $tmpdir
 		unesc="$(echo "$CONTENT" | sed 's/\^\(.\)/\n^\1\n/g' | grep '\^' |\
 		  sort | uniq | grep -v "['[!]" | hexdump -e '"" 3/1 "%d " "\n"' |\
-		  awk '{ printf "-e '\''s/\\^%c/\\&#%d;/g'\'' ",$2,$2}') \
+		  awk '{ printf "-e '\''s/\\^%c/\\&#%d;/g'\'' ",$2,$2}' | \
+		  sed 's/\^\([*.[{]\)/^\\\1/') \
 		  -e 's/\\^'\\''/\\&#39;/g' -e 's/\^\!/\&#33;/g' \
 		  -e 's/\^\[/\&#91;/g'"
 		CONTENT="$(eval sed $unesc <<EOT | \
@@ -494,8 +495,7 @@ if authentified; then
 	AUTH_POST="\n<input type=\"hidden\" name=\"auth\" value=\"$AUTH\" />"
 fi
 
-header "Content-type: text/html"
-sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
+html2="$(sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
 	-e "s/{WIKI_TITLE}/$(sedesc "$WIKI_TITLE")/" \
 	-e "s/{\([^}]*\)HISTORY\([^}]*\)}/$(sedesc "$HISTORY")/" \
 	-e "s/{PAGE_TITLE}/$(sedesc "$PAGE_TITLE_str")/" \
@@ -503,7 +503,6 @@ sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
 	-e "s/{\([^}]*\)TOC\([^}]*\)}/$(sedesc "$TOC")/" \
 	-e "s/{PAGE_TITLE_BRUT}/$(sedesc "$(htmlentities "$PAGE_TITLE")")/" \
 	-e "s/{LAST_CHANGE}/$(sedesc "$LAST_CHANGES") :/" \
-	-e "s/{CONTENT}/$(sedesc "$CONTENT")/" \
 	-e "s/{LANG}/$(sedesc "$LANG")/" \
 	-e "s/href=\"?/href=\"$(sedesc "$urlbase?$AUTH_GET")/g" \
 	-e "s/action=\"$(sedesc "$urlbase")\">/&$(sedesc "$AUTH_POST")/g" \
@@ -511,4 +510,15 @@ sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
 	-e "s/{TIME}/$(sedesc "$TIME")/" -e "s/{DATE}/$(sedesc "$datew")/" \
 	-e "s/{IP}/$REMOTE_ADDR/" -e "s/{COOKIE}//" -e "s/{RSS}//" <<EOT
 $html
+EOT
+)"
+header "Content-type: text/html"
+sed '/{CONTENT}/{s/{CONTENT}.*//;q}' <<EOT
+$html2
+EOT
+cat <<EOT
+$CONTENT
+EOT
+sed ':a;N;/{CONTENT}/!ba;s/.*{CONTENT}//;:b;N;$!bb' <<EOT
+$html2
 EOT
