@@ -11,7 +11,7 @@ template()
 {
 	case "$(GET action)" in
 	edit)	UPLOAD="<a href=\"$urlbase?action=upload\">$UPLOAD</a>"
-		html="$(sed "s|HISTORY|$UPLOAD / HISTORY|" <<EOT
+		html="$(sed "s|HISTORY|$(sedesc "$UPLOAD") / HISTORY|" <<EOT
 $html
 EOT
 )" ;;

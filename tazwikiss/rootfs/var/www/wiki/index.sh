@@ -56,6 +56,12 @@ authentified()
 	cache_auth "$PASSWORD"
 }
 
+sedesc()
+{
+	echo "$1" | sed 's|[/&"]|\\&|g' | \
+		sed ':a;N;$!ba;s|\n|\\n|g;s|'$(echo -en "\r")'||g'
+}
+
 plugin_call_method()
 {
 	local status
@@ -154,7 +160,7 @@ $CONTENT
 EOT
 )"
 else
-	CONTENT="$(sed -e "s#%page%#$PAGE_TITLE#" <<EOT
+	CONTENT="$(sed -e "s/%page%/$(sedesc "$PAGE_TITLE")/" <<EOT
 $DEFAULT_CONTENT
 EOT
 )"
@@ -320,7 +326,7 @@ EOT
 		 	-e 's/(phone)/\&#9742;/' -e 's/(wphone)/\&#9743;/' \
 		 	-e 's/(skull)/\&#9760;/' -e 's/(radioactive)/\&#9762;/' \
 		 	-e 's/(sad)/\&#9785;/'  -e 's/(smile)/\&#9786;/' \
-		 	-e 's/(recycle)/\&#9742;/' -e 's/(wheelchair)/\&#9755;/' \
+		 	-e 's/(recycle)/\&#9842;/' -e 's/(wheelchair)/\&#9855;/' \
 		 	-e 's/(wflag)/\&#9872;/' -e 's/(bflag)/\&#9873;/' \
 		 	-e 's/(anchor)/\&#9875;/' -e 's/(flower)/\&#9880;/' \
 		 	-e 's/(gear)/\&#9881;/' -e 's/(volt)/\&#9889;/' \
@@ -375,8 +381,8 @@ $CONTENT
 EOT
 )"
 		while read link; do
-			[ -s $PAGES_DIR$link.txt ] && continue
-			CONTENT="$(sed "s|\\?page=$link\"|& class=\"pending\"|" <<EOT
+			[ -s "$PAGES_DIR$link.txt" ] && continue
+			CONTENT="$(sed "s/\\?page=$(sedesc "$link")\"/& class=\"pending\"/" <<EOT
 $CONTENT
 EOT
 )"
@@ -410,7 +416,7 @@ $toc
 	<h$i><a href="#$label">$line</a></h$i>
 EOT
 )"
-				CONTENT="$(sed "s#^!!* *$line\$#<h$i><a name=\"$label\">$line</a></h$i>#" <<EOT
+				CONTENT="$(sed "s/^!!* *$(sedesc "$line")\$/<h$i><a name=\"$label\">$(sedesc "$line")<\/a><\/h$i>/" <<EOT
 $CONTENT
 EOT
 )"
@@ -462,10 +468,10 @@ HELP="\1<a href=\"$urlbase?page=$HELP_BUTTON\" accesskey=\"2\" rel=\"nofollow\">
 [ "$action" != "edit" ] && HELP=""
 
 [ -r "$template" ] || die "'$template' is missing!"
-html="$(sed -e "s#{\([^}]*\)RECENT_CHANGES\([^}]*\)}#\1$RECENT\2#" \
-           -e "s#{\([^}]*\)HOME\([^}]*\)}#\1$HOME\2#" \
-           -e "s#{\([^}]*\)HELP\([^}]*\)}#$HELP#" \
-           -e "s#{SEARCH}#<form method=\"get\" action=\"$urlbase?page=$(urlencode "$PAGE_TITLE" | sed 's/#/\\#/g')\"><div><input type=\"hidden\" name=\"action\" value=\"search\" /><input type=\"text\" name=\"query\" value=\"$(htmlentities $(GET query) )\" tabindex=\"1\" /> <input type=\"submit\" value=\"$SEARCH_BUTTON\" accesskey=\"q\" /></div></form>#" \
+html="$(sed -e "s/{\([^}]*\)RECENT_CHANGES\([^}]*\)}/\1$(sedesc "$RECENT")\2/" \
+           -e "s/{\([^}]*\)HOME\([^}]*\)}/\1$(sedesc "$HOME")\2/" \
+           -e "s/{\([^}]*\)HELP\([^}]*\)}/$(sedesc "$HELP")/" \
+           -e "s/{SEARCH}/<form method=\"get\" action=\"$(sedesc "$urlbase?page=$(urlencode "$PAGE_TITLE" | sed 's/#/\\#/g')")\"><div><input type=\"hidden\" name=\"action\" value=\"search\" \/><input type=\"text\" name=\"query\" value=\"$(sedesc "$(htmlentities $(GET query) )")\" tabindex=\"1\" \/> <input type=\"submit\" value=\"$(sedesc "$SEARCH_BUTTON")\" accesskey=\"q\" \/><\/div><\/form>/" \
            < $template )"
 [ "$action" != "" -a "$action" != "edit" -o ! -e "$PAGE_txt" ] && TIME="-"
 plugin_call_method template
@@ -478,37 +484,31 @@ EDIT="$EDIT_BUTTON"
 if $editable ; then
 	EDIT="$PROTECTED_BUTTON"
 	[ -w "$PAGE_txt" -o ! -e "$PAGE_txt" ] &&
-        EDIT="<a href=\"$urlbase?page=$(urlencode "$PAGE_TITLE")\&amp;action=edit\" accesskey=\"5\" rel=\"nofollow\">$EDIT_BUTTON</a>"
+        EDIT="<a href=\"$urlbase?page=$(urlencode "$PAGE_TITLE")&amp;action=edit\" accesskey=\"5\" rel=\"nofollow\">$EDIT_BUTTON</a>"
 fi
 [ -n "$toc" ] && toc="\1$toc\2"
 AUTH_GET=""
 AUTH_POST=""
 if authentified; then
-	AUTH_GET="auth=$AUTH\&"
+	AUTH_GET="auth=$AUTH&"
 	AUTH_POST="\n<input type=\"hidden\" name=\"auth\" value=\"$AUTH\" />"
 fi
 
 header "Content-type: text/html"
-sed	-e "s#{ERROR}#$ERROR#"		-e "s#{WIKI_TITLE}#$WIKI_TITLE#" \
-	-e "s|{\([^}]*\)HISTORY\([^}]*\)}|${HISTORY//&/\&}|" \
-	-e "s|{PAGE_TITLE}|${PAGE_TITLE_str//&/\&}|" \
-	-e "s|{\([^}]*\)EDIT\([^}]*\)}|\1${EDIT//&/\&}\2|" \
-	-e "s|{\([^}]*\)TOC\([^}]*\)}|$(awk '{ printf "%s\\n" $0 }' <<EOT | \
-		sed -e 's/&/\\\&/g' -e 's/|/\\|/g'
-$toc
-EOT
-)|" \
-	-e "s#{PAGE_TITLE_BRUT}#$(htmlentities "$PAGE_TITLE")#" \
-	-e "s#{LAST_CHANGE}#$LAST_CHANGES :#" \
-	-e "s#{CONTENT}#$(awk '{ printf "%s\\n" $0 }' <<EOT | \
-		sed -e 's/&/\\\&/g' -e 's/#/\\#/g'
-$CONTENT
-EOT
-)#" \
-	-e "s#{LANG}#$LANG#"		-e "s#href=\"?#href=\"$urlbase?#g" \
-	-e "s#$urlbase?#&$AUTH_GET#g" -e "s#action=\"$urlbase\">#&$AUTH_POST#g" \
-	-e "s#{WIKI_VERSION}#$WIKI_VERSION#" \
-	-e "s#{TIME}#$TIME#"		-e "s#{DATE}#$datew#" \
-	-e "s#{IP}#$REMOTE_ADDR#"	-e "s#{COOKIE}##" <<EOT
+sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
+	-e "s/{WIKI_TITLE}/$(sedesc "$WIKI_TITLE")/" \
+	-e "s/{\([^}]*\)HISTORY\([^}]*\)}/$(sedesc "$HISTORY")/" \
+	-e "s/{PAGE_TITLE}/$(sedesc "$PAGE_TITLE_str")/" \
+	-e "s/{\([^}]*\)EDIT\([^}]*\)}/\1$(sedesc "$EDIT")\2/" \
+	-e "s/{\([^}]*\)TOC\([^}]*\)}/$(sedesc "$TOC")/" \
+	-e "s/{PAGE_TITLE_BRUT}/$(sedesc "$(htmlentities "$PAGE_TITLE")")/" \
+	-e "s/{LAST_CHANGE}/$(sedesc "$LAST_CHANGES") :/" \
+	-e "s/{CONTENT}/$(sedesc "$CONTENT")/" \
+	-e "s/{LANG}/$(sedesc "$LANG")/" \
+	-e "s/href=\"?/href=\"$(sedesc "$urlbase?$AUTH_GET")/g" \
+	-e "s/action=\"$(sedesc "$urlbase")\">/&$(sedesc "$AUTH_POST")/g" \
+	-e "s/{WIKI_VERSION}/$(sedesc "$WIKI_VERSION")/" \
+	-e "s/{TIME}/$(sedesc "$TIME")/" -e "s/{DATE}/$(sedesc "$datew")/" \
+	-e "s/{IP}/$REMOTE_ADDR/" -e "s/{COOKIE}//" -e "s/{RSS}//" <<EOT
 $html
 EOT

@@ -9,10 +9,10 @@ See also [AideTables] to create tables.
 
 ----
 
-Tiles use the exclamation mark '''!'''%%
-^! Big%%
-^!! Less big%%
-^!!! Smaller%%
+Tiles use the exclamation mark '''!'''
+^! Big
+^!! Less big
+^!!! Smaller
 gives you :
 ! Big
 !! Less big
@@ -31,10 +31,10 @@ Styles use the single quote '
 
 ----
 
-Stroke of a work use quote and two dashes%%
+Stroke of a work use quote and two dashes
 ^'--Stroked--' --> '--Stroked--'
 
-the same applies for underline, quote followed by by two underscore%%
+the same applies for underline, quote followed by by two underscore
 ^'__Underlined__' --> '__Underlined__'
 
 ----
@@ -53,10 +53,10 @@ Non ordered lists use the star '''*'''
 
 ----
 
-The code, and all of those things where formatting is important, use the braces %%
-^{{import sys%%
-if len(sys.argv) == 2:%%
-   print "Hello",sys.argv^[1]}}%%
+The code, and all of those things where formatting is important, use the braces
+^{{import sys
+if len(sys.argv) == 2:
+   print "Hello",sys.argv^[1]}}
 give :
 {{import sys
 if len(sys.argv) == 2:
@@ -65,13 +65,16 @@ if len(sys.argv) == 2:
 ----
 
 The separation between paragraphs of text is done through an empty line.
-To force a line break in the middle of a paragraph, use: ^%%
+To force a line break in the middle of a paragraph, use: ^
 
 ----
 
 Some special characters are recognized:
-* Arrows : &lt;^-- : &lt;--, ^--> : -->, &lt;^--> : &lt;-->
-* Copyrights : ^(c) or ^(C) : (c), ^(r) or ^(R) : (r)
+* Arrows: &lt;^-- : &lt;--, ^--> : -->, &lt;^--> : &lt;-->
+* Copyrights: ^(c) or ^(C) : (c), ^(r) or ^(R) : (r)
+* Fractions: ^(1/2) : (1/2), ^(1/4) : (1/4), ^(3/4) : (3/4)
+* Miscellaneous: ^(+-) : (+-), ^(!=) : (!=)
+* Some icons: ^(phone) : (phone), ^(wphone) : (wphone), ^(bflag) : (bflag), ^(wflag) : (wflag) ^(radioactive) : (radioactive), ^(sad) : (sad), ^(smile) : (smile), ^(recycle) : (recycle), ^(wheelchair) : (wheelchair), ^(anchor) : (anchor), ^(flower) : (flower), ^(gear) : (gear), ^(volt) : (volt), ^(warn) : (warn), ^(skull) : (skull), ^(star) : (star)
 
 ----
 
@@ -79,7 +82,7 @@ Links to wiki-pages use square brackets :
 '''^['''Accueil''']''' --> [Accueil]
 
 If a page does not exists, it will be created on first click.
-Click on "SandBox" below and you will be able to create it ...%%
+Click on "SandBox" below and you will be able to create it ...
 [SandBox]
 
 To link a wiki-page with a different text use :
@@ -97,21 +100,21 @@ with a ? you get a Wikipedia link in the current language :
 
 ----
 
-Images are automagically inserted with the picture URL between square brackets%%
+Images are automagically inserted with the picture URL between square brackets
 '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png''']''' -->
 [http://wikiss.tuxfamily.org/img/logo_100.png]
 
-You can also use an image as a link : %%
+You can also use an image as a link : 
 '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|'''^http://wikiss.tuxfamily.org/''']''' --> 
 [http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org/]
 
 But also position the image on a floating left or right: 
 [http://wikiss.tuxfamily.org/img/logo_100.png|left] [http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org|right]
-%%
 
-&lt;-- '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|left]'''%%
+
+&lt;-- '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|left]'''
 '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|'''^http://wikiss.tuxfamily.org'''|right]''' -->
-%%
+
 
 ----
 
@@ -119,7 +122,7 @@ But also position the image on a floating left or right:
 
 ----
 
-Finally, in order to neutralize the syntax WiKiss, use the caret ^ %%
+Finally, in order to neutralize the syntax WiKiss, use the caret ^ 
 Thus, enter '''^^^['''WiKiss''']''' can display ^[WiKiss] rather than [WiKiss]
 
 ----
