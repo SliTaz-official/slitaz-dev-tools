@@ -148,8 +148,8 @@ fi
 if [ -r "$PAGE_txt" -o -n "$action" ]; then
 	CONTENT=""
 	if [ -e "$PAGE_txt" ]; then
-		TIME=$(filedate $PAGE_txt)
-		CONTENT="$(cat $PAGE_txt)"
+		TIME=$(filedate "$PAGE_txt")
+		CONTENT="$(cat "$PAGE_txt")"
 	fi
 	# Restaurer une page
 	[ -n "$(GET page)" -a -n "$gtime" -a "$(GET restore)" == 1 ] &&
@@ -278,7 +278,7 @@ EOT
 		unesc="$(echo "$CONTENT" | sed 's/\^\(.\)/\n^\1\n/g' | grep '\^' |\
 		  sort | uniq | grep -v "['[!]" | hexdump -e '"" 3/1 "%d " "\n"' |\
 		  awk '{ printf "-e '\''s/\\^%c/\\&#%d;/g'\'' ",$2,$2}' | \
-		  sed 's/\^\([*.[{]\)/^\\\1/') \
+		  sed 's/\^\([*.]\)/^\\\1/') \
 		  -e 's/\\^'\\''/\\&#39;/g' -e 's/\^\!/\&#33;/g' \
 		  -e 's/\^\[/\&#91;/g'"
 		CONTENT="$(eval sed $unesc <<EOT | \
@@ -407,33 +407,32 @@ $CONTENT
 EOT
 )"
 		toc='<div id="toc">'
-		i=1
-		for pat in '^![^!]' '^!![^!]' '^!!![^!]' '^!!!![^!]' '^!!!!!' ; do
-			while read line; do
-				[ -n "$line" ] || continue
-				label="$(echo $line | sed 's/[^\dA-Za-z]/_/g')"
-				toc="$(cat <<EOT
+		while read line; do
+			[ -n "$line" ] || continue
+			i=$(echo "$line" | sed 's/^!\(!*\).*/\1/' | wc -c)
+			line="$(echo "$line" | sed 's/^!!*//')"
+			label="$(echo "$line" | sed 's/[^\dA-Za-z]/_/g')"
+			toc="$(cat <<EOT
 $toc
 	<h$i><a href="#$label">$line</a></h$i>
 EOT
 )"
-				CONTENT="$(sed "s/^!!* *$(sedesc "$line")\$/<h$i><a name=\"$label\">$(sedesc "$line")<\/a><\/h$i>/" <<EOT
+			CONTENT="$(sed "s/^!!* *$(sedesc "$line")\$/<h$i><a name=\"$label\">$(sedesc "$line")<\/a><\/h$i>/" <<EOT
 $CONTENT
 EOT
 )"
-			done <<EOT
-$(grep "$pat" <<EOM | sed -e 's/^!!*//' -e 's/#/\#/g' -e 's/&/\\\&/g'
+		done <<EOT
+$(grep "^!" <<EOM | sed -e 's/#/\#/g' -e 's/&/\\\&/g'
 $CONTENT
 EOM
 )
 EOT
-			i=$(( $i + 1 ))
-		done
 		toc="$(cat <<EOT
 $toc
 </div>
 EOT
 )"
+		false &&
 		case "$hastoc" in
 		TOC*) ;;
 		*) toc='';;
@@ -487,7 +486,7 @@ if $editable ; then
 	[ -w "$PAGE_txt" -o ! -e "$PAGE_txt" ] &&
         EDIT="<a href=\"$urlbase?page=$(urlencode "$PAGE_TITLE")&amp;action=edit\" accesskey=\"5\" rel=\"nofollow\">$EDIT_BUTTON</a>"
 fi
-[ -n "$toc" ] && toc="\1$toc\2"
+[ $(echo "$toc" | wc -l) -gt 2 ] && toc="\1$toc\2" || toc=""
 AUTH_GET=""
 AUTH_POST=""
 if authentified; then
@@ -500,7 +499,7 @@ html2="$(sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
 	-e "s/{\([^}]*\)HISTORY\([^}]*\)}/$(sedesc "$HISTORY")/" \
 	-e "s/{PAGE_TITLE}/$(sedesc "$PAGE_TITLE_str")/" \
 	-e "s/{\([^}]*\)EDIT\([^}]*\)}/\1$(sedesc "$EDIT")\2/" \
-	-e "s/{\([^}]*\)TOC\([^}]*\)}/$(sedesc "$TOC")/" \
+	-e "s/{\([^}]*\)TOC\([^}]*\)}/$(sedesc "$toc")/" \
 	-e "s/{PAGE_TITLE_BRUT}/$(sedesc "$(htmlentities "$PAGE_TITLE")")/" \
 	-e "s/{LAST_CHANGE}/$(sedesc "$LAST_CHANGES") :/" \
 	-e "s/{LANG}/$(sedesc "$LANG")/" \

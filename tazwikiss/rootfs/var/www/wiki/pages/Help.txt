@@ -70,7 +70,7 @@ To force a line break in the middle of a paragraph, use: ^
 ----
 
 Some special characters are recognized:
-* Arrows: &lt;^-- : &lt;--, ^--> : -->, &lt;^--> : &lt;-->
+* Arrows: &lt;^-- : &lt;--, ^--> : -->, &lt;^--> : &lt;-->, &lt;^== : &lt;==, ^==> : ==>, &lt;^==> : &lt;==>
 * Copyrights: ^(c) or ^(C) : (c), ^(r) or ^(R) : (r)
 * Fractions: ^(1/2) : (1/2), ^(1/4) : (1/4), ^(3/4) : (3/4)
 * Miscellaneous: ^(+-) : (+-), ^(!=) : (!=)
