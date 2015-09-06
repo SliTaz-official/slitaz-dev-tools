@@ -16,7 +16,7 @@ function csv(id,rows,cols) {
             var letter = String.fromCharCode("A".charCodeAt(0)+j-1);
 	    data += document.getElementById(id+letter+i).title+';';
 	}
-	data += "\\\\n";
+	data += "\\n";
     }
     alert(data);
 }

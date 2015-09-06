@@ -120,7 +120,7 @@ $hr
 <input type=checkbox $disabled $([ $test $i ] && echo 'checked=checked ') name=\"$name\" />
 $plugin</b></td><td><i>$description</i></td></tr>"
 		done
-		CONTENT="$CONTENT\n</form>\n"
+		CONTENT="$CONTENT</form>"
 	done <<EOT
 Plugins	$plugins_dir/*.sh	-x
 Locales	config-*.sh		-x
