@@ -4,5 +4,5 @@ Name=Wiki documents
 Name[fr]=Documents Wiki
 Name[ru]=Персональная Wiki
 Exec=browser http://localhost/wiki/index.sh
-Icon=html
+Icon=tazwikiss
 Categories=Utility;TextTools;

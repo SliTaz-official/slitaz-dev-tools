@@ -2,6 +2,7 @@
 Type=Application
 Name=Spreadsheet
 Name[fr]=Feuille de calcul
+Name[ru]=Электронная таблица
 Exec=browser http://localhost/wiki/index.sh?page=Calc
-Icon=html
+Icon=tazcalc
 Categories=Utility;TextTools;
