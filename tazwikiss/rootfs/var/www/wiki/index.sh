@@ -502,7 +502,7 @@ html2="$(sed	-e "s/{ERROR}/$(sedesc "$ERROR")/" \
 	-e "s/{\([^}]*\)TOC\([^}]*\)}/$(sedesc "$toc")/" \
 	-e "s/{PAGE_TITLE_BRUT}/$(sedesc "$(htmlentities "$PAGE_TITLE")")/" \
 	-e "s/{LAST_CHANGE}/$(sedesc "$LAST_CHANGES") :/" \
-	-e "s/{LANG}/$(sedesc "$LANG")/" \
+	-e "s/{LANG}/$(sedesc "$LANG")/g" \
 	-e "s/href=\"?/href=\"$(sedesc "$urlbase?$AUTH_GET")/g" \
 	-e "s/action=\"$(sedesc "$urlbase")\">/&$(sedesc "$AUTH_POST")/g" \
 	-e "s/{WIKI_VERSION}/$(sedesc "$WIKI_VERSION")/" \

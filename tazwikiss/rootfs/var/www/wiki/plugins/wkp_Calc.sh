@@ -150,7 +150,7 @@ function showcalc()
 			gsub("&lt;","<",line[i])
 			for (j = 1; j < split(line[i],tmp,";"); j++) {
 				if (tmp[j] == "") continue
-				gsub("\"","\\\\\"",tmp[j])
+				gsub("\"","\\\"",tmp[j])
 				s = "setCell(document.getElementById(\"" id
 				c = substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",j,1)
 				print s c i "\"), \"" tmp[j] "\")";
