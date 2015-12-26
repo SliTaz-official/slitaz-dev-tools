@@ -28,3 +28,7 @@ A number;its square root;
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);days ago !;}}
 SliTaz 1.0 was released;Saturday 22 march 2008;
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);days ago !;
+!!Some true spreadsheets
+* [sc|http://127.0.0.1:82/user/pkgs.cgi?info=sc] for console
+* [sc-im|http://127.0.0.1:82/user/pkgs.cgi?info=sc-im] for console with colors
+* [gnumeric|http://127.0.0.1:82/user/pkgs.cgi?info=gnumeric]

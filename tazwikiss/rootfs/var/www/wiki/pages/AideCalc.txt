@@ -28,3 +28,7 @@ Un nombre;sa racine carré;
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours avant !;}}
 SliTaz 1.0 est sortie;Mar 22, 2008;
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours avant !;
+!!Quelques véritables tableurs
+* [sc|http://127.0.0.1:82/user/pkgs.cgi?info=sc] pour console
+* [sc-im|http://127.0.0.1:82/user/pkgs.cgi?info=sc-im] pour console avec couleurs
+* [gnumeric|http://127.0.0.1:82/user/pkgs.cgi?info=gnumeric]
