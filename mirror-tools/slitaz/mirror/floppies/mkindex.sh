@@ -135,7 +135,7 @@ done
 <h2>Floppy image set</h2>
 
 <p>
-This floppy set will boot a Slitaz stable$LORAM version. You can write floppies
+This floppy set will boot a SliTaz stable$LORAM version. You can write floppies
 with SliTaz <i>bootfloppybox</i>, 
 <a href="http://en.wikipedia.org/wiki/RaWrite">Windows rawrite</a> or simply dd:
 </p><pre># dd if=fd001.img of=/dev/fd0

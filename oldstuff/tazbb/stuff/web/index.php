@@ -27,7 +27,7 @@ include("conf.php");
 	<!-- Access -->                                                                 
 	<div id="access">
 	    <a href="/<?php if ($version != 'stable')
-		echo "?stable"; ?>" title="Slitaz <?php
+		echo "?stable"; ?>" title="SliTaz <?php
 		echo $notversion ?> packages"><?php echo $notversion ?></a>                          
 	</div>                                                                         
     <a href="http://bb.slitaz.org/"><img id="logo"
