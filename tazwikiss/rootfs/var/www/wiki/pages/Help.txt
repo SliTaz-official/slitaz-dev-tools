@@ -98,6 +98,9 @@ or through a text between square brackets :
 with a ? you get a Wikipedia link in the current language :
 * '''^[?'''Wiki''']''' --> [?Wiki]
 
+with ! you get an embedded player for '''audio''' or '''video''' :
+* '''^[!'''video'''|'''^http://video.webmfiles.org/big-buck-bunny_trailer.webm''']''' --> [!video|http://video.webmfiles.org/big-buck-bunny_trailer.webm]
+
 ----
 
 Images are automagically inserted with the picture URL between square brackets

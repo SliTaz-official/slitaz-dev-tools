@@ -62,6 +62,9 @@ ou au travers d'un texte entre crochets :
 
 avec un ? on fait un lien vers Wikipedia dans la langue courante :
 '''^[?'''Wiki''']''' --> [?Wiki]
+
+avec un ! on obtient un lecteur intégré pour l' '''audio''' ou la '''video''' :
+* '''^[!'''video'''|'''^http://video.webmfiles.org/big-buck-bunny_trailer.webm''']''' --> [!video|http://video.webmfiles.org/big-buck-bunny_trailer.webm]
 ----
 Les images sont incluses automagiquement en insérant l'URL de l'image que vous voulez voir entre crochets
 '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png''']''' -->

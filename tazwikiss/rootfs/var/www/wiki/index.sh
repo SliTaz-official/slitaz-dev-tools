@@ -353,6 +353,8 @@ EOT
 			-e "s#\[\($rg_img_http\)|\($rg_link_local\)|*\([a-z]*\)*\]#<a href=\"\2\" class=\"url\"><img src=\"\1\" alt=\"\1\" title=\"\1\"style=\"float:\3;\"/></a>#g" \
 			-e "s#\[\($rg_img_local\)|\($rg_link_http\)|*\([a-z]*\)*\]#<a href=\"\2\" class=\"url\"><img src=\"\1\" alt=\"\1\" title=\"\1\"style=\"float:\3;\"/></a>#g" \
 			-e "s#\[\($rg_img_local\)|\($rg_link_local\)|*\([a-z]*\)*\]#<a href=\"\2\" class=\"url\"><img src=\"\1\" alt=\"\1\" title=\"\1\"style=\"float:\3;\"/></a>#g" \
+			-e "s#\[!\(video\|audio\)|\($rg_link_http\)\]#<\1 src=\"\2\" controls></\1>#" \
+			-e "s#\[!\(video\|audio\)|\($rg_link_local\)\]#<\1 src=\"\2\" controls></\1>#" \
 			-e "s#\[\([^]]*\)|\($rg_link_http\)\]#<a href=\"\2\" class=\"url\">\1</a>#g" \
 			-e "s#\[\([^]]*\)|\($rg_link_local\)\]#<a href=\"\2\" class=\"url\">\1</a>#g" \
 			-e "s#\[\($rg_link_http\)\]#<a href=\"\1\" class=\"url\">\1</a>#g" \
