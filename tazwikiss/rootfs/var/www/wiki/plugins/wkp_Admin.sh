@@ -41,7 +41,6 @@ action()
 	esac
 	PAGE_TITLE_link=false
 	editable=false
-	lang="${HTTP_ACCEPT_LANGUAGE%%[,;_-]*}"
 	PAGE_TITLE="Administration"
 	curpass="$(POST curpass)"
 	secret="admin.secret"
@@ -91,11 +90,11 @@ $hr
 				eval $(grep ^plugin= $i)
 				[ -n "$plugin" ] || continue
 				eval $(grep ^description= $i)
-				alt="$(grep ^description_$lang= $i)"
+				alt="$(grep ^description_$LANG= $i)"
 				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
 				help=
 				eval $(grep ^help= $i)
-				alt="$(grep ^help_$lang= $i)"
+				alt="$(grep ^help_$LANG= $i)"
 				[ -n "$alt" ] && eval $(echo "$alt" | sed 's/_..=/=/')
 				name="$(basename $i .sh)"
 				[ -n "$help" ] && description=" <a href='?page=$help' title='$plugin help page'>$description</a>"
