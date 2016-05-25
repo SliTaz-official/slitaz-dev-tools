@@ -9,6 +9,7 @@
 
 cd $(dirname $0)
 CONFIG=config-${HTTP_ACCEPT_LANGUAGE%%[,;_-]*}.sh
+[ "$HTTP_ACCEPT_LANGUAGE" ] || CONFIG=config-${lang%%[,;_-]*}.sh
 [ -x "$CONFIG" ] || CONFIG=config.sh
 . ./$CONFIG
 
