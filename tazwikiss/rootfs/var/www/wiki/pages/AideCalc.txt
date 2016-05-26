@@ -25,9 +25,9 @@ Total :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';
 Un nombre;sa racine carré;
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);
 {{SliTaz 1.0 est sortie;Mar 22, 2008; 
-=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours avant !;}}
+=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours plus tôt !;}}
 SliTaz 1.0 est sortie;Mar 22, 2008;
-=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours avant !;
+=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);jours plus tôt !;
 !!Quelques véritables tableurs
 * [sc|http://127.0.0.1:82/user/pkgs.cgi?info=sc] pour console
 * [sc-im|http://127.0.0.1:82/user/pkgs.cgi?info=sc-im] pour console avec couleurs
