@@ -31,8 +31,7 @@ Commands:
 
 Options:
   --admin  Make user admin
-  --del    Delete a user
-  --clean  check: clean users accounts
+  --del    Delete a user account
 
 EOT
 }
@@ -42,7 +41,9 @@ no_account() {
 }
 
 deluser() {
-	rm -rf "${people}/${user}"
+	if [ -d ]; then
+		rm -rf "${people}/${user}"
+	fi
 	sed -i "/^${user}:/"d $authfile
 }
 
@@ -82,7 +83,6 @@ case "$1" in
 			if ! [ -f "$people/$user/account.conf" ]; then
 				echo -n "$(colorize 30 "$user")"
 				echo -e "\\033[16GMissing account.conf"
-				[ "$clean" ] && deluser
 			else # check empty VALUES
 				. "$people/$user/account.conf"
 				if [ -z "$NAME" ]; then
@@ -97,7 +97,6 @@ case "$1" in
 					echo -n "$(colorize 30 "$user")"
 					echo -e "\\033[16GMissing KEY"
 				fi
-				[ "$clean" ] && deluser
 				unset NAME MAIL KEY
 			fi
 		done
@@ -107,12 +106,10 @@ case "$1" in
 			if ! [ -d "$people/$user" ]; then
 				echo -n "$(colorize 30 "$user")"
 				echo -e "\\033[16GMissing in DB"
-				if [ "$clean" ]; then # --clean
-					sed -i "/^${user}:/"d $authfile
-				fi
 			fi
 		done
-		separator && newline ;;
+		separator 
+		echo "Use 'tazu user --del' to remove a corrupted account" && newline ;;
 	*)
 		# Handle general: --options
 		case " $@ " in
@@ -145,7 +142,6 @@ case "$1" in
 					separator && newline
 				else
 					no_account
-					echo ${people}/${user}
 				fi ;;
 		esac ;;
 esac
