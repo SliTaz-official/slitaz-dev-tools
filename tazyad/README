@@ -2,7 +2,7 @@ Yad on SliTaz
 ================================================================================
 
 
-Yad is the new prefered way to create GUI boxes for the SliTaz desktop. We use
+Yad is the new preferred way to create GUI boxes for the SliTaz desktop. We use
 Yad GTK boxes for all user and administrator interfaces that can't be handled
 by TazPanel (admin panel) or TazDE (desktop environment). Both are powered
 by CGI scripts and use xHTML 5 and CSS 3 for the UI. Yad is a powerful tool
@@ -14,7 +14,7 @@ If you're motivated to code, please have a look at the TODO file and continue
 reading :-)
 
 
-Coding guidlines
+Coding guidelines
 ----------------
 Use a function and a function_main for main= variable to keep data,
 that way we can have yad boxes commands separated from shell scripts.

@@ -124,7 +124,7 @@ mount_chroot()
 		status
 	fi
 	# Mount source so they can be shared between cooking/stable/undigest.
-	# But do it only if it's a slitaz developement chroot.
+	# But do it only if it's a slitaz development chroot.
 	fs=$rootfs/home/slitaz
 	if [ -d "$slitaz" ]; then
 		bind_chroot_dir $SLITAZ_HOME/src $fs/src
