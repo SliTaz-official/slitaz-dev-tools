@@ -85,7 +85,7 @@ case "$1" in
 			fi
 		done
 		echo "$(colorize 33 "Checking auth file...")"
-		for user in $(cat $authfile | cut -d : -f 1)
+		for user in "$(cat $authfile | cut -d : -f 1)"
 		do
 			if ! [ -d "$people/$user" ]; then
 				echo -n "$(colorize 30 "$user")"
