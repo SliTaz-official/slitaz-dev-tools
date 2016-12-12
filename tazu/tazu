@@ -83,7 +83,18 @@ case "$1" in
 				fi
 				#else -- check empty VALUES
 			fi
-		done 
+		done
+		echo "$(colorize 33 "Checking auth file...")"
+		for user in $(cat $authfile | cut -d : -f 1)
+		do
+			if ! [ -d "$people/$user" ]; then
+				echo -n "$(colorize 30 "$user")"
+				echo -e "\\033[16GMissing in DB"
+				if [ "$clean" ]; then # --clean
+					sed -i "/^${user}:/"d $authfile
+				fi
+			fi
+		done
 		separator && newline ;;
 	*)
 		# Handle general: --options
