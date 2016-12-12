@@ -41,6 +41,11 @@ no_account() {
 	echo "No user account for: $user"
 }
 
+deluser() {
+	rm -rf "${people}/${user}"
+	sed -i "/^${user}:/"d $authfile
+}
+
 #
 # Commands
 #
@@ -77,15 +82,27 @@ case "$1" in
 			if ! [ -f "$people/$user/account.conf" ]; then
 				echo -n "$(colorize 30 "$user")"
 				echo -e "\\033[16GMissing account.conf"
-				if [ "$clean" ]; then # --clean
-					rm -rf "${people}/${user}"
-					sed -i "/^${user}:/"d $authfile
+				[ "$clean" ] && deluser
+			else # check empty VALUES
+				. "$people/$user/account.conf"
+				if [ -z "$NAME" ]; then
+					echo -n "$(colorize 30 "$user")"
+					echo -e "\\033[16GMissing NAME"
 				fi
-				#else -- check empty VALUES
+				if [ -z "$MAIL" ]; then
+					echo -n "$(colorize 30 "$user")"
+					echo -e "\\033[16GMissing MAIL"
+				fi
+				if [ -z "$KEY" ]; then
+					echo -n "$(colorize 30 "$user")"
+					echo -e "\\033[16GMissing KEY"
+				fi
+				[ "$clean" ] && deluser
+				unset NAME MAIL KEY
 			fi
 		done
 		echo "$(colorize 33 "Checking auth file...")"
-		for user in "$(cat $authfile | cut -d : -f 1)"
+		for user in $(cat $authfile | cut -d : -f 1)
 		do
 			if ! [ -d "$people/$user" ]; then
 				echo -n "$(colorize 30 "$user")"
@@ -113,9 +130,7 @@ case "$1" in
 				# Delete a user
 				if [ -d "${people}/${user}" ]; then
 					echo -n "Deleting user: $(colorize 34 "$user")" 
-					rm -rf "${people}/${user}"
-					sed -i "/^${user}:/"d $authfile
-					status
+					deluser && status
 				else
 					no_account
 				fi ;;
