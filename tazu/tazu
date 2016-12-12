@@ -2,7 +2,10 @@
 #
 # TazU - SliTaz Users account utility
 #
-# Copyright 2014 (C) SliTaz GNU/Linux - BSD License
+# This tool is used to mange SliTaz users accounts on bugs.slitaz.org
+# and scn.slitaz.org. It can also be used to admin TinyCM users DB.
+#
+# Copyright 2016 (C) SliTaz GNU/Linux - BSD License
 # Author: Christophe Lincoln <pankso@slitaz.org>
 #
 . /lib/libtaz.sh
@@ -24,10 +27,12 @@ Usage: $(basename $0) [user|command] [--option]
 Commands:
   count    Count all users
   list     List all users
+  check    Check accounts integrity
 
 Options:
   --admin  Make user admin
   --del    Delete a user
+  --clean  check: clean users accounts
 
 EOT
 }
@@ -52,9 +57,32 @@ case "$1" in
 		separator
 		for user in $(ls $people)
 		do
+			if ! [ -f "$people/$user/account.conf" ]; then
+				echo -n "$(colorize 31 "$user")"
+				echo -e "\\033[16GCORRUPTED" && continue
+			fi
 			. $people/$user/account.conf
 			echo -n "$(colorize 34 "$user")"
 			echo -e "\\033[16G${NAME}"
+		done 
+		separator && newline ;;
+	check)
+		# Check accounts and auth file
+		newline
+		boldify "SliTaz accounts integrity"
+		separator
+		echo "$(colorize 33 "Checking account.conf files...")"
+		for user in $(ls $people)
+		do
+			if ! [ -f "$people/$user/account.conf" ]; then
+				echo -n "$(colorize 30 "$user")"
+				echo -e "\\033[16GMissing account.conf"
+				if [ "$clean" ]; then # --clean
+					rm -rf "${people}/${user}"
+					sed -i "/^${user}:/"d $authfile
+				fi
+				#else -- check empty VALUES
+			fi
 		done 
 		separator && newline ;;
 	*)
