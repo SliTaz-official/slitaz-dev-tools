@@ -12,9 +12,13 @@
 check_root
 user="$1"
 
-people="/var/lib/slitaz/people"
-authfile="/var/lib/slitaz/auth/people"
-admin="/var/lib/slitaz/auth/admin"
+people="/home/pankso/tazu/db/people"
+authfile="/home/pankso/tazu/db/auth/people"
+admin="/home/pankso/tazu/db/auth/admin"
+
+#people="/var/lib/slitaz/people"
+#authfile="/var/lib/slitaz/auth/people"
+#admin="/var/lib/slitaz/auth/admin"
 
 # Sanity check
 for file in ${authfile} ${admin}; do
@@ -38,22 +42,27 @@ Commands:
   stats      SliTaz users DB stats
   list       List all users accounts
   last       List last active users
-  check      Check accounts integrity
+  check      Check for corrupted accounts
 
 Options:
   --admin    Make user admin
   --edit     Edit user account.conf
+  --search   Search for users using patterns
   --del      Delete a user account (or all corrupted) 
   
 Examples:
   tazu username --admin
-  tazu "user name" --del
+  tazu "user name" --search
 
 EOT
 }
 
 no_account() {
 	echo "No user account for: $user"
+}
+
+md5crypt() {
+	echo -n "$1" | md5sum | awk '{print $1}'
 }
 
 # Delete a user (we may have corrupted accounts: check twice)
@@ -116,16 +125,22 @@ EOT
 		do
 			if ! [ -f "$people/$user/account.conf" ]; then
 				echo -n "$(colorize 31 "$user")"
-				indent 26 "CORRUPTED" && continue
+				indent 20 "CORRUPTED" && continue
 			fi
-			. $people/$user/account.conf
 			echo -n "$(colorize 34 "$user")"
-			indent 26 "${NAME}"
+			indent 20 "${NAME}"
 		done 
+		separator
+		echo "$(boldify "Users:") $(ls $people | wc -l)"
+		echo -n "$(boldify "Admin users:") "
+		for u in $(cat $admin); do
+			echo -n "$u "
+		done && newline 
 		separator && newline ;;
 	
 	check)
 		# Check accounts and auth file
+		tmp=/tmp/tazu_corrupted
 		newline
 		boldify "SliTaz accounts integrity"
 		separator
@@ -133,22 +148,29 @@ EOT
 		for user in $(ls $people)
 		do
 			if ! [ -f "$people/$user/account.conf" ]; then
-				echo -n "$(colorize 30 "$user")"
+				echo -n "$(colorize 31 "$user")"
 				indent 26 "Missing account.conf"
-			else # check empty VALUES
+			else # Check empty VALUES
 				. "$people/$user/account.conf"
 				if [ -z "$NAME" ]; then
-					echo -n "$(colorize 30 "$user")"
+					echo -n "$(colorize 31 "$user")"
 					indent 26 "Missing NAME"
 				fi
 				if [ -z "$MAIL" ]; then
-					echo -n $(colorize 30 "$user")
+					echo -n $(colorize 31 "$user")
 					indent 26 "Missing MAIL"
+				fi
+				# Invalide mail
+				if ! echo "$MAIL" | grep -q "@"; then
+					echo -n $(colorize 31 "$user")
+					indent 26 "Invalid MAIL: $MAIL"
+					echo "$user" >> ${tmp}
 				fi
 				# account.conf but not in authfile ?
 				if ! grep -q "^${user}:" ${authfile}; then
 					echo -n $(colorize 31 "$user")
 					indent 26 "Missing in authfile"
+					echo "$user" >> ${tmp}
 				fi
 				unset NAME MAIL
 			fi
@@ -159,14 +181,24 @@ EOT
 		cat ${authfile} | while read user passwd;
 		do
 			if ! [ -d "$people/$user" ]; then
-				echo -n $(colorize 30 "$user")
+				echo -n $(colorize 31 "$user")
 				indent 26 "Missing in DB"
-				[ "$del" ] && deluser "$user"
+				echo "$user" >> ${tmp}
 			fi
 		done
 		unset IFS
 		separator
-		echo "To remove a single corrupted account you can use: tazu 'user' --del" && newline ;;
+		# Handle --del option
+		if [ "$del" ] && [ -f "$tmp" ]; then
+			boldify "Deleting accounts..."
+			cat $tmp | uniq | while read u;
+			do
+				deluser "$u"
+			done && separator
+		else
+			echo "To remove a single corrupted account you can use: tazu 'user' --del"
+		fi
+		newline && rm -f ${tmp} ;;
 
 	*)
 		# Handle general: --options
@@ -188,6 +220,26 @@ EOT
 					no_account
 				fi ;;
 			
+			*\ --search\ *)
+				# Search for a user
+				newline
+				echo -n "Searching for: "; colorize 34 "$1"
+				separator
+				IFS=":"
+				grep -i "$1" ${people}/*/account.conf | while read path patterm;
+				do
+					. ${path}
+					if ! echo "$found" | grep -w -q "$USER"; then
+						found="$found $USER"
+						echo "$(colorize 34 $USER) $(indent 20 $NAME) $(indent 46 $MAIL)"
+					fi
+				done
+				unset IFS && separator && newline ;;
+			
+			*\ --passwd\ *)
+				echo -n "New password for $1: "; read pass
+				echo "TODO" ;;
+			
 			*\ --del\ *)
 				deluser "$user" ;;
 			
@@ -195,7 +247,7 @@ EOT
 				# Show user info
 				if [ -d "${people}/${user}" ]; then
 					newline
-					if grep -q "^$user$" ${admin}; then
+					if fgrep -w -q "$user" ${admin}; then
 						echo "$(colorize 35 "Admin user:") $(colorize 34 "$user")"
 					else
 						echo "$(boldify "User:") $(colorize 34 "$user")"
