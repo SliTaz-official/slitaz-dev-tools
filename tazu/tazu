@@ -12,13 +12,9 @@
 check_root
 user="$1"
 
-people="/home/pankso/tazu/db/people"
-authfile="/home/pankso/tazu/db/auth/people"
-admin="/home/pankso/tazu/db/auth/admin"
-
-#people="/var/lib/slitaz/people"
-#authfile="/var/lib/slitaz/auth/people"
-#admin="/var/lib/slitaz/auth/admin"
+people="/var/lib/slitaz/people"
+authfile="/var/lib/slitaz/auth/people"
+admin="/var/lib/slitaz/auth/admin"
 
 # Sanity check
 for file in ${authfile} ${admin}; do
