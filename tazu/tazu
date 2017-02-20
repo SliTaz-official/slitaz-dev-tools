@@ -5,15 +5,25 @@
 # This tool is used to mange SliTaz users accounts on bugs.slitaz.org
 # and scn.slitaz.org. It can also be used to admin TinyCM users DB.
 #
-# Copyright 2016 (C) SliTaz GNU/Linux - BSD License
+# Copyright 2017 (C) SliTaz GNU/Linux - BSD License
 # Author: Christophe Lincoln <pankso@slitaz.org>
 #
 . /lib/libtaz.sh
 check_root
-
-authfile="/var/lib/slitaz/auth/people"
-people="/var/lib/slitaz/people"
 user="$1"
+
+people="/var/lib/slitaz/people"
+authfile="/var/lib/slitaz/auth/people"
+admin="/var/lib/slitaz/auth/admin"
+
+# Sanity check
+for file in ${authfile} ${admin}; do
+	if ! [ -f "$file" ]; then
+		echo check $file
+		install -d -m 0700 -o www -g www $(dirname $file)
+		touch ${file} && chown www.www ${file} && chmod 0600 ${file}
+	fi
+done
 
 #
 # Functions
@@ -25,14 +35,18 @@ usage() {
 Usage: $(basename $0) [user|command] [--option]
 
 Commands:
-  count    Count all users
-  list     List all users
-  check    Check accounts integrity
+  stats      Count all users
+  list       List all users
+  check      Check accounts integrity
 
 Options:
-  --admin  Make user admin
-  --edit   Edit user account.conf
-  --del    Delete a user account
+  --admin    Make user admin
+  --edit     Edit user account.conf
+  --del      Delete a user account (or all corrupted)
+  
+Examples:
+  tazu username --admin
+  tazu "user name" --del
 
 EOT
 }
@@ -41,11 +55,21 @@ no_account() {
 	echo "No user account for: $user"
 }
 
+# Delete a user (we may have corrupted accounts: check twice)
+# Usage: deluser "username"
 deluser() {
-	if [ -d "${people}/${user}" ]; then
-		rm -rf "${people}/${user}"
+	if [ -d "${people}/${1}" ] || grep -q "^$1:" ${authfile}; then
+		if [ -d "${people}/${1}" ]; then
+			echo -n "Deleting account: $(colorize 34 "$1")"
+			rm -rf "${people}/${1}" && status
+		fi
+		if grep -q "^$user:" ${authfile}; then
+			echo -n "Removing '$1' from authfile..."
+			sed -i "/^${1}:/"d ${authfile} && status
+		fi
+	else
+		no_account
 	fi
-	sed -i "/^${user}:/"d $authfile
 }
 
 #
@@ -54,9 +78,29 @@ deluser() {
 
 case "$1" in
 	"") usage ;;
-	count)
-		echo -n "Users: "
-		colorize 34 "$(ls $people | wc -l)" ;;
+	
+	stats)
+		newline
+		boldify "SliTaz users stats"
+		separator
+		cat << EOT
+People DB       : $people
+Authfie path    : $authfile
+Admin users     : $admin
+User accounts   : $(ls $people | wc -l)
+Authfile users  : $(cat $authfile | wc -l)
+Admin users     : $(cat $admin | wc -l)
+EOT
+		separator && newline ;;
+	
+	last)
+		find ${people} -name "last" | xargs ls -1t | head -n 10 | while read last;
+		do
+			dir="$(dirname $last)"
+			echo -n "$(basename $dir)"
+			indent 26 "$(cat $last)"
+		done ;;
+	
 	list)
 		# List all users
 		newline
@@ -66,62 +110,68 @@ case "$1" in
 		do
 			if ! [ -f "$people/$user/account.conf" ]; then
 				echo -n "$(colorize 31 "$user")"
-				echo -e "\\033[16GCORRUPTED" && continue
+				indent 26 "CORRUPTED" && continue
 			fi
 			. $people/$user/account.conf
 			echo -n "$(colorize 34 "$user")"
-			echo -e "\\033[16G${NAME}"
+			indent 26 "${NAME}"
 		done 
 		separator && newline ;;
+	
 	check)
 		# Check accounts and auth file
 		newline
 		boldify "SliTaz accounts integrity"
 		separator
-		echo "$(colorize 33 "Checking account.conf files...")"
+		echo "$(colorize 33 "Checking users: account.conf")"
 		for user in $(ls $people)
 		do
 			if ! [ -f "$people/$user/account.conf" ]; then
 				echo -n "$(colorize 30 "$user")"
-				echo -e "\\033[16GMissing account.conf"
+				indent 26 "Missing account.conf"
 			else # check empty VALUES
 				. "$people/$user/account.conf"
 				if [ -z "$NAME" ]; then
 					echo -n "$(colorize 30 "$user")"
-					echo -e "\\033[16GMissing NAME"
+					indent 26 "Missing NAME"
 				fi
 				if [ -z "$MAIL" ]; then
-					echo -n "$(colorize 30 "$user")"
-					echo -e "\\033[16GMissing MAIL"
+					echo -n $(colorize 30 "$user")
+					indent 26 "Missing MAIL"
 				fi
-				if [ -z "$KEY" ]; then
-					echo -n "$(colorize 30 "$user")"
-					echo -e "\\033[16GMissing KEY"
+				# account.conf but not in authfile ?
+				if ! grep -q "^${user}:" ${authfile}; then
+					echo -n $(colorize 31 "$user")
+					indent 26 "Missing in authfile"
 				fi
-				unset NAME MAIL KEY
+				unset NAME MAIL
 			fi
 		done
-		echo "$(colorize 33 "Checking auth file...")"
-		for user in $(cat $authfile | cut -d : -f 1)
+		# Check authfile
+		echo "$(colorize 33 "Checking users in authfile...")"
+		IFS=":"
+		cat ${authfile} | while read user passwd;
 		do
 			if ! [ -d "$people/$user" ]; then
-				echo -n "$(colorize 30 "$user")"
-				echo -e "\\033[16GMissing in DB"
+				echo -n $(colorize 30 "$user")
+				indent 26 "Missing in DB"
+				[ "$del" ] && deluser "$user"
 			fi
 		done
-		separator 
-		echo "Use 'tazu user --del' to remove a corrupted account" && newline ;;
+		unset IFS
+		separator
+		echo "To remove a single corrupted account you can use: tazu 'user' --del" && newline ;;
+
 	*)
 		# Handle general: --options
 		case " $@ " in
 			*\ --admin\ *)
 				# Admin user
-				if fgrep -q ADMIN_USER= ${people}/${user}/account.conf; then
+				if fgrep -q ${user} ${admin}; then
 					echo -n "User is already admin: " && colorize 34 "$user" 
 				else
 					echo -n "Adding $user to admin users..."
-					echo 'ADMIN_USER="yes"' >> ${people}/${user}/account.conf
-					status
+					echo "$user" >> ${admin} && status
 				fi ;;
 			
 			*\ --edit\ *)
@@ -133,22 +183,22 @@ case "$1" in
 				fi ;;
 			
 			*\ --del\ *)
-				# Delete a user
-				if [ -d "${people}/${user}" ]; then
-					echo -n "Deleting user: $(colorize 34 "$user")" 
-					deluser && status
-				else
-					no_account
-				fi ;;
+				deluser "$user" ;;
 			
 			*)
 				# Show user info
-				if [ -d "${people}/${user}" ]; then	
+				if [ -d "${people}/${user}" ]; then
 					newline
-					echo "$(boldify "User:") $(colorize 34 "$user")"
+					if grep -q "^$user$" ${admin}; then
+						echo "$(colorize 35 "Admin user:") $(colorize 34 "$user")"
+					else
+						echo "$(boldify "User:") $(colorize 34 "$user")"
+					fi
 					separator
 					cat $people/$user/account.conf | grep "="
-					separator && newline
+					separator
+					
+					newline
 				else
 					no_account
 				fi ;;
