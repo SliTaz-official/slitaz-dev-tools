@@ -44,6 +44,7 @@ Options:
   --admin    Make user admin
   --edit     Edit user account.conf
   --search   Search for users using patterns
+  --passwd   Prompt to change a user pawword
   --del      Delete a user account (or all corrupted) 
   
 Examples:
@@ -233,8 +234,17 @@ EOT
 				unset IFS && separator && newline ;;
 			
 			*\ --passwd\ *)
-				echo -n "New password for $1: "; read pass
-				echo "TODO" ;;
+				user="$1"
+				if [ -d "${people}/${user}" ]; then
+					echo -n "New password for $1: "; read pass
+					if [ "$pass" ]; then
+						echo -n "Changing password..."
+						sed -i "/^${user}:/"d ${authfile}
+						echo "$user:$(md5crypt $pass)" >> ${authfile} && status
+					fi
+				else
+					no_account
+				fi ;;
 			
 			*\ --del\ *)
 				deluser "$user" ;;
