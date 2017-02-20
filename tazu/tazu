@@ -44,7 +44,7 @@ Options:
   --admin    Make user admin
   --edit     Edit user account.conf
   --search   Search for users using patterns
-  --passwd   Prompt to change a user pawword
+  --passwd   Prompt to change a user password
   --del      Delete a user account (or all corrupted) 
   
 Examples:
@@ -92,7 +92,7 @@ case "$1" in
 		separator
 		cat << EOT
 People DB       : $people
-Authfie path    : $authfile
+Authfile path   : $authfile
 Admin users     : $admin
 User accounts   : $(ls $people | wc -l)
 Authfile users  : $(cat $authfile | wc -l)
@@ -157,7 +157,7 @@ EOT
 					echo -n $(colorize 31 "$user")
 					indent 26 "Missing MAIL"
 				fi
-				# Invalide mail
+				# Invalid mail
 				if ! echo "$MAIL" | grep -q "@"; then
 					echo -n $(colorize 31 "$user")
 					indent 26 "Invalid MAIL: $MAIL"
