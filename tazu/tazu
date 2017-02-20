@@ -32,17 +32,18 @@ done
 usage() {
 	cat << EOT
 
-Usage: $(basename $0) [user|command] [--option]
+$(boldify "Usage:") $(basename $0) [user|command] [--option]
 
 Commands:
-  stats      Count all users
-  list       List all users
+  stats      SliTaz users DB stats
+  list       List all users accounts
+  last       List last active users
   check      Check accounts integrity
 
 Options:
   --admin    Make user admin
   --edit     Edit user account.conf
-  --del      Delete a user account (or all corrupted)
+  --del      Delete a user account (or all corrupted) 
   
 Examples:
   tazu username --admin
@@ -94,12 +95,17 @@ EOT
 		separator && newline ;;
 	
 	last)
-		find ${people} -name "last" | xargs ls -1t | head -n 10 | while read last;
+		[ ! "$count" ] && count=15
+		newline
+		boldify "Last active users"
+		separator
+		find ${people} -name "last" | xargs ls -1t | head -n ${count} | while read last;
 		do
 			dir="$(dirname $last)"
 			echo -n "$(basename $dir)"
 			indent 26 "$(cat $last)"
-		done ;;
+		done 
+		separator && newline ;;
 	
 	list)
 		# List all users
