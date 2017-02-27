@@ -5,7 +5,7 @@
 # well commented please, also: configuration variables are $UPPERCASE
 # and variables initialized by tazdev itself are $lowerspace
 #
-# (c) 2014 SliTaz GNU/Linux - GNU gpl v3
+# (c) 2014-2017 SliTaz GNU/Linux - GNU gpl v3
 #
 # AUTHORS
 #     Christophe Lincoln <pankso@slitaz.org>
@@ -13,11 +13,12 @@
 #     Eric Joseph-Alexandre <erjo@slitaz.org>
 #
 
-VERSION=2.0
+VERSION=2.1
 
 . /lib/libtaz.sh
 
 [ -f /etc/slitaz/tazdev.conf ] && . /etc/slitaz/tazdev.conf
+[ -f ~/.config/slitaz/tazdev.conf ] && . ~/.config/slitaz/tazdev.conf
 [ -f tazdev.conf ] && . ./tazdev.conf
 
 if [ ! "$SLITAZ_HOME" ]; then
@@ -32,19 +33,20 @@ $(boldify "Usage:") $(basename $0) [command] [vers|user|tool] [vers|--opts]
 SliTaz developers and build host tool v$VERSION
 
 $(boldify "Commands:")
-  usage               Print this short usage and command list
-  help                Give help on a SliTaz tool or library.
-  stats|-s            Display statistics about your projects
-  chroot|-c           Mount virtual fs and chroot into the build env
-  gen-chroot|-gc      Generate a chroot using packages from config file
-  umount-chroot|-uc   Unmount chroot specified on cmdline
-  clean-chroot|-cc    Clean a chroot environment (skip root/ and home/)
-  push|-p             Upload new packages to the main mirror
-  dry-push|-dp        Show what will be uploaded to the mirror. Does nothing
-  pull                Download new packages from the main mirror
-  dry-pull            Show what will be downloaded from the mirror. Does nothing
-  up-repos|-upr       Update all your SliTaz projects repos in one command.
-  relpkg|-rp          Archive and upload new package/project version
+       usage          Print this short usage and command list
+       help           Give help on a SliTaz tool or library.
+  -s   stats          Display statistics about your projects
+  -c   chroot         Mount virtual fs and chroot into the build env
+  -gc  gen-chroot     Generate a chroot using packages from config file
+  -uc  unchroot       Unmount chroot specified on cmdline
+  -cc  clean-chroot   Clean a chroot environment (skip root/ and home/)
+  -p   push           Upload new packages to the main mirror
+  -dp  dry-push       Show what will be uploaded to the mirror.
+       pull           Download new packages from the main mirror
+       dry-pull       Show what will be downloaded from the mirror.
+  -ur  up-repos       Update all your SliTaz projects repos in one command.
+  -rp  relpkg         Archive and upload new package/project version
+  -sc  setup-cgi      Setup your CGI environment
 
 $(boldify "Options:")
   --rootfs=           Path to the chroot to generate or clean
@@ -53,7 +55,6 @@ $(boldify "Options:")
 
 $(boldify "Options:")
   $(basename $0) gen-chroot undigest --clean
-  $(basename $0) chroot stable
   $(basename $0) -c --arch=arm
 
 EOT
@@ -207,26 +208,22 @@ gen_chroot() {
 
 case "$1" in
 	stats|-s)
-		echo -e "\nStatistics for: $PROJECTS\n"
-		echo -n "Project" && echo -ne "\033[24G Size" && echo -ne "\033[38G Revision"
-		echo -ne "\033[48G Version" && echo -e "\033[64G Files"
+		newline
+		echo "Statistics for: $PROJECTS"
+		newline
+		echo "Project $(indent 24 Revision) $(indent 38 Version) $(indent 54 Files)"
 		separator
-		cd $PROJECTS
+		cd ${PROJECTS}
 		for proj in *
 		do
 			rev=""
-			echo -n "$proj"
-			size=`du -sh $proj | awk '{ print $1 }'`
-			echo -ne "\033[24G $size"
-			if [ -d $proj/.hg ]; then
-				cd $proj
-				rev=`hg head --template '{rev}\n'`
-				vers=`hg tags | head -n 2 | tail -n 1 | cut -d " " -f 1`
-				echo -ne "\033[38G $rev"
-				echo -ne "\033[48G $vers" && cd ..
+			if [ -d "${PROJECTS}/${proj}/.hg" ]; then
+				cd ${PROJECTS}/${proj}
+				rev=$(hg head --template '{rev}\n')
+				vers=$(hg tags | head -n 2 | tail -n 1 | cut -d " " -f 1)
+				files=$(find . -type f | wc -l)
+				echo "$proj $(indent 24 $rev) $(indent 38 $vers) $(indent 54 $files)"
 			fi
-			files=`find $proj -type f | wc -l`
-			echo -e "\033[64G $files"
 		done
 		separator
 		echo "" ;;
@@ -239,7 +236,7 @@ case "$1" in
 		echo -e "Chrooting to: $rootfs\n"
 		chroot $rootfs /bin/sh --login
 		umount_chroot ;;
-	umount-chroot|-uc)
+	umchroot|-uc)
 		check_root
 		get_version $@
 		[ -d "$2" ] && rootfs=$2
@@ -304,7 +301,7 @@ case "$1" in
 		check_mirror $@
 		rsync -r -t -l -v -z --delete --dry-run \
 			-e ssh $user@$MIRROR:$remote $local ;;
-	up-repos|-upr)
+	up-repos|-ur)
 		# Update all at once.
 		newline
 		boldify "Update all SliTaz Hg repos"
@@ -367,9 +364,31 @@ case "$1" in
 			sed -i s"/VERSION=.*/VERSION=\"$version\"/" $pkg*/receipt
 			status
 		fi ;;
+	
+	setup-cgi|-sc)
+		. /etc/slitaz/slitaz.conf
+		echo "$(boldify 'Public :') $PUBLIC" 
+		mkdir -p ${PUBLIC}/cgi-bin
+		cd ${PUBLIC}/cgi-bin
+		for proj in tazbug tinycm mediabox; do
+			if [ ! -d "$proj" ]; then
+				hg clone ttp://hg.slitaz.org/${proj}
+			fi
+		done
+		if [ ! -d "$INSTALLED/lighttpd" ]; then
+			sudo tazpkg -gi lighttpd
+		fi
+		echo
+		echo "TODO: setup SCN (tinycm install + plugins from slitaz-forge"
+		echo
+		echo "$(boldify 'URL    :') http://localhost/~${USER}/cgi-bin/" ;;
+	
 	help)
-		[ ! "$2" ] && echo "Missing tool/library name" && exit 0
-		echo ""
+		if [ ! "$2" ]; then
+			echo "Missing tool/library name"
+			echo "Example: tazdev help httphelper"; exit 0
+		fi
+		newline
 		boldify "Help for: $2"
 		separator
 		if [ -f "/usr/share/doc/slitaz/$2.txt" ]; then
@@ -377,9 +396,10 @@ case "$1" in
 		else
 			echo "No help found"
 		fi
-		separator && echo "" ;;
-	usage|*)
-		usage ;;
+		separator && newline ;;
+	
+	usage|*) usage ;;
+	
 esac
 
 exit 0
