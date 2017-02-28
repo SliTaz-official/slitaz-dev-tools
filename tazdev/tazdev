@@ -59,7 +59,7 @@ $(boldify "Commands:")
 $(boldify "Options:")
   --rootfs=            Path to the chroot to generate or clean
   --arch=              Specify the architecture type for cross-chroot, push/pull
-  --clean or --forced  Clean chroot before generation a new one
+  --clean or --forced  Clean chroot before generating a new one
 
 $(boldify "Examples:")
   $(basename $0) gen-chroot undigest --clean
@@ -130,7 +130,7 @@ mount_chroot()
 		bind_chroot_dir $SLITAZ_HOME/src $fs/src
 		# Now mount package dir, so they are in /home/slitaz/$version
 		# We may not mount cache wok or others: it has no point and if
-		# one wants to use a shared wok, he can bind it manually.
+		# one wants to use a shared wok, one can bind it manually.
 		[ -n "$arch" ] && slitaz="$slitaz/$arch"
 		mkdir -p "$fs/packages" "$slitaz/packages"
 		bind_chroot_dir "$slitaz/packages" "$fs/packages"
@@ -369,7 +369,7 @@ case "$1" in
 		[ -d "$INSTALLED/lighttpd" ] || sudo tazpkg -gi lighttpd
 
 		echo
-		echo "TODO: setup SCN (tinycm install + plugins from slitaz-forge"
+		echo "TODO: setup SCN (tinycm install + plugins from slitaz-forge)"
 		echo
 		echo "$(boldify 'URL    :') http://localhost/~$USER/cgi-bin/"
 		;;
