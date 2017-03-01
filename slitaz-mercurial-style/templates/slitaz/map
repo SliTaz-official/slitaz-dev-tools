@@ -195,3 +195,16 @@ notfound = notfound.tmpl
 error = error.tmpl
 urlparameter = '{separator}{name}={value|urlescape}'
 hiddenformentry = '<input type="hidden" name="{name}" value="{value|escape}" />'
+
+bookmarks = bookmarks.tmpl
+bookmarkentry = '
+  <tr class="parity{parity}">
+    <td class="age"><i class="age">{date|rfc822date}</i></td>
+    <td><a class="list" href="{url|urlescape}rev/{node|short}{sessionvars%urlparameter}"><b>{bookmark|escape}</b></a></td>
+    <td class="link">
+      <a href="{url|urlescape}rev/{node|short}{sessionvars%urlparameter}">changeset</a> |
+      <a href="{url|urlescape}log/{node|short}{sessionvars%urlparameter}">changelog</a> |
+      <a href="{url|urlescape}file/{node|short}{sessionvars%urlparameter}">files</a>
+    </td>
+  </tr>'
+

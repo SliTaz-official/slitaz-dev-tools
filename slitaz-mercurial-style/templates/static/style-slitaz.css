@@ -22,7 +22,7 @@ h2 { color: #444; font-size: 180%; }
 h3 { color: #666; font-size: 140%; }
 h4 { color: #888; font-size: 120%; }
 h2, h3 { border-bottom: 1px dashed #afafaf; padding-bottom: 5px; }
-li { list-style-type: square; }
+
 pre { 	 
 	border: 1px solid #ddd; 
 	padding: 10px;
@@ -535,25 +535,16 @@ div.description {
 /* Graph */
 div#wrapper {
 	position: relative;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
 	margin: 0;
 	padding: 0;
+	margin-top: 3px;
 }
 
 canvas {
 	position: absolute;
 	z-index: 5;
-	top: -0.7em;
+	top: -0.9em;
 	margin: 0;
-}
-
-ul#graphnodes {
-	position: absolute;
-	z-index: 10;
-	top: -1.0em;
-	list-style: none inside none;
-	padding: 0;
 }
 
 ul#nodebgs {
@@ -567,9 +558,18 @@ ul#graphnodes li, ul#nodebgs li {
 	height: 39px;
 }
 
+ul#graphnodes {
+	position: absolute;
+	z-index: 10;
+	top: -0.8em;
+	list-style: none inside none;
+	padding: 0;
+}
+
 ul#graphnodes li .info {
 	display: block;
-	font-size: 70%;
+	font-size: 100%;
 	position: relative;
 	top: -3px;
+	font-style: italic;
 }

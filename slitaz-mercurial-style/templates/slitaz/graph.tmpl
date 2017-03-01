@@ -17,7 +17,6 @@
 		<a href="http://doc.slitaz.org/">Doc</a>
 		<a href="http://forum.slitaz.org/">Forum</a>
 		<a href="http://irc.slitaz.org/">IRC</a>
-		<a href="http://pro.slitaz.org/">Pro</a>
 		<a href="http://bugs.slitaz.org">Bugs</a>
 		<span>Hg</span>
 		<a href="http://cook.slitaz.org/">Cook</a>
@@ -58,12 +57,6 @@
 
 <h2><a href="{url}{sessionvars%urlparameter}">{repo|escape}</a> graph</h2>
 
-<div class="navigate">
-<a href="{url}graph/{rev}{lessvars%urlparameter}">less</a>
-<a href="{url}graph/{rev}{morevars%urlparameter}">more</a>
-| rev {rev}: {changenav%navgraph}
-</div>
-
 <noscript><p>The revision graph only works with JavaScript-enabled browsers.</p></noscript>
 
 <div id="wrapper">
@@ -72,7 +65,7 @@
 <ul id="graphnodes"></ul>
 </div>
 
-<script>
+<script type="text/javascript">
 <!-- hide script content
 
 var data = {jsdata|json};
@@ -89,36 +82,9 @@ graph.vertex = function(x, y, color, parity, cur) \{
 	var bg = '<li class="bg parity' + parity + '"></li>';
 	var left = (this.bg_height - this.box_size) + (this.columns + 1) * this.box_size;
 	var nstyle = 'padding-left: ' + left + 'px;';
-	
-	var tagspan = '';
-	if (cur[7].length || cur[8].length || (cur[6][0] != 'default' || cur[6][1])) \{
-		tagspan = '<span class="logtags">';
-		if (cur[6][1]) \{
-			tagspan += '<span class="branchtag" title="' + cur[6][0] + '">';
-			tagspan += cur[6][0] + '</span> ';
-		} else if (!cur[6][1] && cur[6][0] != 'default') \{
-			tagspan += '<span class="inbranchtag" title="' + cur[6][0] + '">';
-			tagspan += cur[6][0] + '</span> ';
-		}
-		if (cur[7].length) \{
-			for (var t in cur[7]) \{
-				var tag = cur[7][t];
-				tagspan += '<span class="tagtag">' + tag + '</span> ';
-			}
-		}
-		if (cur[8].length) \{
-			for (var t in cur[8]) \{
-				var bookmark = cur[8][t];
-				tagspan += '<span class="bookmarktag">' + bookmark + '</span> ';
-			}
-		}
-		tagspan += '</span>';
-	}
-	
 	var item = '<li style="' + nstyle + '"><span class="desc">';
-	item += '<a class="list" href="{url|urlescape}rev/' + cur[0] + '{sessionvars%urlparameter}" title="' + cur[0] + '"><b>' + cur[3] + '</b></a>';
-	item += '</span> ' + tagspan + '';
-	item += '<span class="info">' + cur[5] + ', by ' + cur[4] + '</span></li>';
+	item += '<a href="{url|urlescape}rev/' + cur[0] + '{sessionvars%urlparameter}" title="' + cur[0] + '">' + cur[3] + '</a>';
+	item += '</span><span class="info">' + cur[5] + ', by ' + cur[4] + '</span></li>';
 
 	return [bg, item];
 	
@@ -127,23 +93,6 @@ graph.vertex = function(x, y, color, parity, cur) \{
 graph.render(data);
 
 // stop hiding script -->
-</script>
-
-<div class="page_nav">
-<a href="{url|urlescape}graph/{symrev}{lessvars%urlparameter}">less</a>
-<a href="{url|urlescape}graph/{symrev}{morevars%urlparameter}">more</a>
-| {changenav%navgraph}
-</div>
-
-<script type="text/javascript">
-    ajaxScrollInit(
-            '{url|urlescape}graph/{rev}?revcount=%next%&style={style}',
-            {revcount}+60,
-            function (htmlText, previousVal) \{ return previousVal + 60; },
-            '#wrapper',
-            '<div class="%class%" style="text-align: center;">%text%</div>',
-            'graph'
-    );
 </script>
 
 <!-- End of content -->
