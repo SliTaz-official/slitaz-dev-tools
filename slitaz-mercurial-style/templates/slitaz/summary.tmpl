@@ -16,7 +16,6 @@
 		<a href="http://doc.slitaz.org/">Doc</a>
 		<a href="http://forum.slitaz.org/">Forum</a>
 		<a href="http://irc.slitaz.org/">IRC</a>
-		<a href="http://pro.slitaz.org/">Pro</a>
 		<a href="http://bugs.slitaz.org">Bugs</a>
 		<span>Hg</span>
 		<a href="http://cook.slitaz.org/">Cook</a>
@@ -24,61 +23,44 @@
 	<h1><a href="http://hg.slitaz.org/">SliTaz Repositories</a></h1>
 </div>
 
-<!-- Block -->
-<div id="block">
-	<!-- Navigation -->
-	<div id="block_nav">
-		<h4>Navigation</h4>
-		<div class="right_box">
-			<ul>
-				<li><a href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
-				<li><a href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
-			</ul>
-		</div>
-		<div class="left_box">
-			<ul>
-				<li>Summary</li>
-				<li><a href="{url}log{sessionvars%urlparameter}">Changelog</a></li>
-				<li><a href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
-				<li><a href="{url}tags{sessionvars%urlparameter}">Tags</a></li>
-				<li><a href="{url}branches{sessionvars%urlparameter}">Branches</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- Information/image -->
-	<div id="block_info">
-		<h4>Project: {repo|escape}</h4>
-		<p>
-			Clone project: hg clone http://hg.slitaz.org/{repo|escape}
-		</p>
-		<div id="tarball">
-			<ul>
-				<li>Download tarball:</li>
-				{archives%archiveentry}
-			</ul>
-		</div>
-		<h4>Search</h4>
-		<form class="search" action="{url}log">
-			{sessionvars%hiddenformentry}
-			<p><input name="rev" id="search1" type="text" /></p>
-			<!-- <div id="hint">find changesets by author, revision,
-			files, or words in the commit message</div> -->
-		</form>
-	</div>
-</div>
+<!-- Navigation -->
+<nav id="nav" role="navigation" tabindex="0">
+	<ul>
+		<li><a class="nav2" href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
+		<li><a class="nav1" href="{url}log{sessionvars%urlparameter}">Changelog</a></li>
+		<li><a class="nav2" href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
+		<li><a class="nav1" href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
+		<li><a class="nav2" href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
+	</ul>
+	<p>
+		Repo: <span class="repo">{repo|escape}</span> &#8594;
+		Download: <a href="/{repo|escape}/archive/tip.tar.bz2">bz2</a> -
+		Last change: {lastchange|age}
+		<br />
+		<span id="repo-desc">{desc}</span>
+	</p>
+</nav>
 
+<div id="hgsearch">
+	<form class="search" action="{url}log">
+	{sessionvars%hiddenformentry}
+	<input name="rev" id="search1" type="text" placeholder="Search" />
+	<!-- <div id="hint">find changesets by author, revision,
+	files, or words</div> -->
+	</form>
+</div>
 
 <div id="content">
 
 <h2>Repository Overview</h2>
 
-<ul style="list-style-type: square;">
-	<li>Repo: {repo|escape} - {desc}</li>
-	<li>Owner: {owner|obfuscate}</li>
-	<li>Last change: {lastchange|rfc822date}</li>
-</ul>
+<pre>
+Node            : {node}
+Changeset       : <span class="value">{node|short}</span>
+Owner           : {owner|obfuscate}
+</pre>
 
-<h2>Changes</h2>
+<h3>Changes</h3>
 <table style="margin-top: 10px;">
 {shortlog}
 	<tr class="light">
@@ -88,7 +70,7 @@
 	</tr>
 </table>
 
-<h2>Tags</h2>
+<h3>Tags</h3>
 <table style="margin-top: 10px;">
 {tags}
 	<tr class="light">
@@ -98,7 +80,7 @@
 	</tr>
 </table>
 
-<h2>Branches</h2>
+<h3>Branches</h3>
 <table style="margin-top: 10px;">
 {branches%branchentry}
 </table>
