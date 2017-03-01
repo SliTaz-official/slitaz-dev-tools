@@ -1,5 +1,9 @@
 {header}
-<title>{repo|escape}: {node|short} {path|escape}</title>
+<title>{repo|escape}: Bookmarks</title>
+<link rel="alternate" type="application/atom+xml"
+   href="{url|urlescape}atom-bookmarks" title="Atom feed for {repo|escape}"/>
+<link rel="alternate" type="application/rss+xml"
+   href="{url|urlescape}rss-bookmarks" title="RSS feed for {repo|escape}"/>
 </head>
 <body>
 
@@ -30,11 +34,10 @@
 	</ul>
 	<p>
 		Repo: <span class="repo">{repo|escape}</span> &#8594;
-		<a href="{url}bookmarks{sessionvars%urlparameter}">Bookmarks</a> -
-		Download: <a href="/{repo|escape}/archive/tip.tar.bz2">bz2</a> -
+		<a href="{url}branches{sessionvars%urlparameter}">Branches</a> -
 		Changeset: <span class="value">{node|short}</span>
 		<br />
-		<span id="repo-desc">Revision: {rev}</span>
+		<span id="repo-desc">Coded with &hearts; and KISS principle</span>
 	</p>
 </nav>
 
@@ -47,24 +50,14 @@
 
 <!-- Content -->
 <div id="content">
+	
+<h2><a href="{url}{sessionvars%urlparameter}">{repo|escape}</a> bookmarks</h2>
 
-<h2><a href="{url}{sessionvars%urlparameter}">{repo|escape}</a>
-	{path|escape} {tags%changelogtag}</h2>
-
-<table class="bigtable">
-<tr>
-  <th class="name">name</th>
-  <th class="size">size</th>
-  <th class="permissions">permissions</th>
-</tr>
-<tr class="fileline parity{upparity}">
-  <td class="name"><a href="{url}file/{node|short}{up|urlescape}{sessionvars%urlparameter}">[up]</a></td>
-  <td class="size"></td>
-  <td class="permissions">drwxr-xr-x</td>
-</tr>
-{dentries%direntry}
-{fentries%fileentry}
-</table>
+<div id="bookmarks">
+	<table>
+		{entries%bookmarkentry}
+	</table>
+</div>
 
 <!-- End of content -->
 </div>

@@ -55,34 +55,37 @@
 <h2>Repository Overview</h2>
 
 <pre>
+Last change     : {lastchange|isodate}
 Changeset       : <span class="value">{node|short}</span>
-repo owner      : {owner|obfuscate}
-<a href="{url|urlescape}bookmarks{sessionvars%urlparameter}">bookmarks</a>
+Clone repo      : hg clone http://hg.slitaz.org/{repo}
 </pre>
 
 <h3>Changes</h3>
-<table style="margin-top: 10px;">
-{shortlog}
-	<tr class="light">
-		<td colspan="4">
-			<a class="list" href="{url}shortlog{sessionvars%urlparameter}">More changes...</a>
-		</td>
-	</tr>
+<table cellspacing="0">
+	{shortlog}
 </table>
+<p>
+	<strong>
+	<a href="{url}shortlog{sessionvars%urlparameter}">More changes...</a>
+	</strong>
+</p>
+
+<!-- <a href="{url}bookmarks{sessionvars%urlparameter}">bookmarks</a> -->
+<h3>Bookmarks</h3>
+<div id="bookmarks">
+	<table cellspacing="0">
+		{bookmarks%bookmarkentry}
+	</table>
+</div>
 
 <h3>Tags</h3>
-<table style="margin-top: 10px;">
-{tags}
-	<tr class="light">
-		<td colspan="3">
-			<a class="list" href="{url}tags{sessionvars%urlparameter}">More tags...</a>
-		</td>
-	</tr>
+<table cellspacing="0">
+	{tags}
 </table>
 
 <h3>Branches</h3>
-<table style="margin-top: 10px;">
-{branches%branchentry}
+<table cellspacing="0">
+	{branches%branchentry}
 </table>
 
 <!-- End of content -->

@@ -93,7 +93,7 @@ nav {
 	font-size: 120%;
 	min-height: 100px;
 	background: #eee; 
-	padding: 56px 6% 0;
+	padding: 40px 6% 0;
 	text-align: center;
 	color: #222;
 	border-bottom: 1px solid #afafaf;
@@ -119,8 +119,8 @@ nav p { padding: 8px; color: #333; font-size: 92%; }
 
 .nav1 { background-color: #333; }
 .nav1:hover { background-color: #128da9; }
-.nav2 { background-color: #ab3c00; }
-.nav2:hover { background-color: #ff9b00; }
+.nav2 { background-color: #af0a4a; }
+.nav2:hover { background-color: #ab3c00; }
 .navpi { background-color: #444; }
 .navpi:hover { background-color: #bc1142; }
 
@@ -462,7 +462,7 @@ h2 a { color: #215090; }
 
 table { border-collapse: collapse; }
 
-.bigtable {
+.bigtable, #bookmarks table {
   border-bottom: 1px solid #ddd;
   border-collapse: collapse;
   font-size: 100%;
@@ -491,6 +491,9 @@ table .author { width: 12em; }
 .bigtable .annotate { text-align: right; }
 .bigtable td.annotate { font-size: smaller; }
 .bigtable td.source { font-size: inherit; }
+
+td.link { padding: 4px; text-align: right; }
+#bookmarks table { width: 100%; }
 
 .source, .sourcefirst, .sourcelast {
   font-family: monospace;
@@ -573,3 +576,4 @@ ul#graphnodes li .info {
 	top: -3px;
 	font-style: italic;
 }
+
