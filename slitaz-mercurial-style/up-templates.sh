@@ -5,7 +5,7 @@ check_root
 
 rm -rf /usr/lib/python2.7/site-packages/mercurial/templates/slitaz
 
-echo "Copying template files to syste wide location..."
+echo "Copying template files to system wide location..."
 cp -rf templates/slitaz \
 	/usr/lib/python2.7/site-packages/mercurial/templates
 

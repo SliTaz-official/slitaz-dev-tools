@@ -1,15 +1,15 @@
 README for slitaz-mercurial-style
 ================================================================================
 
-This the template for our so famous and so used Hg repositories.
+This is the template for our so famous and so used Hg repositories.
 
 Install: /usr/lib/python2.7/site-packages/mercurial/templates/slitaz
 
-To work on it you need hgweb.cgi with it config file, Lighttpd with CGI Python
+To work on it you need hgweb.cgi (with it's config file), Lighttpd with CGI Python
 support.
 
-To use it localy you can install the package: slitaz-mercurial-style and use 
-a config file that look like bellow or use a single repo with a modified .hgrc
+To use it locally you can install the package: slitaz-mercurial-style and use 
+a config file that looks like below or use a single repo with a modified .hgrc
 configuration file.
 
 --------------------------------------------------------------------------------
