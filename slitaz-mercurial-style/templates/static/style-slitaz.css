@@ -23,8 +23,7 @@ h3 { color: #666; font-size: 140%; }
 h4 { color: #888; font-size: 120%; }
 h2, h3 { border-bottom: 1px dashed #afafaf; padding-bottom: 5px; }
 li { list-style-type: square; }
-pre { 
-	background-color: #f8f8f8; 
+pre { 	 
 	border: 1px solid #ddd; 
 	padding: 10px;
 }
@@ -93,7 +92,7 @@ pre {
 nav {
 	font-size: 120%;
 	min-height: 100px;
-	background: #ddd; 
+	background: #eee; 
 	padding: 56px 6% 0;
 	text-align: center;
 	color: #222;
@@ -211,7 +210,7 @@ nav p { padding: 8px; color: #333; font-size: 92%; }
 .box-dl a { font-weight: bold; text-decoration: none; }
 .dlbutton { padding-left: 38px; }
 pre, .box, .box-dl, .box-up, .box-share, .box-rpi {
-	background-color: #efefef;
+	background-color: #f8f8f8;
 	border: 1px solid #ddd;
 }
 
@@ -338,8 +337,8 @@ nav p a {
 nav p a:hover { text-decoration: underline; }
 
 .repo { font-weight: bold; }
-#repo-desc { font-size: 90%; color: #888; }
-#repo-desc a { font-size: 90%; color: #333; }
+#repo-desc { font-size: 92%; color: #666; }
+#repo-desc a { font-size: 90%; color: #215090; }
 
 #content a { text-decoration: none; }
 
@@ -410,6 +409,7 @@ form.search:hover div#hint { display: block; }
 .date { white-space:nowrap; }
 .indexlinks { white-space:nowrap; }
 .parity0 { background-color: #f0f0f0; }
+.source.parity0 { background-color: white; }
 .parity1 { background-color: white; }
 .plusline { color: green; }
 .minusline { color: #dc143c; } /* crimson */

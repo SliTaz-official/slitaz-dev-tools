@@ -12,7 +12,6 @@
 		<a href="http://doc.slitaz.org/">Doc</a>
 		<a href="http://forum.slitaz.org/">Forum</a>
 		<a href="http://irc.slitaz.org/">IRC</a>
-		<a href="http://pro.slitaz.org/">Pro</a>
 		<a href="http://bugs.slitaz.org">Bugs</a>
 		<span>Hg</span>
 		<a href="http://cook.slitaz.org/">Cook</a>
@@ -20,53 +19,35 @@
 	<h1><a href="http://hg.slitaz.org/">SliTaz Repositories</a></h1>
 </div>
 
-<!-- Block -->
-<div id="block">
-	<!-- Navigation -->
-	<div id="block_nav">
-		<h4>Developers corner</h4>
-		<div class="right_box">
-			<ul>
-				<li><a href="http://cook.slitaz.org/">Build Bot</a></li>
-				<li><a href="http://pkgs.slitaz.org/">Packages</a></li>
-				<li><a href="http://tank.slitaz.org/">Tank Server</a></li>
-			</ul>
-		</div>
-		<div class="left_box">
-			<ul>
-				<li><a href="http://www.slitaz.org/en/devel/">Website Devel</a></li>
-				<li><a href="http://scn.slitaz.org/groups/devel/">Community Group</a></li>
-				<li><a href="http://labs.slitaz.org/">Laboratories</a></li>
-				<li><a href="http://doc.slitaz.org/en:cookbook:start">Cookbook</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- Information/image -->
-	<div id="block_info">
-		<h4>Repository not found</h4>
-		<p>
-			The specified repository "{repo|escape}" is unknown, sorry.
-		</p>
-		<p>
-			Please go back to the 
-			<a href="http://hg.slitaz.org/">main repository list page</a>.
-		</p>
-		<h4>Search</h4>
-		<form class="search" action="{url}log">
-			{sessionvars%hiddenformentry}
-			<p><input name="rev" id="search1" type="text" /></p>
-			<!-- <div id="hint">find changesets by author, revision,
-			files, or words in the commit message</div> -->
-		</form>
-	</div>
-</div>
+<nav id="nav" role="navigation" tabindex="0">
+	<ul>
+		<li><a class="nav2" href="http://www.slitaz.org/en/devel/">Devel Doc</a></li>
+		<li><a class="nav1" href="http://tank.slitaz.org/">Main Mirror</a></li>
+		<li><a class="nav2" href="http://pkgs.slitaz.org/">Packages</a></li>
+		<li><a class="nav1" href="http://people.slitaz.org/">People</a></li>
+	</ul>
+	<p>
+		Real time improvements, fixes and goodies from SliTaz contributors
+	</p>
+</nav>
 
 <!-- Content -->
 <div id="content">
 
-
+<h2>Repository not found</h2>
+<div class="description">
+	<p>
+		The specified repository "{repo|escape}" is unknown, sorry.
+	</p>
+	<p>
+		Please go back to the 
+		<a href="http://hg.slitaz.org/">main repository list page</a>.
+	</p>
+</div>
 
 <!-- End of content -->
 </div>
+
+<div style="height: 240px;"></div>
 
 {footer}

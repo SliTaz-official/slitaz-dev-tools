@@ -1,4 +1,4 @@
-default = 'shortlog'
+default = 'summary'
 
 mimetype = 'text/html; charset=utf-8'
 header = header.tmpl

@@ -5,6 +5,7 @@
 
 # Path to repo or hgweb config to serve (see 'hg help hgweb')
 config = "hgweb.config"
+#config = "/home/pankso/Projects/sup"
 
 # Uncomment and adjust if Mercurial is not installed system-wide
 # (consult "installed modules" path from 'hg debuginstall'):

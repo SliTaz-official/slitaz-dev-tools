@@ -1,36 +1,22 @@
 
 <!-- Footer -->
 
-<script type="text/javascript">
-	function QRCodePNG(str, obj) \{
-		try \{
-			obj.height = obj.width += 300;
-			return QRCode.generatePNG(str, \{ecclevel: 'H'});
-		}
-		catch (any) \{
-			var element = document.createElement("script");
-			element.src = "{staticurl}qrcode.js";
-			element.type ="text/javascript"; 
-			element.onload = function() \{
-				obj.src = QRCode.generatePNG(str, \{ecclevel: 'H'});
-			};
-			document.body.appendChild(element);
-		}
-	}
-</script>
-
 <div id="footer">
-	Copyright &copy; <span class="year"></span>
-	<a href="http://www.slitaz.org/">SliTaz</a> - Network:
-	<a href="http://scn.slitaz.org/">Community</a>
-	<a href="http://doc.slitaz.org/">Doc</a>
-	<a href="http://forum.slitaz.org/">Forum</a>
-	<a href="http://pkgs.slitaz.org/">Packages</a>
-	<a href="http://bugs.slitaz.org">Bugs</a>
-	<a href="http://hg.slitaz.org/">Hg</a>
+	Copyright &copy; <span class="year"></span> 
+	<a href="http://www.slitaz.org/">SliTaz GNU/Linux</a> Contributors
 	<p>
-		<img src="#" alt="SliTaz @" onmouseover="this.title = location.href"
-		 onclick="this.src = QRCodePNG(location.href, this)" />
+		Network:
+		<a href="http://scn.slitaz.org/">Community</a>
+		<a href="http://doc.slitaz.org/">Doc</a>
+		<a href="http://forum.slitaz.org/">Forum</a>
+		<a href="http://pkgs.slitaz.org/">Packages</a>
+		<a href="http://bugs.slitaz.org">Bugs</a>
+		<a href="http://scn.slitaz.org/?sup">SUP</a>
+		<a href="http://cook.slitaz.org/">Cook</a>
+		<a href="http://people.slitaz.org/">People</a>
+		<a href="http://boot.slitaz.org/">Boot</a>
+	</p>
+	<p>
 		<a href="http://twitter.com/slitaz">Twitter</a>
 		<a href="http://www.facebook.com/slitaz">Facebook</a>
 		<a href="http://distrowatch.com/slitaz">Distrowatch</a>

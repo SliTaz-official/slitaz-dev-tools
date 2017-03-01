@@ -35,9 +35,9 @@
 	<p>
 		Repo: <span class="repo">{repo|escape}</span> &#8594;
 		Download: <a href="/{repo|escape}/archive/tip.tar.bz2">bz2</a> -
-		Revision: {rev} - {changenav%navshort}
+		Changeset: <span class="value">{node|short}</span>
 		<br />
-		<span id="repo-desc">Changeset: {node|short}</span>
+		<span id="repo-desc">Revision: {rev} | {changenav%navshort}</span>
 	</p>
 </nav>
 

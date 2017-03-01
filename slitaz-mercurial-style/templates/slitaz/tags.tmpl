@@ -24,36 +24,29 @@
 	<h1><a href="http://hg.slitaz.org/">SliTaz Repositories</a></h1>
 </div>
 
-<!-- Block -->
-<div id="block">
-	<!-- Navigation -->
-	<div id="block_nav">
-		<h4>Navigation</h4>
-		<ul>
-			<li><a href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
-			<li><a href="{url}shortlog{sessionvars%urlparameter}">Changelog</a></li>
-			<li><a href="{url}graph{sessionvars%urlparameter}">Graph</a></li>
-			<li>Tags</li>
-			<li><a href="{url}branches{sessionvars%urlparameter}">Branches</a></li>
-		</ul>
-	</div>
-	<!-- Information/image -->
-	<div id="block_info">
-		<h4>Project: {repo|escape}</h4>
-		<p>
-			Clone project: hg clone http://hg.slitaz.org/{repo|escape}
-		</p>
-		<p>
-			Tags are used to name particular revisions.
-		</p>
-		<h4>Search</h4>
-		<form class="search" action="{url}log">
-			{sessionvars%hiddenformentry}
-			<p><input name="rev" id="search1" type="text" /></p>
-			<!-- <div id="hint">find changesets by author, revision,
-			files, or words in the commit message</div> -->
-		</form>
-	</div>
+<!-- Navigation -->
+<nav id="nav" role="navigation" tabindex="0">
+	<ul>
+		<li><a class="nav2" href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
+		<li><a class="nav1" href="{url}log{sessionvars%urlparameter}">Changelog</a></li>
+		<li><a class="nav2" href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
+		<li><a class="nav1" href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
+		<li><a class="nav2" href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
+	</ul>
+	<p>
+		Repo: <span class="repo">{repo|escape}</span> &#8594;
+		<a href="{url}branches{sessionvars%urlparameter}">Branches</a> -
+		Changeset: <span class="value">{node|short}</span>
+		<br />
+		<span id="repo-desc">Coded with &hearts; and KISS principle</span>
+	</p>
+</nav>
+
+<div id="hgsearch">
+	<form class="search" action="{url}log">
+	{sessionvars%hiddenformentry}
+	<input name="rev" id="search1" type="text" placeholder="Search" />
+	</form>
 </div>
 
 <!-- Content -->
@@ -71,5 +64,7 @@
 
 <!-- End of content -->
 </div>
+
+<div style="height: 240px;"></div>
 
 {footer}

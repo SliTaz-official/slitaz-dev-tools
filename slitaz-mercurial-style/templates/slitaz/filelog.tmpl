@@ -23,61 +23,33 @@
 	<h1><a href="http://hg.slitaz.org/">SliTaz Repositories</a></h1>
 </div>
 
+<!-- Navigation -->
 <nav id="nav" role="navigation" tabindex="0">
 	<ul>
-		<li><a class="nav2" href="http://www.slitaz.org/en/devel/">Devel Doc</a></li>
-		<li><a class="nav1" href="http://tank.slitaz.org/">Main Mirror</a></li>
-		<li><a class="nav2" href="http://pkgs.slitaz.org/">Packages</a></li>
-		<li><a class="nav1" href="http://people.slitaz.org/">People</a></li>
+		<li><a class="nav2" href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
+		<li><a class="nav1" href="{url}log{sessionvars%urlparameter}">Changelog</a></li>
+		<li><a class="nav2" href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
+		<li><a class="nav1" href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
+		<li><a class="nav2" href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
 	</ul>
 	<p>
-		Real time improvements, fixes and goodies from SliTaz contributors
+		Repo: <span class="repo">{repo|escape}</span> &#8594;
+		File:
+		<a href="{url}diff/{node|short}/{file|urlescape}{sessionvars%urlparameter}">Diff</a>
+		| <a href="{url}annotate/{node|short}/{file|urlescape}{sessionvars%urlparameter}">Annotate</a>
+		| <a href="{url}log/{node|short}/{file|urlescape}{sessionvars%urlparameter}">File log</a>
+		| <a href="{url}raw-file/{node|short}/{file|urlescape}">Raw</a>
+		- Changeset: <span class="value">{node|short}</span>
+		<br />
+		<span id="repo-desc">File revision: {nav%filenav}</span>
 	</p>
 </nav>
 
-<!-- Block -->
-<div id="block">
-	<!-- Navigation -->
-	<div id="block_nav">
-		<h4>Navigation</h4>
-		<div class="right_box">
-			<ul>
-				<li><a href="{url}file/{node|short}{path|urlescape}{sessionvars%urlparameter}">Browse</a></li>
-				<li><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">File</a></li>
-				<li><a href="{url}diff/{node|short}/{file|urlescape}{sessionvars%urlparameter}">Diff</a></li>
-				<li><a href="{url}annotate/{node|short}/{file|urlescape}{sessionvars%urlparameter}">Annotate</a></li>
-				<li>File log</li>
-				<li><a href="{url}raw-file/{node|short}/{file|urlescape}">Raw</a></li>
-			</ul>
-		</div>
-		<div class="left_box">
-			<ul>
-				<li><a href="{url}summary{sessionvars%urlparameter}">Summary</a></li>
-				<li><a href="{url}log/{node|short}{sessionvars%urlparameter}">Changelog</a></li>
-				<li><a href="{url}graph/{node|short}{sessionvars%urlparameter}">Graph</a></li>
-				<li><a href="{url}tags{sessionvars%urlparameter}">Tags</a></li>
-				<li><a href="{url}branches{sessionvars%urlparameter}">Branches</a></li>
-				<li><a href="{url}rev/{node|short}{sessionvars%urlparameter}">Changeset</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- Information/image -->
-	<div id="block_info">
-		<h4>Project: {repo|escape}</h4>
-		<p>
-			Clone project: hg clone http://hg.slitaz.org/{repo|escape}
-		</p>
-		<p>
-			Log for a particular file
-		</p>
-		<h4>Search</h4>
-		<form class="search" action="{url}log">
-			{sessionvars%hiddenformentry}
-			<p><input name="rev" id="search1" type="text" /></p>
-			<!-- <div id="hint">find changesets by author, revision,
-			files, or words in the commit message</div> -->
-		</form>
-	</div>
+<div id="hgsearch">
+	<form class="search" action="{url}log">
+	{sessionvars%hiddenformentry}
+	<input name="rev" id="search1" type="text" placeholder="Search" />
+	</form>
 </div>
 
 <!-- Content -->
@@ -85,8 +57,6 @@
 
 <h2><a href="{url}{sessionvars%urlparameter}">{repo|escape}</a>
 	log {file|escape}</h2>
-
-<div class="navigate">{nav%filenav}</div>
 
 <table class="bigtable">
  <tr>
