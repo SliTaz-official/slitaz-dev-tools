@@ -1,9 +1,12 @@
 
-Minecraft custom tools for SliTaz GNU/Linux
+Minecraft custom tools for SliTaz GNU/Linux. Tazcraft can install and run Minecraft server
+as well as getting the client and starting to play. It can also optionaly install the Java
+Runtime Environement (JRE)
 
 
 Server configuration
 --------------------
+Config file: server.properties
 
 gamemode=
 	0 - Survival
