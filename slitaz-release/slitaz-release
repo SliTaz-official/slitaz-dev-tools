@@ -170,7 +170,7 @@ case "$(hostname)" in
 		echo ""
 		
 		if [ "$ready" == 0 ]; then
-			echo "Ready for release SliTaz $version :-)"
+			echo "Ready to release SliTaz $version :-)"
 		else
 			echo "Not yet ready to release SliTaz $version"
 		fi
