@@ -3,18 +3,18 @@ slitaz-release - SliTaz stable and cooking release helper
 Doc: http://www.slitaz.org/en/devel/release.php
 
 
-The slitaz-release script is designed to help SliTaz releases process on
-all hosts: tank, pangolin, mirror and localy. 
+The slitaz-release script is designed to help SliTaz release processes on
+all hosts: tank, pangolin, mirror and locally. 
 
 
-	* Localy it will check release string into slitaz-base-files, the wok
+	* Locally it will check release strings in slitaz-base-files, the wok
 	  and slitaz-doc repos as well as isolinux.cfg in syslinux package
 	
-	* On tank it will check for build chroot and ISO's
+	* On tank it will check for build chroot and ISOs
 	
-	* On Pangolin it will check for wok-stable and wok latest Hg tag
+	* On Pangolin it will check for wok-stable and wok latest Hg tags
 	
-	* On mirror it will check for packages/[version] and uploaded ISO's
+	* On mirror it will check for packages/[version] and uploaded ISOs
 
 
 Examples:
