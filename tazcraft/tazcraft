@@ -41,7 +41,7 @@ $(colorize 032 Commands:)
   -s  start         Start your Minecraft server
   -p  play          Launch the Minecraft client
   -j  java          Install Sun Java Runtime Environment
-  -i  info          Display server and java informations
+  -i  info          Display server and java information
 
 $(colorize 032 Options:)
   --gui             Run the server with a graphical user interface
@@ -52,7 +52,7 @@ EOT
 # Check if Java is installed
 check_java() {
 	if [ ! -x "$java" ]; then
-		colorize 031 "Can't fin Java Runtime Environment (JRE)"; return 1
+		colorize 031 "Can't find Java Runtime Environment (JRE)"; return 1
 	fi
 }
 
@@ -83,7 +83,7 @@ case "$1" in
 				https://s3.amazonaws.com/Minecraft.Download/versions/${version}/minecraft_server.${version}.jar \
 				-O ${server}/minecraft_server.${version}.jar
 		else
-			colorize 032 "Minecraft is already downladed :-)"
+			colorize 032 "Minecraft is already downloaded :-)"
 		fi ;;
 	
 	-s|start)

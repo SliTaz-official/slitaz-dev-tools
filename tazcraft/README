@@ -1,9 +1,9 @@
 Tazcraft
 ================================================================================
 
-Minecraft custom tools for SliTaz GNU/Linux. Tazcraft can install and run 
+Minecraft custom tools for SliTaz GNU/Linux. Tazcraft can install and run a
 Minecraft server as well as getting the client and starting to play. It can 
-also optionaly install the Java Runtime Environement (JRE).
+also optionally install the Java Runtime Environment (JRE).
 
 
 Server configuration
@@ -17,7 +17,7 @@ gamemode=
 	3 - Spectator
 
 
-MOTD text colours and formating
+MOTD text colours and formatting
 -------------------------------
 	\u00A70 - BLACK
 	\u00A71 - DARK BLUE
