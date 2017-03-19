@@ -30,7 +30,7 @@ cat << EOT
 <head>
 	<meta charset="utf-8" />
 	<title>Tazcraft</title>
-	<link rel="stylesheet" href="/style.css" />
+	<link rel="stylesheet" href="http://play.slitaz.me/style.css" />
 </head>
 <body>
 <header>
