@@ -6,6 +6,11 @@ Minecraft server as well as getting the client and starting to play. It can
 also optionally install the Java Runtime Environment (JRE).
 
 
+Server operator
+---------------
+From the server console: /op username
+
+
 Server configuration
 --------------------
 Config file: server.properties
@@ -41,4 +46,8 @@ MOTD text colours and formatting
 	\u00A7n - Underline
 	\u00A7o - Italic
 	\u00A7r - Reset
-	
+
+Online resources
+----------------
+
+MOTD creator: https://mctools.org/motd-creator

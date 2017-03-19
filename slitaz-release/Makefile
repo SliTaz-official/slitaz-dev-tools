@@ -1,4 +1,4 @@
-# Makefile for Tazcraft
+# Makefile for slitaz-release
 #
 
 PACKAGE=slitaz-release
@@ -8,7 +8,6 @@ DESTDIR?=
 all:
 
 install:
-	install -m 0755 -d $(DESTDIR)$(PREFIX)/sbin
 	install -m 0755 $(PACKAGE) $(DESTDIR)$(PREFIX)/sbin
 
 uninstall:

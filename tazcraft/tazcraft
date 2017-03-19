@@ -1,9 +1,11 @@
 #!/bin/sh
 #
-# tazcraft - Your Minecraft server tiny configuration tool
+# tazcraft - Minecraft server config & admin tool for SliTaz
 #
 # Authors: Kayam Lincoln-Vazquez, Christophe Lincoln
 # Copyright (C) 2017 SliTaz GNU/Linux - BSD License
+#
+# TODO: add spigot support, rcon handler, properties settings
 #
 . /lib/libtaz.sh
 
@@ -15,6 +17,7 @@ config="$server/server.properties"
 server_jar="minecraft_server.${version}.jar"
 client_jar="Minecraft.jar"
 client_path="$HOME/.local/share/minecraft/$client_jar"
+
 spigot_jar="spigot-${version}.jar"
 
 java_version="8u121"
@@ -22,7 +25,7 @@ java_id="218821"
 java_md5="e9e7ea248e2c4826b92b3f075a80e441"
 java_tarball="jre-$java_version-linux-i586.tar.gz"
 
-# Prefer Sun Java JRE but let user use icedtea6-jre
+# Prefer Sun Java JRE but support system wide icedtea6-jre if installed
 java="$home/jre/bin/java"
 if [ ! -x "$java" ]; then
 	java="/usr/bin/java"
@@ -42,11 +45,18 @@ $(colorize 032 Commands:)
   -p  play          Launch the Minecraft client
   -j  java          Install Sun Java Runtime Environment
   -i  info          Display server and java information
+      motd          Raw display of the Message Of The Day
+      ops           Show server operators name
 
 $(colorize 032 Options:)
   --gui             Run the server with a graphical user interface
 
 EOT
+}
+
+# Commands
+title() {
+	echo ""; colorize 032 "$@"; separator "-"
 }
 
 # Check if Java is installed
@@ -57,10 +67,12 @@ check_java() {
 }
 
 # Change default motd
-check_motd() {
-	motd=$(grep ^motd= ${config} | sed s'/motd=//')
-	if [ "$motd" == "A Minecraft Server" ]; then
-		sed -i s'/motd=.*/motd=\u00A72A Tazcraft Server/' ${config}
+defaut_motd() {
+	if [ -f "$config" ]; then
+		motd=$(grep ^motd= ${config} | sed s'/motd=//')
+		if [ "$motd" == "A Minecraft Server" ]; then
+			sed -i s'#motd=.*#motd=\\u00A72A Tazcraft Server#' ${config}
+		fi
 	fi
 }
 
@@ -88,7 +100,7 @@ case "$1" in
 	
 	-s|start)
 		check_java || exit 1
-		check_motd
+		defaut_motd
 		colorize 032 "Starting Minecraft server..."
 		[ ! "$gui" ] && opts="nogui"
 		cd ${server}
@@ -124,6 +136,53 @@ case "$1" in
 			${java} -version
 		fi ;;
 	
+	motd)
+		defaut_motd 
+		motd=$(grep ^motd= ${config} | sed s'/motd=//')
+		title "Message Of The Day (motd)"
+		echo  "$motd" 
+		newline ;;
+	
+	-o|ops)
+		title "Server operators"
+		ops_json="$server/ops.json"
+		#echo "Config file: $server/ops.json"
+		fgrep name ${ops_json} | cut -d '"' -f 4
+		newline ;;
+	
+	-w|white-list)
+		# Usage: tazcraft -w [username|--true|--false]
+		white_list="${server}/white-list.txt"
+		title "Minecraft server white list"
+		
+		case "$2" in
+		
+			--true) 
+				echo "Activaction white list support..."
+				sed -i s'/white-list=*./white-list=true/' ${config}
+				touch ${white_list} ;;
+				
+			--false) ;;
+			*) ;;
+		esac
+		# Add/remove users
+		
+		
+		# --true
+		if [ "$true" ]; then
+			
+		fi
+		
+		# Display white list users or give settings info
+		if [ -f "$white_list" ]; then
+			cat  ${white_list}
+		else
+			get_value "white-list"
+			colorize 031 "White list file is not activated $val"
+		fi
+		
+		newline ;;
+	
 	-i|info)
 		newline
 		colorize 032 "Minecraft Server"
@@ -132,7 +191,9 @@ case "$1" in
 		newline
 		
 		colorize 032 "Server properties"
-		for var in gamemode server-port level-name difficulty max-players; do
+		for var in gamemode server-port level-name difficulty max-players \
+			allow-flight
+		do
 			get_value ${var}
 		done
 		newline

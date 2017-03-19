@@ -54,6 +54,10 @@ check_string() {
 # Handle commands
 #
 case "$1" in
+
+	info)
+		echo -n "Hostname:"; hostname ;;
+		
 	"") help; exit 0 ;;
 esac
 
@@ -86,7 +90,9 @@ case "$(hostname)" in
 		title "Checking repo: wok"
 		cd $repos/wok; hg up
 		slitaz_release=$(hg parents --template '{latesttag}')
-		check_string "cooking wok is not yet ready to be copied" ;;
+		check_string "cooking wok is not yet ready to be copied" 
+		
+		newline ;;
 	
 	*)
 		# Local Hg repos: set stable string and Hg tags
