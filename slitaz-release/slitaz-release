@@ -10,8 +10,19 @@
 
 version="$1"
 
-if [ "$2" ]; then
-	local_repos="$2"
+# Parse cmdline options and store values in a variable.
+for opt in "$@"; do
+	opt_name="${opt%%=*}"
+	opt_name="$(echo -n "${opt_name#--}" | tr -c 'a-zA-Z0-9' '_')"
+	case "$opt" in
+		--*=*)	export  $opt_name="${opt#*=}" ;;
+		--*)	export  $opt_name="yes" ;;
+	esac
+done
+
+# --repos=/path/to/local/repos
+if [ "$repos" ]; then
+	local_repos="$repos"
 else
 	local_repos="$HOME/Projects"
 fi
@@ -19,7 +30,11 @@ fi
 help() {
 	cat << EOT
 
-$(colorize 032 "Usage:") slitaz-release [version] [repos_path]
+$(colorize 38 "Usage:")	slitaz-release [version] [--options]
+
+$(colorize 38 "Options:")
+	--repos=
+	--now
 
 $(colorize 033 "Local repos   :") $local_repos
 $(colorize 033 "Documentation :") http://www.slitaz.org/en/devel/release.php
@@ -43,9 +58,11 @@ title() {
 
 check_string() {
 	if [ "$slitaz_release" != "$version" ]; then
+		read=1
 		colorize 031 "Wrong string: $slitaz_release"
 		echo " * $1"
 	else
+		ready=0
 		colorize 031 "SliTaz release: $version"
 	fi
 }
@@ -59,6 +76,7 @@ case "$1" in
 		echo -n "Hostname:"; hostname ;;
 		
 	"") help; exit 0 ;;
+	
 esac
 
 #
@@ -79,26 +97,48 @@ case "$(hostname)" in
 	pangolin) 
 		# Host all Hg repositories
 		repos="/home/slitaz/repos"
+		backups="/home/slitaz/backups"
 		
 		# Stable wok
 		title "Checking repo: wok-stable" 
-		cd $repos/wok-stable; hg up
+		cd ${repos}/wok-stable; hg up
 		slitaz_release=$(hg parents --template '{latesttag}')
 		check_string "stable wok is not yet tagged to $version"
 		
 		# Cooking wok
 		title "Checking repo: wok"
-		cd $repos/wok; hg up
+		cd ${repos}/wok; hg up
 		slitaz_release=$(hg parents --template '{latesttag}')
-		check_string "cooking wok is not yet ready to be copied" 
+		check_string "cooking wok is not yet ready to be copied"
 		
-		newline ;;
+		# Ready for --now ?
+		if [ "$now" ] && [ "$ready" == 0 ]; then
+			echo "Releasing SliTaz: $version"
+			cd ${repos}/wok-stable; hg up
+			previous_release=$(hg parents --template '{latesttag}')
+			echo "Previous release string: $previous_release"
+			
+			echo "Archiving current wok-stable..."
+			cd ${repos}
+			tar czf wok-stable-${previous_release}.tar.gz wok-stable
+			mv wok-stable-${previous_release}.tar.gz ${backups}
+			
+			echo "Copying current wok to wok-stable"
+			rm -rf wok-stable && cp -a wok wok-stable
+			
+		else
+			echo "Not yet ready to release SliTaz $version on $(hostname)"
+		fi
+		
+		echo "" ;;
 	
 	*)
 		# Local Hg repos: set stable string and Hg tags
 		for repo in slitaz-base-files slitaz-doc wok; do
 			if [ ! -d "$local_repos/$repo" ]; then
-				colorize 031 "Missing repos: $local_repos/$repo"; exit 1
+				echo ""
+				colorize 031 "Missing repos: $local_repos/$repo"
+				help; exit 1
 			fi
 		done
 		
@@ -116,7 +156,7 @@ case "$(hostname)" in
 		
 		# slitaz-doc
 		title "Checking repo: slitaz-doc" 
-		cd $local_repos/slitaz-doc
+		cd ${local_repos}/slitaz-doc
 		slitaz_release=$(hg parents --template '{latesttag}')
 		check_string "slitaz-doc should provide relnotes and be tagged"
 		
@@ -124,9 +164,16 @@ case "$(hostname)" in
 		# Hg server and then it will continue its own life with security updates.
 		# Tagging the wok lets us have the initial state of the new release.
 		title "Checking repo: wok" 
-		cd $local_repos/wok
+		cd ${local_repos}/wok
 		slitaz_release=$(hg parents --template '{latesttag}')
 		check_string "the wok should be tagged to $version"
+		echo ""
+		
+		if [ "$ready" == 0 ]; then
+			echo "Ready for release SliTaz $version :-)"
+		else
+			echo "Not yet ready to release SliTaz $version"
+		fi
 		
 		echo "" ;;
 esac
