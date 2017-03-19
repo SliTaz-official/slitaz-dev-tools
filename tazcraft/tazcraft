@@ -56,6 +56,14 @@ check_java() {
 	fi
 }
 
+# Change default motd
+check_motd() {
+	motd=$(grep ^motd= ${config} | sed s'/motd=//')
+	if [ "$motd" == "A Minecraft Server" ]; then
+		sed -i s'/motd=.*/motd=\u00A72A Tazcraft Server/' ${config}
+	fi
+}
+
 # Get a value in
 get_value() {
 	val=$(grep ^${1}= ${config} | cut -d "=" -f 2)
@@ -80,6 +88,7 @@ case "$1" in
 	
 	-s|start)
 		check_java || exit 1
+		check_motd
 		colorize 032 "Starting Minecraft server..."
 		[ ! "$gui" ] && opts="nogui"
 		cd ${server}
@@ -120,16 +129,18 @@ case "$1" in
 		colorize 032 "Minecraft Server"
 		echo "Version : $version"
 		echo "Home    : $home"
+		newline
 		
 		colorize 032 "Server properties"
-		for var in server-port level-name; do
+		for var in gamemode server-port level-name difficulty max-players; do
 			get_value ${var}
 		done
+		newline
 		
 		if check_java; then
 			colorize 032 "Java Runtime Environment"
-			echo "Java: $java"
-			${java} -version
+			echo "Path: $java"
+			${java} -version #2>&1 | grep "version"
 		fi
 		newline ;;
 	

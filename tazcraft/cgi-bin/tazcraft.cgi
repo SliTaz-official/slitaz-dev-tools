@@ -41,13 +41,14 @@ cat << EOT
 	</div>
 	<h1>Tazcraft Server</h1>
 </header>
-
 <div id="content">
+
 <h2>Welcome to Tazcraft</h2>
 <p>A SliTaz GNU/Linux Minecraft server</p>
 <pre>
-<img src="minecraft.png" alt="*" />Server address: <b>play.slitaz.org</b>
+<img src="minecraft.png" alt="*" />Server address: <b>play.slitaz.me</b>
 </pre>
+
 <h3>Configuration</h3>
 <table>
 	<thead>
@@ -56,14 +57,13 @@ cat << EOT
 	</thead>
 EOT
 
-for var in gamemode server-port level-name; do
+for var in gamemode server-port level-name difficulty max-players; do
 	get_value ${var}
 done
 
 # HTML footer
 cat << EOT
 </table>
-
 </div>
 <footer></footer>
 </body>
