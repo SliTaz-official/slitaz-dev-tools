@@ -1,0 +1,136 @@
+TOC
+!Hilfe
+
+Dies ist eine Übersicht aller Formatierungsregeln für ''WiKiss''.
+Wenn Sie auf "Bearbeiten" oben oder unten auf dieser Seite klicken, können Sie sehen wie es funktioniert.
+(wenn "Seite gesperrt" erscheint, muss diese Datei (über ftp) mit chmod 775 änderbar gemacht werden)
+
+Bei [HilfeTabellen] wird erklärt, wie man Tabellen erstellt.
+
+----
+
+Überschriften werden mit dem Ausrufungszeichen '''!''' definiert
+^! Groß
+^!! Weniger groß
+^!!! Kleiner
+ergibt:
+! Groß
+!! Weniger groß
+!!! Kleiner
+
+Mit der Markierung '''TOC''' in einer Seite wird automatisch ein Inhaltsverzeichnis der Seite erstellt.
+Die Markierung kann sich befinden:
+* der Deutlichkeit halber in der letzten Zeile der Seite, was die Positionierung des Inhaltsverzeichnisses aber nicht beeinflußt;
+* in der ersten Zeile, wenn die Zeichenfolge TOC irgendwo in der Seite vorkommt.
+Nur das erste Auftreten der Markierung wird berücksichtigt.
+
+----
+
+Der Schriftschnitt wird mit dem Apostroph ' festgelegt
+* ^''^'Fett^''^' --> '''Fett'''
+* ^''kursiv^'' --> ''kursiv''
+* ^''^''^'Fett und kursiv^''^''^' --> '''''Fett und kursiv'''''
+
+----
+
+Um ein Wort durchgestrichen darzustellen, werden der Apostroph und zwei Bindestriche verwendet
+^'--Durchgestrichen--' --> '--Durchgestrichen--'
+
+ebenso zum Unterstreichen der Apostroph und zwei Unterstriche
+^'__Unterstrichen__' --> '__Unterstrichen__'
+
+----
+
+Eine nummerierte Liste wird mit dem Nummernzeichen '''#''' erzeugt
+# Erster Punkt
+# Zweiter Punkt
+# Dritter Punkt
+
+----
+
+Für einfache Aufzählungen wird der Stern '''*''' verwendet
+* Apfel
+* Birne
+* Pfirsich
+
+----
+
+Programmcode und alle Dinge, bei denen die Beibehaltung des Formates wichtig ist, werden in geschweifte Klammern
+eingeschlossen. Es wird dann auch eine dicktengleiche Schrift verwendet.
+^{{import sys
+if len(sys.argv) == 2:
+   print "Hallo",sys.argv^[1]}}
+ergibt:
+{{import sys
+if len(sys.argv) == 2:
+   print "Hallo",sys.argv[1]}}
+
+----
+
+Textabschnitte (Paragraphen) werden mit einer Leerzeile getrennt
+Einen Zeilenumbruch innerhalb eines Paragraphen bewirkt '''^^'''
+
+----
+
+Einige Zeichenfolgen werden als Sonderzeichen interpretiert:
+* Pfeile: &lt;^-- : &lt;--, ^--> : -->, &lt;^--> : &lt;-->, &lt;^== : &lt;==, ^==> : ==>, &lt;^==> : &lt;==>
+* Copyrights: ^(c) or ^(C) : (c), ^(r) or ^(R) : (r)
+* Brüche: ^(1/2) : (1/2), ^(1/4) : (1/4), ^(3/4) : (3/4)
+* Verschiedenes: ^(+-) : (+-), ^(!=) : (!=)
+* Einige symbole: ^(phone) : (phone), ^(wphone) : (wphone), ^(bflag) : (bflag), ^(wflag) : (wflag) ^(radioactive) : (radioactive), ^(sad) : (sad), ^(smile) : (smile), ^(recycle) : (recycle), ^(wheelchair) : (wheelchair), ^(anchor) : (anchor), ^(flower) : (flower), ^(gear) : (gear), ^(volt) : (volt), ^(warn) : (warn), ^(skull) : (skull), ^(star) : (star)
+
+----
+
+Verknüpfungen mit anderen Seiten des wiki werden mit eckigen Klammern erstellt:
+'''^['''Startseite''']''' --> [Startseite]
+
+Wenn eine Seite noch nicht existiert, wird sie beim ersten Anklicken erstellt.
+Klicken Sie auf "Sandkiste" unten, und die Seite wird erstellt werden...
+[Sandkiste]
+
+Die verknüpfte wiki-Seite kann auch mit einem anderen Text angezeigt werden:
+'''^['''Anfang'''|?page='''Startseite''']''' --> [Anfang|?page=Startseite]
+
+Externe Verknüpfungen und email-Adressen werden automagisch erkannt...
+* ^http://wikiss.tuxfamily.org/ --> http://wikiss.tuxfamily.org/
+* wikiss^@example.org --> wikiss@example.org
+
+oder als Text innerhalb von eckigen Klammern:
+* '''^['''Besuchen Sie WiKiss im Internet'''|'''^http://wikiss.tuxfamily.org/''']''' --> [Besuchen Sie WiKiss im Internet|http://wikiss.tuxfamily.org/]
+
+mit einem Fragezeichen ? erstellen Sie eine Wikipedia-Verknüpfung in der aktuellen Sprache:
+* '''^[?'''Wiki''']''' --> [?Wiki]
+
+mit dem Ausrufungszeichen ! starten Sie einen eingebetteten '''audio'''- oder '''video'''-Abspieler:
+* '''^[!'''video'''|'''^http://video.webmfiles.org/big-buck-bunny_trailer.webm''']''' --> [!video|http://video.webmfiles.org/big-buck-bunny_trailer.webm]
+
+----
+
+Bilder werden automagisch eingefügt mit dem URL des Bildes innerhalb eckiger Klammern
+'''^['''^http://wikiss.tuxfamily.org/img/logo_100.png''']''' -->
+[http://wikiss.tuxfamily.org/img/logo_100.png]
+
+Sie können auch ein Bild als Verknüpfung verwenden: 
+'''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|'''^http://wikiss.tuxfamily.org/''']''' --> 
+[http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org/]
+
+Ein Bild kann auch schwebend links oder rechts positioniert werden: 
+[http://wikiss.tuxfamily.org/img/logo_100.png|left] [http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org|right]
+
+
+&lt;-- '''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|left]'''
+'''^['''^http://wikiss.tuxfamily.org/img/logo_100.png'''|'''^http://wikiss.tuxfamily.org'''|right]''' -->
+
+
+----
+
+... ein waagerechter Strich wird mit vier Bindestrichen erzeugt:  '''---- '''
+
+----
+
+Schließlich wird mit dem Zirkumflex '''^^''' die Syntaxinterpretation von WiKiss außer Kraft gesetzt 
+So wird mit '''^^^['''WiKiss''']''' angezeigt ^[WiKiss] statt [WiKiss]
+
+----
+
+Probieren Sie es aus, und Sie werden sehen, wie einfach es ist.

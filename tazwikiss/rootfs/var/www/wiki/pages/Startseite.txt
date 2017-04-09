@@ -1,0 +1,18 @@
+TOC
+!Dies ist ...
+!!... Ihr wiki
+
+Danke, dass Sie TazWiKiss, die Portierung für SliTaz von [WiKiss|http://wikiss.tuxfamily.org/] und seiner
+[Zusatzprogramme|?action=list] gewählt haben. Sehen Sie sich in der Standard-Installation um, bis Sie sich
+an TazWiKiss gewöhnt haben.
+
+!!Anleitung
+
+Um das Bearbeiten und Formatieren mit ''WiKiss'' zu üben, klicken Sie auf "'''Bearbeiten'''" oben auf dieser
+Seite, und Sie können den Quelltext dieser Seite ansehen (und verändern). Sie können auch über die Seite
+[Sandkasten] das Ändern oder Erstellen von neuen Seiten üben.
+
+In den Seiten [Hilfe] und [HilfeTabellen] gibt es eine Übersicht aller Möglichkeiten. Durch Klicken auf
+"'''Startseite'''" kommen Sie immer zu dieser Seite zurück.
+
+'''Viel Spaß!'''

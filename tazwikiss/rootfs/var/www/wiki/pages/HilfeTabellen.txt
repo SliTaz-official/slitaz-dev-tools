@@ -1,0 +1,70 @@
+! Die Syntax für Tabellen
+
+!! Tabelle erzeugen
+Tabellen werden mit dem Zeichen ^| definiert
+
+Im einfachsten Fall kann das so aussehen:
+
+{{|Element 1|Element 2|
+|Element 3|Element 4|
+}}
+
+was dann dargestellt wird als:
+|Element 1|Element 2|
+|Element 3|Element 4|
+
+Ein Tabellenelement kann auch formatiert werden, indem bestimmte Zeichen dem Element vorangestellt werden:
+
+* ein '''h''', wenn das Element eine Überschrift sein soll
+* weitere Buchstaben, gefolgt von einem Leerzeichen, bestimmen die Ausrichtung:
+** t : vertikal am oberen Rand ausgerichtet
+** b : vertikal am unteren Rand ausgerichtet
+** l : horizontal am linken Rand ausgerichtet
+** r : horizontal am rechten Rand ausgerichtet
+* zum Verbinden von Tabellenzellen können zwei Zahlen angegeben werden
+** die erste gibt an, wieviele Spalten verbunden werden sollen
+** die zweite, nach einem Komma, gibt an, wieviele Zeilen verbunden werden sollen
+
+{{
+|hl Überschrift linksbündig|hr Überschrift rechtsbündig|
+|r rechtsbündig         |l    linksbündig    |
+|2 Zwei Spalten                 |
+|t ,2 Zwei Zeilen  | A |
+                 | B |
+|,2 zwei Zeilen    | C |
+                 | D |}}
+ergibt:
+|hl Überschrift linksbündig|hr Überschrift rechtsbündig|
+|r rechtsbündig       |l    linksbündig    |
+|2 Zwei Spalten                |
+|t ,2 Zwei Zeilen  | A |
+                 | B |
+|,2 zwei Zeilen    | C |
+                 | D |
+
+!! Weitere Syntaxelemente, die in einer Tabelle verwendet werden können
+
+|h 3 Unterstützte wiki-Syntax |
+|ht ,7 Formatierung | ^''kursiv^'' | ''kursiv'' |
+                     |  '^''fett'^''  |  '''fett'''  |
+                     |'^'^'^''fett und kursiv'^'^'^''|'''''fett und kursiv'''''|
+                     |^'--durchgestrichen--'|'--durchgestrichen--'|
+                     |^'__unterstrichen__'|'__unterstrichen__'|
+                     | Sonderzeichen | (c) (r) --> &lt;-- |
+                     |^{{code}}|{{code}}|
+|ht ,3 Verknüpfungen |^[WikiLink] | [WikiLink] |
+                     |^[Verknüpfung 2^|?page=Verknüpfung]| [Verknüpfung 2|?page=Verknüpfung] |
+                     |^[?Wikipedia]| [?Wikipedia] |
+|ht ,4 Bilder        |^[^http://wikiss.tuxfamily.org/img/logo_100.png]|[http://wikiss.tuxfamily.org/img/logo_100.png]|
+    |^[/logo_100.png^|^http://wikiss.tuxfamily.org/]|[http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org/]|
+    |^[^http://wikiss.tuxfamily.org/img/logo_100.png^|rechts] | [http://wikiss.tuxfamily.org/img/logo_100.png|rechts]|
+    |^[/logo_100.png^|^http://wikiss.tuxfamily.org/^|links] | [http://wikiss.tuxfamily.org/img/logo_100.png|http://wikiss.tuxfamily.org/|links]|
+
+und
+
+|h 2 Nicht unterstützte wiki-Syntax|
+|Überschriften   | !! Überschriften|
+|,2 Listen | * nicht nummeriert |
+          | # nummeriert |
+|Trennlinien    |----|
+

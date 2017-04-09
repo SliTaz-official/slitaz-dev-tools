@@ -1,0 +1,38 @@
+!Anleitung für CSV-Tabellenkalkulation
+
+!!Erzeugung
+Kalkulationstabellen werden mit eingebetteten CSV-Daten erzeugt, die aus mindestens 2 Spalten und 2 Zeilen bestehen:
+* Die CSV-Zeilen müssen mit einem ''';''' enden
+* Die CSV-Zeilen müssen mindestens zwei ''';''' enthalten
+* Jede CSV-Zeile muss dieselbe Anzahl von ''';''' enthalten
+* Jedes Tabellenelement wird mit einem Buchstaben und einer Zahl addressiert, und kann enthalten:
+** Text
+** eine Zahl
+** Eine ''javascript''-Formel, die mit '''=''' beginnt
+
+!!Anwendung
+* Bewegen Sie den Mauszeiger über die Tabellenelemente, um den Inhalt zu sehen
+* Klicken Sie in eine weiße Zelle zum Ändern des Tabellenelements
+** Klicken Sie irgendwo außerhalb der Zelle, um eine Neuberechnung zu starten
+* Klicken Sie in eine weiße Zelle zum Anzeigen der CSV-Aktualisierung
+
+!!Beispiele
+{{Äpfel;12;=round((100*B1)/B3)+"%"; 
+Birnen;7;=round((100*B2)/B3)+"%"; 
+Summe :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';}}
+Äpfel;12;=round((100*B1)/B3)+'%';
+Birnen;7;=round((100*B2)/B3)+"%";
+Summe :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';
+{{Eine Zahl;ihre Quadratwurzel; 
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
+Eine Zahl;ihre Quadratwurzel;
+2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);
+{{SliTaz 1.0 wurde freigegeben;Saturday 22 march 2008; 
+=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);Tage vor dem heutigen Tag!;}}
+SliTaz 1.0 wurde freigegeben;Saturday 22 march 2008;
+=round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);Tage vor dem heutigen Tag!;
+
+!!Einige Kalkulationstabellen im praktischen Einsatz
+* [sc|http://127.0.0.1:82/user/pkgs.cgi?info=sc] für Konsole
+* [sc-im|http://127.0.0.1:82/user/pkgs.cgi?info=sc-im] für Konsole (farbig)
+* [gnumeric|http://127.0.0.1:82/user/pkgs.cgi?info=gnumeric]
