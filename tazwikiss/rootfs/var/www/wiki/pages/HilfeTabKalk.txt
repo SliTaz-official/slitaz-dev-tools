@@ -20,16 +20,16 @@ Kalkulationstabellen werden mit eingebetteten CSV-Daten erzeugt, die aus mindest
 {{Äpfel;12;=round((100*B1)/B3)+"%"; 
 Birnen;7;=round((100*B2)/B3)+"%"; 
 Summe :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';}}
-Äpfel;12;=round((100*B1)/B3)+'%';
+Äpfel;12;=round((100*B1)/B3)+"%";
 Birnen;7;=round((100*B2)/B3)+"%";
 Summe :;=sum("B1","B2");=parseInt(C1)+parseInt(C2)+'%';
 {{Eine Zahl;ihre Quadratwurzel; 
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);}}
 Eine Zahl;ihre Quadratwurzel;
 2;=(A2&lt;0)?alert('A2 &lt; 0 !'):sqrt(A2);
-{{SliTaz 1.0 wurde freigegeben;Saturday 22 march 2008; 
+{{SliTaz 1.0 wurde freigegeben;2008-03-22; 
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);Tage vor dem heutigen Tag!;}}
-SliTaz 1.0 wurde freigegeben;Saturday 22 march 2008;
+SliTaz 1.0 wurde freigegeben;2008-03-22;
 =round(((new Date()).getTime() - Date.parse(B1))/1000/3600/24);Tage vor dem heutigen Tag!;
 
 !!Einige Kalkulationstabellen im praktischen Einsatz

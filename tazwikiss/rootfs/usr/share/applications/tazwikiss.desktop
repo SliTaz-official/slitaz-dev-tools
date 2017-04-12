@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Wiki documents
+Name[de]=persönliches Wiki
 Name[fr]=Documents Wiki
 Name[ru]=Персональная Wiki
 Exec=browser http://localhost/wiki/index.sh
