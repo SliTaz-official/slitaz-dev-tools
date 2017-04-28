@@ -86,12 +86,12 @@ plugin_call_method()
 
 curdate()
 {
-	date '+%Y-%m-%d %H:%M'
+	date '+%Y-%m-%dT%H:%M'
 }
 
 filedate()
 {
-	stat -c %y $1 | sed -e 's|-|/|g' -e 's/\(:..\):.*/\1/'
+	stat -c %y $1 | sed -e 's/\(:..\):.*/\1/'
 }
 
 AUTH=$(GET auth)
@@ -219,7 +219,7 @@ history)
 		HISTORY="$HISTORY_BUTTON"
 		CONTENT="$NO_HISTORY"
 		if [ -d $complete_dir ]; then
-			CONTENT="<form method=\"GET\" action=\"$urlbase\">\n<input type=hidden name=action value=diff><input type=hidden name=page value=\"$PAGE_TITLE\">" 
+			CONTENT="<form method=\"GET\" action=\"$urlbase\"><input type=hidden name=action value=diff><input type=hidden name=page value=\"$PAGE_TITLE\">" 
 			for file in $(ls $complete_dir | sort -r); do
 				CONTENT="$CONTENT
 <input type=radio name=f1 value=$file><input type=radio name=f2 value=$file />

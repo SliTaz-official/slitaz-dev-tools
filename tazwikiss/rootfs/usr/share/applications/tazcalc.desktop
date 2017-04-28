@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Spreadsheet
+Name[de]=Kalkulationstabelle
 Name[fr]=Feuille de calcul
 Name[ru]=Электронная таблица
 Exec=browser http://localhost/wiki/index.sh?page=Calc
