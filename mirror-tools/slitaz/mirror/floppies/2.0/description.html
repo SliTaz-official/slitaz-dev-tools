@@ -1,29 +1,30 @@
-<p>
-You can start with one of the 3 following flavors :
-</p>
+<p>You can start with one of the 3 following flavors:</p>
+
 <ul>
-  <li>
-  <b>base</b> needs 32Mb of RAM and 5 floppies: <i>fd001.img</i> to <i>fd005.img</i>.<br />
-  base provides the minimum slitaz distribution subset in text mode. 
-  </li>
-  <li>
-  <b>justx</b> needs 96M of RAM and 11 floppies: <i>fd001.img</i> to <i>fd105.img</i>.<br />
-  justx provides the minimum slitaz distribution subset with X11 support. 
-  </li>
-  <li>
-  <b>core</b> needs 160M of RAM and 22 floppies: <i>fd001.img</i> to <i>fd210.img</i>.<br />
-  core provides the default slitaz distribution. 
-  </li>
+	<li><b>base</b> needs 32MB of RAM and 5 floppies: <tt>fd001.img</tt> to
+		<tt>fd005.img</tt>.<br>
+		base provides the minimum SliTaz distribution subset in text mode.</li>
+	<li><b>justx</b> needs 96MB of RAM and 11 floppies: <tt>fd001.img</tt> to
+		<tt>fd105.img</tt>.<br>
+		justx provides the minimum SliTaz distribution subset with X11
+		support.</li>
+	<li><b>core</b> needs 160MB of RAM and 21 floppies: <tt>fd001.img</tt> to
+		<tt>fd209.img</tt>.<br>
+		core provides the default SliTaz distribution.</li>
 </ul>
-<p>
-Start your computer with <i>fd001.img</i>. It will show the kernel version string and
-the kernel cmdline line. You can edit the cmdline. Most users can just press Enter.
-</p>
-<p>
-The floppy is then loaded into memory (one dot each 64k) and you will be prompted to
-insert the next floppy, <i>fd002.img</i>. And so on up to <i>fd005.img</i>.
-</p>
-<p>
-The base flavor will then start and you will be prompted to insert extra floppies
-for justx and core flavors. You can bypass this by using Q and Enter.
-</p>
+
+<p>Start your computer with <tt>fd001.img</tt>. It will show the kernel version
+string and the kernel cmdline line. You can edit the cmdline. Most users can
+just press Enter.</p>
+
+<p>The floppy is then loaded into memory (one dot each 64KB) and you will be
+prompted to insert the next floppy, <tt>fd002.img</tt>. And so on up to
+<tt>fd005.img</tt>.</p>
+
+<p>The base flavor will then start and you will be prompted to insert extra
+floppies for justx and core flavors. You can bypass this by using Q and
+Enter.</p>
+
+<p>If you have an ext3 partition on your hard disk, the bootstrap can create the
+installation script <code>slitaz/install.sh</code>. You will be able to install
+SliTaz on your hard disk without extra media.</p>

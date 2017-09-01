@@ -1,23 +1,22 @@
 <p>You can start with one of the 2 following flavors:</p>
 
 <ul>
-	<li><b>base</b> needs 28MB of RAM and 4 floppies: <tt>fd001.img</tt> to
-		<tt>fd004.img</tt>.<br>
+	<li><b>base</b> needs 20MB of RAM and 5 floppies: <tt>fd001.img</tt> to
+		<tt>fd005.img</tt>.<br>
 		base provides the minimum SliTaz distribution subset in text mode.</li>
-	<li><b>core</b> needs 128MB of RAM and 18 floppies: <tt>fd001.img</tt> to
-		<tt>fd113.img</tt>.<br>
+	<li><b>core</b> needs 80MB of RAM and 24 floppies: <tt>fd001.img</tt> to
+		<tt>fd118.img</tt>.<br>
 		core provides the default SliTaz distribution.</li>
 </ul>
 
-<p>Start your computer with <tt>fd001.img</tt>. It will show the Kernel version
-string and the Kernel cmdline line. You can edit the cmdline. Most users can
+<p>Start your computer with <tt>fd001.img</tt>. It will show the kernel version
+string and the kernel cmdline line. You can edit the cmdline. Most users can
 just press Enter.</p>
 
 <p>The floppy is then loaded into memory (one dot each 64KB) and you will be
-prompted to insert the next floppy, <tt>fd002.img</tt>. And so on up to
-<tt>fd004.img</tt>.</p>
+prompted to insert the next floppy, <tt>fd002.img</tt>.</p>
 
-<p>The base flavor will then start and you will be prompted to insert extra
+<p>The loram bootstrap will then start and you will be prompted to insert extra
 floppies for the core flavor. You can bypass this by using Q and Enter.</p>
 
 <p>If you have an ext3 partition on your hard disk, the bootstrap can create the

@@ -36,99 +36,93 @@ if (isset($_GET['file']))
 		download(sprintf("fdiso%02d.img",$_GET['file']), $fdsz, $cmd);
 	}
 }
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+?><!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
 	<title>SliTaz Boot Floppies</title>
-	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-	<meta name="description" content="slitaz boot floppies" />
-	<meta name="robots" content="index, nofollow" />
-	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="../css/favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="../css/slitaz.css" />
+	<meta name="description" content="slitaz boot floppies">
+	<meta name="robots" content="index, nofollow">
+	<meta name="author" content="SliTaz Contributors">
+	<link rel="shortcut icon" href="static/favicon.ico">
+	<link rel="stylesheet" href="static/slitaz.min.css">
 	<style type="text/css">
-#copy {
-	text-align: center;
-}
-
-#bottom {
-	text-align: center;
-}
-
+.block_info { width: 40%; }
+nav table { margin: 6px 0 0 0; }
+nav table a { color: #215090; }
+nav header::before { content: url(pics/floppy.png); vertical-align: middle; padding: 0 6px 0 0; }
+pre, tt, code { font-size: 0.9rem; }
 	</style>
 </head>
-<body bgcolor="#ffffff">
-<!-- Header -->
-<div id="header">
-    <a name="top"></a>
-	<div id="logo"></div>
-	<div id="network">
-		<a href="http://www.slitaz.org/">
-		<img src="/css/pics/network.png" alt="network.png" /></a>
-		<a href="floppy-grub4dos" title="Boot tools">Generic boot floppy</a> |
-		<a href="http://tiny.slitaz.org/" title="SliTaz in one floppy !">Tiny SliTaz</a> |
-		<a href="index-loram.html" title="Floppy image sets for low ram systems">Loram floppies</a> |
-		<a href="builder/index.php" title="Build floppies with your own kernel and initramfs">Floppy set web builder</a> |
+<body>
+
+<script>de=document.documentElement;de.className+=(("ontouchstart" in de)?' touch':' no-touch');</script>
+
+<header>
+	<h1 id="top"><a href="http://www.slitaz.org/">Boot floppies</a></h1>
+
+	<div class="network">
+		<a href="http://www.slitaz.org/" class="home"></a>
+		<a href="floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
+		<a href="http://tiny.slitaz.org/" title="SliTaz in one floppy !">Tiny SliTaz</a>
+		<a href="builder/index.php" title="Build floppies with your own kernel and initramfs">Floppy set web builder</a>
 		<a href="builder/bootloader" title="Build your floppy sets without Internet">Shell builder</a>
 	</div>
-	<h1><a href="http://www.slitaz.org/">Boot floppies</a></h1>
-</div>   
+</header>
 
 <!-- Block -->
-<div id="block">
+<div class="block"><div>
+
+	<!-- Information/image -->
+	<div class="block_info">
+		<header>Available boot floppies</header>
+		<ul>
+<?php
+for ($i = 1; file_exists("index-$i.0.html") ; $i++);
+while (--$i > 0) {
+	echo "			<li><a href=\"index-$i.0.html\">SliTaz $i.0</a>";
+	if (file_exists("index-loram-".$i.".0.html"))
+		echo "				· <a href=\"index-loram-$i.0.html\">loram</a>";
+	echo "			</li>\n";
+}
+?>
+		</ul>
+	</div>
+
+
 	<!-- Navigation -->
-	<div id="block_nav">
-		<h4><img src="pics/floppy.png" alt="@" />Download 1.44Mb images for <?php $dir = explode('/',$_POST["iso"]); echo $dir[1]; ?></h4>
-<table width="100%">
+	<nav>
+		<header>Download 1.44MB images for <?php $dir = explode('/',$_POST["iso"]); echo $dir[1]; ?></header>
+		<table>
 <?php
 $max = floor((my_filesize("../".$_POST["iso"]) + $fdsz - 1 + $cpiopad) / $fdsz);
 for ($i = 1; $i <= $max ; $i++) {
-	if ($i % 4 == 1) echo "<tr>\n";
-	echo "	<td><a href=\"download.php?file=$i&amp;iso=".
+	if ($i % 6 == 1) echo "			<tr>\n";
+	echo "				<td><a href=\"download.php?file=$i&amp;iso=".
 		urlencode($_POST["iso"])."\">fdiso".sprintf("%02d",$i);
-	if ($max < 100) echo ".img";
 	echo "</a></td>\n";
-	if ($i % 4 == 0) echo "</tr>\n";
+	if ($i % 6 == 0) echo "			</tr>\n";
 }
-if ($max % 4 != 0) {
-	while ($max % 4 != 3) { echo "<td></td>"; $max++; }
+if ($max % 6 != 0) {
+	while ($max % 6 != 5) { echo "				<td> </td>"; $max++; }
 }
-else echo "<tr>\n";
-echo "	<td><a href=\"download.php?file=md5sum&amp;iso=".
-	urlencode($_POST["iso"])."\">md5sum</a></td>\n</tr>";
+else echo "			<tr>\n";
+echo "				<td><a href=\"download.php?file=md5sum&amp;iso=".
+	urlencode($_POST["iso"])."\">md5</a></td>\n			</tr>";
 ?>
-</table>
-	</div>
-	<!-- Information/image -->
-	<div id="block_info">
-		<h4>Available boot floppies</h4>
-		<ul>
-	<li><a href="index-4.0.html">SliTaz 4.0</a></li>
-	<li><a href="index-loram-4.0.html">SliTaz loram 4.0</a></li>
-	<li><a href="index-3.0.html">SliTaz 3.0</a></li>
-	<li><a href="index-loram-3.0.html">SliTaz loram 3.0</a></li>
-	<li><a href="index-2.0.html">SliTaz 2.0</a></li>
-	<li><a href="index-1.0.html">SliTaz 1.0</a></li>
-		</ul>
-	</div>
-</div>
+		</table>
+	</nav>
+</div></div>
 
-<!-- Content top. -->
-<div id="content_top">
-<div class="top_left"></div>
-<div class="top_right"></div>
-</div>
 
 <!-- Content -->
-<div id="content">
+<main>
 
 <h2>ISO image floppy set</h2>
 
-<p>
-You can restore the <a href="../<?php echo $_POST['iso'].
-'">'.basename($_POST['iso']); ?></a> ISO image on your hard disk using :
-</p>
+<p>You can restore the <a href="../<?php echo $_POST['iso'].
+'">'.basename($_POST['iso']); ?></a> ISO image on your hard disk using:</p>
+
 <pre>
 # dd if=/dev/fd0 of=fdiso01.img
 # dd if=/dev/fd0 of=fdiso02.img
@@ -136,28 +130,54 @@ You can restore the <a href="../<?php echo $_POST['iso'].
 # cat fdiso*.img | cpio -i
 </pre>
 
-<!-- End of content with round corner -->
-</div>
-<div id="content_bottom">
-<div class="bottom_left"></div>
-<div class="bottom_right"></div>
-</div>
 
-<!-- Start of footer and copy notice -->
-<div id="copy">
-<p>
-Copyright &copy; <span class="year"></span> <a href="http://www.slitaz.org/">SliTaz</a> -
-<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
-</p>
-<!-- End of copy -->
-</div>
+<!-- End of content -->
+</main>
 
-<!-- Bottom and logo's -->
-<div id="bottom">
-<p>
-<a href="http://validator.w3.org/check?uri=referer"><img src="../css/pics/website/xhtml10.png" alt="Valid XHTML 1.0" title="Code valid� XHTML 1.0" style="width: 80px; height: 15px;" /></a>
-</p>
-</div>
+
+<script>
+	function QRCodePNG(str, obj) {
+		try {
+			obj.height = obj.width += 300;
+			return QRCode.generatePNG(str, {ecclevel: 'H'});
+		}
+		catch (any) {
+			var element = document.createElement("script");
+			element.src = "/static/qrcode.min.js";
+			element.type = "text/javascript";
+			element.onload = function() {
+				obj.src = QRCode.generatePNG(str, {ecclevel: 'H'});
+			};
+			document.body.appendChild(element);
+		}
+	}
+</script>
+
+<footer>
+	<div>
+		Copyright © <span class="year"></span>
+		<a href="http://www.slitaz.org/">SliTaz</a>
+	</div>
+	<div>
+		Network:
+		<a href="http://scn.slitaz.org/">Community</a> ·
+		<a href="http://doc.slitaz.org/">Doc</a> ·
+		<a href="http://forum.slitaz.org/">Forum</a> ·
+		<a href="http://pkgs.slitaz.org/">Packages</a> ·
+		<a href="http://bugs.slitaz.org">Bugs</a> ·
+		<a href="http://hg.slitaz.org/?sort=lastchange">Hg</a>
+	</div>
+	<div>
+		SliTaz @
+		<a href="http://twitter.com/slitaz">Twitter</a> ·
+		<a href="http://www.facebook.com/slitaz">Facebook</a> ·
+		<a href="http://distrowatch.com/slitaz">Distrowatch</a> ·
+		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a> ·
+		<a href="http://flattr.com/profile/slitaz">Flattr</a>
+	</div>
+	<img src="/static/qr.png" alt="#" onmouseover="this.title = location.href"
+	onclick="this.src = QRCodePNG(location.href, this)"/>
+</footer>
 
 </body>
 </html>

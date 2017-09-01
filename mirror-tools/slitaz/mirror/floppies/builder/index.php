@@ -1,17 +1,32 @@
 <?php
 if (false) { // no php support on this mirror !
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
 	<title>SliTaz Boot Floppies redirection</title>
-	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-	<meta name="description" content="slitaz boot floppies builder redirection" />
-	<meta name="robots" content="index, nofollow" />
-	<meta name="author" content="SliTaz Contributors" />
-	<meta http-equiv="Refresh" content="0;url=http://mirror.slitaz.org/floppies/builder/index.php">
+	<meta name="description" content="slitaz boot floppies builder redirection">
+	<meta name="robots" content="index, nofollow">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="SliTaz Contributors">
+	<meta http-equiv="Refresh" content="0;url=http://mirror1.slitaz.org/floppies/builder/index.php">
 </head>
+<body>
+	<script type="text/javascript">
+	window.location.replace('http://mirror1.slitaz.org/floppies/builder/index.php')
+	</script>
+	<noscript>
+	<frameset rows="100%">
+		<frame src="http://mirror1.slitaz.org/floppies/builder/index.php">
+		<noframes>
+		<body>Please follow <a href="http://mirror1.slitaz.org/floppies/builder/index.php
+		">this link</a>.</body>
+		</noframes>
+	</frameset>
+	</noscript>
+</body>
+</html>
 <?php
 }
 ini_set('upload_max_filesize','16M');
@@ -19,10 +34,10 @@ ini_set('post_max_size','16M');
 if (isset($_GET['id']) && is_file("/tmp/".$_GET['id']."/fd")) {
 
 	// Download a floppy image
-	
-    	$size = $_GET['s'];
-    	if ($size == 0)
-    		$size = filesize("/tmp/".$_GET['id']."/fd");
+
+	$size = $_GET['s'];
+	if ($size == 0)
+		$size = filesize("/tmp/".$_GET['id']."/fd");
 	header("Content-Type: application/octet-stream");
 	header("Content-Length: ".$size);
 	header("Content-Disposition: attachment; filename=".
@@ -37,63 +52,43 @@ if (isset($_GET['id']) && is_file("/tmp/".$_GET['id']."/fd")) {
 	exit;
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
 	<title>SliTaz Boot Floppies</title>
-	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-	<meta name="description" content="slitaz boot floppies builder" />
-	<meta name="robots" content="index, nofollow" />
-	<meta name="author" content="SliTaz Contributors" />
-	<link rel="shortcut icon" href="../static/favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="../static/slitaz.css" />
-	<style type="text/css">
-	
-input[type=text] {
-	width: inherit;
-}
-
-#content {
-	margin: 6px 280px 0px 0px;
-	padding: 0px 3% 20px 4%;
-}
-
-#nav {
-	right: 4%;
-}
-
-#copy {
-	text-align: center;
-}
-
-#bottom {
-	text-align: center;
-}
-
+	<meta name="description" content="slitaz boot floppies builder">
+	<meta name="robots" content="index, nofollow">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="SliTaz Contributors">
+	<link rel="shortcut icon" href="../static/favicon.ico">
+	<link rel="stylesheet" href="../static/slitaz.min.css">
+	<style>
+input[type=text] { width: inherit; }
 	</style>
 </head>
-<body bgcolor="#ffffff">
-<!-- Header -->
-<div id="header">
-    <a name="top"></a>
-	<div id="logo"></div>
-	<div id="network">
-		<a href="http://www.slitaz.org/">
-		<img src="../static/home.png" alt="[ home ]" /></a>
-		<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a> |
+<body>
+
+<script>de=document.documentElement;de.className+=(("ontouchstart" in de)?' touch':' no-touch');</script>
+
+<header>
+	<h1 id="top"><a href="http://www.slitaz.org/">Boot floppies builder</a></h1>
+	<div class="network">
+		<a href="http://www.slitaz.org/" class="home"></a>
+		<a href="bootloader" title="Build your floppy sets without Internet">Shell builder</a>
 		<a href="../floppy-grub4dos" title="Boot tools">Generic boot floppy</a>
 	</div>
-	<h1><a href="http://www.slitaz.org/">Boot floppies builder</a></h1>
-</div>
+</header>
 
-<!-- Navigation menu -->
-<div id="nav">
+<!-- Block -->
+<div class="block"><div>
+
+	<!-- Navigation menu -->
 
 <?php
 
 	// Cleanup old sessions
-	
+
 	$dir = opendir("/tmp");
 	while (($name = readdir($dir)) !== false) {
 		if (preg_match('/^fdbuild/',$name) == 0) continue;
@@ -118,21 +113,19 @@ function get_long($file, $offset)
 function error($string, $title="Error")
 {
 	echo <<<EOT
-<div class="nav_box">
-<h4>$title</h4>
-<p>
-$string
-</p>
-</div>
+	<nav>
+		<header>$title</header>
+		<p>$string</p>
+	</nav>
 EOT;
 }
 
 	$size = 0;
 	$initrd_size = 0;
 	$info_size = 0;
-	
+
 	// Upload kernel
-	
+
 	foreach($_FILES as $data) {
 		$msg="The file ".$data['name']." ";
 		switch ($data["error"]) {
@@ -154,7 +147,7 @@ EOT;
 		}
 	}
 	if (isset($_FILES["kernel"]['tmp_name']) &&
-	    is_uploaded_file($_FILES["kernel"]['tmp_name'])) {
+		is_uploaded_file($_FILES["kernel"]['tmp_name'])) {
 		$tmp_dir = tempnam('','fdbuild');
 		if (file_exists($tmp_dir)) unlink($tmp_dir);
 		mkdir($tmp_dir);
@@ -173,36 +166,36 @@ EOT;
 	}
 
 	if ($size && isset($_FILES["info"]['tmp_name']) &&
-	    is_uploaded_file($_FILES["info"]['tmp_name'])) {
+		is_uploaded_file($_FILES["info"]['tmp_name'])) {
 		move_uploaded_file($_FILES["info"]['tmp_name'],
 				   $tmp_dir."info");
 		$info_size = $_FILES["info"]['size'];
 	}
-	
+
 	// Upload initrd
-	
-	if ($size && isset($_FILES["initrd"]['tmp_name']) &&
-	    is_uploaded_file($_FILES["initrd"]['tmp_name'])) {
-		move_uploaded_file($_FILES["initrd"]['tmp_name'],
-				   $tmp_dir."initrd");
-		$initrd_size = $_FILES["initrd"]['size'];
+
+	if ($size) for ($i = 0; $i < count($_FILES["initrd"]['name']); $i++)
+	if (isset($_FILES["initrd"]['tmp_name'][$i]) &&
+		is_uploaded_file($_FILES["initrd"]['tmp_name'][$i])) {
+		move_uploaded_file($_FILES["initrd"]['tmp_name'][$i],
+				   $tmp_dir."initrd.".$i);
+		$initrd_cmd .= " --initrd ".$tmp_dir."initrd.".$i;
+		$initrd_size = $_FILES["initrd"]['size'][$i];
 		$size += $initrd_size;
+		if ($i == 0)
 		$msg = "The total size of the files ".$_FILES["kernel"]['name'].
-		       " and ".$_FILES["initrd"]['name'];
+		       " and ".$_FILES["initrd"]['name'][$i];
+		else $msg .= ", ".$FILE["initrd"]['name'][$i];
 	}
-	if ($initrd_size && isset($_FILES["initrd2"]['tmp_name']) &&
-	    is_uploaded_file($_FILES["initrd2"]['tmp_name'])) {
-		move_uploaded_file($_FILES["initrd2"]['tmp_name'],
-				   $tmp_dir."initrd2");
-		$initrd2_size = $_FILES["initrd2"]['size'];
+	if ($initrd_size) for ($i = 0; $i < count($_FILES["initrd2"]['name']); $i++)
+	if (isset($_FILES["initrd2"]['tmp_name'][$i]) &&
+		is_uploaded_file($_FILES["initrd2"]['tmp_name'][$i])) {
+		move_uploaded_file($_FILES["initrd2"]['tmp_name'][$i],
+				   $tmp_dir."initrd2.".$i);
+		$initrd2_cmd .= " --initrd ".$tmp_dir."initrd2.".$i;
+		$initrd2_size = $_FILES["initrd2"]['size'][$i];
 		$size += $initrd2_size;
-		$msg = "The total size of the files ".$_FILES["kernel"]['name'].
-		       ", ".$_FILES["initrd"]['name'].
-		       " and ".$_FILES["initrd2"]['name'];
-	}
-	if ($size >= 15 * 1024 * 1024) {
-		error($msg." exceeds 15 MB.");
-		$size = 0;
+		$msg .= ", ".$FILE["initrd2"]['name'][$i];
 	}
 	if ($size == 0) {
 		if (isset($tmp_dir))
@@ -221,9 +214,9 @@ EOT;
 		if (file_exists($_POST['rdev']))
 			$cmd .= " --rdev ".$_POST['rdev'];
 		if ($initrd_size)
-			$cmd .= " --initrd ".$tmp_dir."initrd";
+			$cmd .= $initrd_cmd;
 		if ($initrd2_size)
-			$cmd .= " --initrd ".$tmp_dir."initrd2";
+			$cmd .= $initrd2_cmd;
 		switch ($_POST['size']) {
 		case 1763328 : 
 		case 2015232 : 
@@ -261,59 +254,69 @@ function show_size($size)
 }
 ?>
 
-<!-- End navigation menu -->
-</div>
+	<!-- End navigation menu -->
+</div></div>
 
-<!-- Content top. -->
-<div id="content_top">
-<div class="top_left"></div>
-<div class="top_right"></div>
-</div>
 
 <!-- Content -->
-<div id="content">
+<main>
 
 <h2>Floppy image set builder</h2>
 
+<script>
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+	try {
+		updateHtmlCode();
+	}
+	catch (any) {
+		var element = document.createElement("script");
+		element.src = "clientbuilder.js";
+		element.type = "text/javascript";
+		element.onload = function() {
+			updateHtmlCode();
+		};
+		document.body.appendChild(element);
+	}
+}
+</script>
 <?php
 	if (!isset($count)) {
 		$max = rtrim(ini_get('upload_max_filesize'),"M");
 		$max_post = rtrim(ini_get('post_max_size'),"M");
 		if ($max_post < $max) $max = $max_post;
-		$msg = "the tiny boot loader can't load more than 15 MB";
-		if ($max < 16)
-			$msg = "the web server can't upload more than $max MB";
+		$msg = "the web server can't upload more than $max MB";
 ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-<table>
+<form id="io" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+
+<div class="large"><table>
 	<tr>
-	<td>Linux kernel:</td>
-	<td><input type="file" name="kernel" size="37" /> <i>required</i></td>
+		<td>Linux kernel:</td>
+		<td><input type="file" name="kernel" size="37" /> <i>required</i></td>
 	</tr>
 	<tr>
-	<td>Initramfs / Initrd:</td>
-	<td><input type="file" name="initrd" size="37" /> <i>optional</i></td>
+		<td>Initramfs / Initrd:</td>
+		<td><input type="file" name="initrd[]" size="37" multiple /> <i>optional</i></td>
 	</tr>
 	<tr>
-	<td>Extra initramfs:</td>
-	<td><input type="file" name="initrd2" size="37" /> <i>optional</i></td>
+		<td>Extra initramfs:</td>
+		<td><input type="file" name="initrd2[]" size="37" multiple /> <i>optional</i></td>
 	</tr>
 	<tr>
-	<td>Boot message:</td>
-	<td><input type="file" name="info" size="37" /> <i>optional</i></td>
+		<td>Boot message:</td>
+		<td><input type="file" name="info" size="37" /> <i>optional</i></td>
 	</tr>
 	<tr>
-	<td>Default cmdline:</td>
-	<td><input type="text" name="cmdline" size="36" <?php 
+		<td>Default cmdline:</td>
+		<td id="cmdline"><input type="text" name="cmdline" size="36" <?php
 		if (isset($_GET['cmdline'])) echo 'value="'.$_GET['cmdline'].'"';
 	?>/> <input type="checkbox" name="edit" checked="checked" />edit
 	<i>optional</i></td>
 	</tr>
 	<tr>
-	<td>Root device:</td>
-	<td><input type="text" name="rdev" size="8" value="<?php
+		<td>Root device:</td>
+		<td><input type="text" name="rdev" size="8" value="<?php
 		if (isset($_GET['rdev'])) echo $_GET['rdev'];
-		else echo "/dev/fd0";
+		else echo "/dev/ram0";
 	?>" />
 	&nbsp;&nbsp;Flags: <select name="flags">
 		<option value="1">R/O</option>
@@ -375,25 +378,54 @@ function show_size($size)
 			$options[0x311] = "640x480x16";
 			$options[0x312] = "640x480x24";
 			$options[0x33A] = "640x480x32";// 321?
+			$options[879]   = "800x500x8";
+			$options[880]   = "800x500x15";
+			$options[881]   = "800x500x16";
+			$options[882]   = "800x500x24";
+			$options[883]   = "800x500x32";
 			//$options[770] = "800x600x4";
 			$options[0x303] = "800x600x8";
 			$options[0x313] = "800x600x15";
 			$options[0x314] = "800x600x16";
 			$options[0x315] = "800x600x24";
 			$options[0x33B] = "800x600x32";//322?
+			$options[815]   = "896x672x8";
+			$options[816]   = "896x672x15";
+			$options[817]   = "896x672x16";
+			$options[818]   = "896x672x24";
+			$options[819]   = "896x672x32";
+			$options[874]   = "1024x640x8";
+			$options[875]   = "1024x640x15";
+			$options[876]   = "1024x640x16";
+			$options[877]   = "1024x640x24";
+			$options[878]   = "1024x640x32";
 			//$options[772] = "1024x768x4";
 			$options[0x305] = "1024x768x8";
 			$options[0x316] = "1024x768x15";
 			$options[0x317] = "1024x768x16";
 			$options[0x318] = "1024x768x24";
 			$options[0x33C] = "1024x768x32";//323?
+			$options[869]   = "1152x720x8";
+			$options[870]   = "1152x720x15";
+			$options[871] =   "1152x720x16";
+			$options[872] =   "1152x720x24";
+			$options[873] =   "1152x720x32";
 			$options[0x307] = "1280x1024x8";
 			$options[0x319] = "1280x1024x15";
 			$options[0x31A] = "1280x1024x16";
 			$options[0x31B] = "1280x1024x24";
 			$options[0x33D] = "1280x1024x32";
+			$options[835]   = "1400x1050x8";
+			$options[837] =   "1400x1050x16";
+			$options[838] =   "1400x1040x24";
+			$options[864]   = "1440x900x8";
+			$options[864]   = "1440x900x15";
+			$options[866] =   "1440x900x16";
+			$options[867] =   "1440x900x24";
+			$options[868] =   "1440x900x32";
 			$options[0x330] = "1600x1200x8";
 			$options[0x331] = "1600x1200x16";
+			$options[893]   = "1920x1200x8";
 			foreach ($options as $key => $value) {
 				echo '<option value="'.$key.'"';
 				if ($key == $selected || $value == $selected)
@@ -401,14 +433,38 @@ function show_size($size)
 				echo '>'.$value."</option>\n";
 			}
 		?>
-	</select>
-	</td>
+		</select>
+		</td>
 	</tr>
 	<tr>
-	<td>Floppy size:</td>
-	<td><select name="size">
+		<td>Floppy size:</td>
+		<td><select name="size">
 <?php
 	foreach ($sizes as $key => $value) {
+		switch ($key) {
+		case "368640" :
+			echo "		<optgroup label=\"5&frac14; SD\">\n";
+			break;
+		case "737280" :
+			echo "		</optgroup>\n";
+			echo "		<optgroup label=\"3&frac12; SD\">\n";
+			break;
+		case "1228800" :
+			echo "		</optgroup>\n";
+			echo "		<optgroup label=\"5&frac14; HD\">\n";
+			break;
+		case "1474560" :
+			echo "		</optgroup>\n";
+			echo "		<optgroup label=\"3&frac12; HD\">\n";
+			break;
+		case "2949120" :
+			echo "		</optgroup>\n";
+			echo "		<optgroup label=\"3&frac12; ED\">\n";
+			break;
+		case "0" :
+			echo "		</optgroup>\n";
+			break;
+		}
 		echo "		<option value=\"$key\"";
 		if ($key == "1474560") echo " selected='selected'";
 		echo ">$value</option>\n";
@@ -424,24 +480,22 @@ function show_size($size)
 		<input name="build" value="Build floppy set" type="submit" />
 	</td>
 	</tr>
-</table>
-</form>
+</table></div>
 <?php
 		echo <<<EOT
-<p>
-Note 1: $msg of files (kernel and initramfs) in memory.
-</p>
-<p>
-Note 2: the extra initramfs may be useful to add your own configuration files.
-</p>
-<p>
-Note 3: the keyboard is read for ESC or ENTER on every form feed (ASCII 12) in the boot message.
-</p>
+<p id="note1">Note 1: $msg of files (kernel and initramfs) in memory.</p>
+
+<p>Note 2: the extra initramfs may be useful to add your own configuration files.</p>
+
+<p>Note 3: the keyboard is read for ESC or ENTER on every form feed (ASCII 12) in the boot message.</p>
+</form>
 EOT;
 	}
 	else {
 ?>
+
 <h4>Download image<?php if ($count >= 2) echo "s"; ?></h4>
+
 <ul>
 <?php
 		for ($i = 1; $i <= $count; $i++) {
@@ -453,81 +507,97 @@ EOT;
 		echo "</ul>\n".floor($padding/1024)."KB padding.\n";
 ?>
 
-<p>
-You can write floppies with SliTaz <i>bootfloppybox</i>, 
-<a href="http://en.wikipedia.org/wiki/RaWrite">Windows rawrite</a> or simply dd:
-</p>
-<pre># dd if=fd001.img of=/dev/fd0
-</pre>
+<p>You can write floppies with SliTaz <code>bootfloppybox</code>, <a
+href="http://en.wikipedia.org/wiki/RaWrite">Windows rawrite</a> or simply
+<code>dd</code>:</p>
 
-<p>
-Start your computer with <i>fd001.img</i>. It will show the kernel version string and
-the kernel cmdline line. You can edit the cmdline. Most users can just press Enter.
-</p>
+<pre># dd if=fd001.img of=/dev/fd0</pre>
+
+<p>Start your computer with <tt>fd001.img</tt>. It will show the kernel version
+string and the kernel cmdline line. You can edit the cmdline. Most users can
+just press Enter.</p>
 
 <?php
 		if ($count >= 2) {
 ?>
-<p>
-The floppy is then loaded into memory (one dot each 64k) and you will be prompted to
-insert the next floppy, <i>fd002.img</i>. And so on.
-</p>
+<p>The floppy is then loaded into memory (one dot each 64K) and you will be
+prompted to insert the next floppy, <tt>fd002.img</tt>. And so on.</p>
 
-<p>
-The floppy set detects disk swaps and can be used without a keyboard.
-</p>
+<p>The floppy set detects disk swaps and can be used without a keyboard.</p>
 <?php
 		}
 ?>
-<p>
-Good luck.
-</p>
+<p>Good luck.</p>
+
 <?php
 	}
 ?>
 
-<div class="nav_box">
-<h4>How does it work ?</h4>
-<p>
-This tool updates the boot sector of your kernel with
-<a href="http://hg.slitaz.org/wok/raw-file/66e38bd6a132/linux/stuff/linux-header.u">this patch</a>.
-You may add a default cmdline and an initramfs. The cmdline can be edited at boot
-time but the keyboard is not mandatory.
-A <a href="bootloader"> standalone version</a> is available.
-</p>
-<p>
-Each part (boot, setup, boot message, cmdline, kernel, initramfs) is aligned to 512 bytes.
-The result is split to fit the floppy size.
-The last floppy image is padded with zeros.
-</p>
-<p>
-You can extract the <u>kernel</u>, <u>cmdline</u> and <u>rootfs</u> files with 
-<a href="../floppies">this tool</a> from the floppy images.
-</p>
-</div>
 
-<!-- End of content with round corner -->
-</div>
-<div id="content_bottom">
-<div class="bottom_left"></div>
-<div class="bottom_right"></div>
-</div>
+<h3>How does it work?</h3>
 
-<!-- Start of footer and copy notice -->
-<div id="copy">
-<p>
-Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.slitaz.org/">SliTaz</a> -
-<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
-</p>
-<!-- End of copy -->
-</div>
+<p>This tool updates the boot sector of your kernel with <a
+href="http://hg.slitaz.org/wok/raw-file/13835bce7189/syslinux/stuff/iso2exe/bootloader.S">this
+code</a>. You may add a default cmdline and an initramfs. The cmdline can be
+edited at boot time but the <acronym title="Check for disk swap every 5 seconds"
+>keyboard is not mandatory</acronym>. A <a href="bootloader">standalone
+version</a> is available to break the web server upload limit.</p>
 
-<!-- Bottom and logo's -->
-<div id="bottom">
-<p>
-<a href="http://validator.w3.org/check?uri=referer"><img src="../static/xhtml10.png" alt="Valid XHTML 1.0" title="Code valid� XHTML 1.0" style="width: 80px; height: 15px;" /></a>
-</p>
-</div>
+<p>Each part (boot, setup, boot message, cmdline, kernel, initramfs) is aligned
+to 512 bytes. The result is split to fit the floppy size. The last floppy image
+is padded with zeros.</p>
+
+<p>You can extract the <u>kernel</u>, <u>cmdline</u> and <u>rootfs</u> files
+with <a href="bootloader" title="./bootloader --extract floppy.*">this tool</a>
+from the floppy images.</p>
+
+
+<!-- End of content -->
+</main>
+
+<script>
+	function QRCodePNG(str, obj) {
+		try {
+			obj.height = obj.width += 300;
+			return QRCode.generatePNG(str, {ecclevel: 'H'});
+		}
+		catch (any) {
+			var element = document.createElement("script");
+			element.src = "/static/qrcode.min.js";
+			element.type = "text/javascript";
+			element.onload = function() {
+				obj.src = QRCode.generatePNG(str, {ecclevel: 'H'});
+			};
+			document.body.appendChild(element);
+		}
+	}
+</script>
+
+<footer>
+	<div>
+		Copyright © <span class="year"></span>
+		<a href="http://www.slitaz.org/">SliTaz</a>
+	</div>
+	<div>
+		Network:
+		<a href="http://scn.slitaz.org/">Community</a> ·
+		<a href="http://doc.slitaz.org/">Doc</a> ·
+		<a href="http://forum.slitaz.org/">Forum</a> ·
+		<a href="http://pkgs.slitaz.org/">Packages</a> ·
+		<a href="http://bugs.slitaz.org">Bugs</a> ·
+		<a href="http://hg.slitaz.org/?sort=lastchange">Hg</a>
+	</div>
+	<div>
+		SliTaz @
+		<a href="http://twitter.com/slitaz">Twitter</a> ·
+		<a href="http://www.facebook.com/slitaz">Facebook</a> ·
+		<a href="http://distrowatch.com/slitaz">Distrowatch</a> ·
+		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a> ·
+		<a href="http://flattr.com/profile/slitaz">Flattr</a>
+	</div>
+	<img src="/static/qr.png" alt="#" onmouseover="this.title = location.href"
+	onclick="this.src = QRCodePNG(location.href, this)"/>
+</footer>
 
 </body>
 </html>

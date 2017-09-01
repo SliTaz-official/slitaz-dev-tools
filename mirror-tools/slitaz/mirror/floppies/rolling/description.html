@@ -1,0 +1,27 @@
+<p>You can start with one of the 4 following flavors:</p>
+
+<ul>
+	<li><b>base</b> needs 48MB of RAM and 8 floppies:
+		<tt>fd001.img</tt> to <tt>fd008.img</tt>.<br>
+		base provides the minimum SliTaz distribution subset in text mode.</li>
+	<li><b>justx</b> needs 128MB of RAM and 16 floppies:
+		<tt>fd001.img</tt> to <tt>fd107.img</tt>.<br>
+		justx provides the minimum SliTaz distribution subset with X11 support.</li>
+	<li><b>gtkonly</b> needs 192MB of RAM and 24 floppies:
+		<tt>fd001.img</tt> to <tt>fd207.img</tt>.<br>
+		gtkonly provides the minimum SliTaz distribution subset with GTK+ support.</li>
+	<li><b>core</b> needs 256MB of RAM and 32 floppies:
+		<tt>fd001.img</tt> to <tt>fd307.img</tt>.<br>
+		core provides the default SliTaz distribution.</li>
+</ul>
+
+<p>Start your computer with <tt>fd001.img</tt>. It will show the kernel version
+string and the kernel cmdline line. You can edit the cmdline. Most users can
+just press Enter.</p>
+
+<p>The floppy is then loaded into memory (one dot each 64KB) and you will be
+prompted to insert the next floppy, <tt>fd002.img</tt>. And so on up to last
+floppy.</p>
+
+<p>You will be prompted to insert extra floppies for the next flavors.
+You can bypass this by using B to boot without loading extra floppies.</p>
