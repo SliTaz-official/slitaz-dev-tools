@@ -171,7 +171,7 @@ or simply <code>dd</code>:</p>
 
 <pre># dd if=fd001.img of=/dev/fd0</pre>
 
-<p>If you have a CD-ROM, an USB port and an USB key or a network card, but you
+<p>If you have a CD-ROM, a USB port and a USB key or a network card, but you
 can't boot these devices directly, then try <a
 href="http://mirror.slitaz.org/boot/floppy-grub4dos" target="_blank"
 >floppy-grub4dos</a> first. This 1.44Mb floppy provides tiny programs to boot
