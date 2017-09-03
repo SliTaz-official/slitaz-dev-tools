@@ -575,24 +575,24 @@ from the floppy images.</p>
 
 <footer>
 	<div>
-		Copyright © <span class="year"></span>
+		Copyright &copy; <span class="year"></span>
 		<a href="http://www.slitaz.org/">SliTaz</a>
 	</div>
 	<div>
 		Network:
-		<a href="http://scn.slitaz.org/">Community</a> ·
-		<a href="http://doc.slitaz.org/">Doc</a> ·
-		<a href="http://forum.slitaz.org/">Forum</a> ·
-		<a href="http://pkgs.slitaz.org/">Packages</a> ·
-		<a href="http://bugs.slitaz.org">Bugs</a> ·
+		<a href="http://scn.slitaz.org/">Community</a> &middot;
+		<a href="http://doc.slitaz.org/">Doc</a> &middot;
+		<a href="http://forum.slitaz.org/">Forum</a> &middot;
+		<a href="http://pkgs.slitaz.org/">Packages</a> &middot;
+		<a href="http://bugs.slitaz.org">Bugs</a> &middot;
 		<a href="http://hg.slitaz.org/?sort=lastchange">Hg</a>
 	</div>
 	<div>
 		SliTaz @
-		<a href="http://twitter.com/slitaz">Twitter</a> ·
-		<a href="http://www.facebook.com/slitaz">Facebook</a> ·
-		<a href="http://distrowatch.com/slitaz">Distrowatch</a> ·
-		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a> ·
+		<a href="http://twitter.com/slitaz">Twitter</a> &middot;
+		<a href="http://www.facebook.com/slitaz">Facebook</a> &middot;
+		<a href="http://distrowatch.com/slitaz">Distrowatch</a> &middot;
+		<a href="http://en.wikipedia.org/wiki/SliTaz">Wikipedia</a> &middot;
 		<a href="http://flattr.com/profile/slitaz">Flattr</a>
 	</div>
 	<img src="/static/qr.png" alt="#" onmouseover="this.title = location.href"
