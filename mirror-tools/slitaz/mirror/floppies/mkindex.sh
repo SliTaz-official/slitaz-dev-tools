@@ -1,7 +1,7 @@
 #!/bin/sh
 
 list_version() {
-	ls rolling ?.0 -dr | \
+	ls rolling next ?.0 -dr | \
 	while read dir; do
 		echo $dir
 		[ -d loram-$dir ] && echo loram-$dir
@@ -21,6 +21,7 @@ build_page() {
 		web*)	TYPE="&nbsp;web" ;;
 		mini*)	TYPE="&nbsp;mini" ;;
 		loram*)	TYPE="&nbsp;loram" ;;
+		next*)	TYPE="&nbsp;next" ;;
 		*)	TYPE=""
 	esac
 	TITLE="Floppy image set"
@@ -70,7 +71,7 @@ $(
 list_version | \
 while read dir; do
 	case "$dir" in
-	*-*)
+	*-*|next)
 		echo -n "					<li>"
 		text="${dir/-/ }";;
 	*)
@@ -83,7 +84,7 @@ while read dir; do
 	echo "						>$text</a>"
 
 	case "$dir" in
-	*-*)
+	*-*|next)
 		echo "					</li>";;
 	*)
 		echo "						<ul>"
@@ -126,6 +127,7 @@ while read dir; do
 	web*)	echo -en "\n				&middot; <a href=\"index-$dir.html\">web</a>" ;;
 	mini*)	echo -en "\n				&middot; <a href=\"index-$dir.html\">mini</a>" ;;
 	loram*)	echo -en "\n				&middot; <a href=\"index-$dir.html\">loram</a>" ;;
+	next*)	echo -en "\n				&middot; <a href=\"index-$dir.html\">next</a>" ;;
 	*)   	echo -en "$tail			<li><a href=\"index-$dir.html\">SliTaz $dir</a>" ;;
 	esac
 	tail="</li>\n"
