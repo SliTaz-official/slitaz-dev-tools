@@ -55,8 +55,15 @@ if [ "$PKG_VER" == "update-hg" ]; then
 		for i in $repos/* ; do
 			grep -qs '\[paths]' $i/.hg/hgrc || continue
 			cd $i
-			hg pull
-			hg update
+			if hg pull -u 2>&1 | grep -q abort ; then
+				cd - > /dev/null
+				cd $repos
+				mv $(basename $i) $(basename $i)-DEAD
+				hg clone http://hg.slitaz.org/$(basename $i)
+				cp $(basename $i)-DEAD/.hg/hgrc \
+					$(basename $i)/.hg/hgrc
+				rm -rf $(basename $i)-DEAD
+			fi
 			cd - > /dev/null
 			case "$i" in
 			*/get-scripts)
@@ -68,7 +75,7 @@ if [ "$PKG_VER" == "update-hg" ]; then
 						echo "|$(head -n 6 $j | sed \
 							"/^$k=/!d;s/$k=//;s/\"\\([^\"]*\\).*/\\1/")"
 					done
-					} | sed "s/'/\\\\'/" | xargs echo
+					} | sed "s/'/\\\\'/" | sed "s|\$PACKAGE|$(basename $j)|" | xargs echo
 				done | sed 's/ |/|/g' > /var/www/slitaz/mirror/packages/get.list
 				chmod a+r /var/www/slitaz/mirror/packages/get.list
 			esac
@@ -315,6 +322,28 @@ rm -rf $TEMP_DIR/boot/fs.cpio.* $TEMP_DIR/boot/fs
 return 0
 }
 
+# Build hybdrid shell/mbr boot
+shhybrid() 
+{
+blkuuid="$(blkid $1 | sed 's/UUID=/!d;/.* UUID="\([^"]*\).*/\1/')"
+[ "$blkuuid" ] || blkuuid="$(blkid $1 | sed 's/.* \(LABEL="[^"]*"\).*/\1/')"
+echo -e "#\xE4\x73\x1C\nexec sed 1,/^#@/d/^#%/q \$0" | dd of=$1 conv=notrunc 2>/dev/null
+dd bs=512 seek=1 conv=notrunc of=$1 2>/dev/null <<EOT
+
+#@
+#!/bin/sh
+ 
+dev=\$({ blkid $(basename $1); blkid; } | sed '/$blkuuid/!d;s/:.*//;q')
+ 
+if [ -n "\$dev" ]; then
+	mkdir -p /mnt/packages
+	mount -t iso9660 -o loop,ro \$dev /mnt/packages
+	/mnt/packages/install.sh
+fi
+#%
+EOT
+}
+
 # Gen boot part
 BOOT_OPT=""
 iso=$ISO_DIR/slitaz-$PKG_VER.iso
@@ -441,6 +470,10 @@ echo -n "Creating hybrid DVD/CDROM"
 ISOHYBRID=isohybrid.sh
 which isohybrid > /dev/null && ISOHYBRID=isohybrid
 which $ISOHYBRID > /dev/null && $ISOHYBRID $IMAGE 2> /dev/null
+status
+
+echo -n "Creating hybrid shell/mbr"
+shhybrid $IMAGE
 status
 
 echo -n "Calculating md5sum"
