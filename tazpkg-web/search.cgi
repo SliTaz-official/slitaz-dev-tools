@@ -25,7 +25,7 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
 		SLITAZ_VERSION=cooking
 		case "$(echo $i | tr [A-Z] [a-z])" in
 		query=*|search=*)
-			[ ${i#*=} == Search ] || SEARCH=${i#*=};;
+			[ ${i#*=} = Search ] || SEARCH=${i#*=};;
 		object=*)
 			OBJECT=${i#*=};;
 		verbose=*)
@@ -69,7 +69,7 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
 		esac
 	done
 	[ -n "$SEARCH" ] && REQUEST_METHOD="POST"
-	[ "$SEARCH" == "." ] && SEARCH=
+	[ "$SEARCH" = "." ] && SEARCH=
 fi
 
 case "$OBJECT" in

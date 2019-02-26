@@ -112,7 +112,7 @@ case "$(hostname)" in
 		check_string "cooking wok is not yet ready to be copied"
 		
 		# Ready for --now ?
-		if [ "$now" ] && [ "$ready" == 0 ]; then
+		if [ "$now" ] && [ "$ready" = 0 ]; then
 			echo "Releasing SliTaz: $version"
 			cd ${repos}/wok-stable; hg up
 			previous_release=$(hg parents --template '{latesttag}')
@@ -169,7 +169,7 @@ case "$(hostname)" in
 		check_string "the wok should be tagged to $version"
 		echo ""
 		
-		if [ "$ready" == 0 ]; then
+		if [ "$ready" = 0 ]; then
 			echo "Ready to release SliTaz $version :-)"
 		else
 			echo "Not yet ready to release SliTaz $version"

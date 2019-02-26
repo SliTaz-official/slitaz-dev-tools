@@ -97,7 +97,7 @@ read_request() {
 	read request
 	while /bin/true; do
 		read header
-		[ "$header" == $'\r' ] && break;
+		[ "$header" = $'\r' ] && break;
 	done
 	# Extract URL from the request string
 	url="${request#GET }"

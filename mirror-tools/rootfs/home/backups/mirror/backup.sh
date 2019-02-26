@@ -34,9 +34,9 @@ EOT
 SSH="ssh -i /home/$BACKUP_USER/.ssh/id_rsa -o PasswordAuthentication=no"
 
 cd $(dirname $0)
-[ $(id -u) == 0 ] || exit 1
-[ $(hostname) == $(basename $PWD) -o \
-  $(hostname) == $(basename $PWD).slitaz.org ] || exit 1
+[ $(id -u) = 0 ] || exit 1
+[ $(hostname) = $(basename $PWD) -o \
+  $(hostname) = $(basename $PWD).slitaz.org ] || exit 1
 
 rotate()
 {
@@ -77,7 +77,7 @@ chown $BACKUP_USER *
 chmod 700 *
 
 [ -n "$REMOTE_USER" ] && for i in $(cd .. ; ls); do
-	[ $i == $(hostname) -o $i.slitaz.org == $(hostname) ] && continue
+	[ $i = $(hostname) -o $i.slitaz.org = $(hostname) ] && continue
 	echo "Getting backups from $i ..."
 	rsync -aH -e "$SSH" --bwlimit=50 $REMOTE_USER@$i.slitaz.org:/home/backups/$i/. ../$i/.
 done

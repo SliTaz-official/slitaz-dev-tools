@@ -107,7 +107,7 @@ daemon_crash()
 				log "start daemon $command"
 				/etc/init.d/$command start
 			}
-			if [ $command == mysql -a ! -e /var/run/mysqld/mysqld.sock ]; then
+			if [ $command = mysql -a ! -e /var/run/mysqld/mysqld.sock ]; then
 				log "mysql socket"
 				killall mysqld
 				killall -9 mysqld
@@ -156,7 +156,7 @@ swap_full()
 
 case "$1" in
 install)
-	[ $0 == $2/usr/sbin/srvwatch ] || mv $0 $2/usr/sbin/srvwatch
+	[ $0 = $2/usr/sbin/srvwatch ] || mv $0 $2/usr/sbin/srvwatch
 	if [ -x $2/usr/sbin/srvwatch ] && ! grep -q /usr/sbin/srvwatch $2/etc/inittab; then
 		sed -i 's|^::sysinit.*|&\n::respawn:/usr/sbin/srvwatch loop|' \
 			$2/etc/inittab

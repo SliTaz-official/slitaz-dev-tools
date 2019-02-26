@@ -50,7 +50,7 @@ EOT
 fi
 
 # Update hg repos
-if [ "$PKG_VER" == "update-hg" ]; then
+if [ "$PKG_VER" = "update-hg" ]; then
 	for repos in $@ ; do
 		for i in $repos/* ; do
 			grep -qs '\[paths]' $i/.hg/hgrc || continue
@@ -147,7 +147,7 @@ cat >$TEMP_DIR/install.sh<<EOF
 DIR=\$(cd \$(busybox dirname \$0); pwd)
 
 # Handle --auto-install case
-if [ "\$DIR" == "/etc/init.d" ]; then
+if [ "\$DIR" = "/etc/init.d" ]; then
   DIR=/cdrom
   if [ ! -f /cdrom/install.sh ]; then
     mkdir /cdrom 2> /dev/null
@@ -357,7 +357,7 @@ case " $OPTIONS " in
 	need $iso
 	which isoinfo > /dev/null || need /usr/bin/isoinfo
 	isoinfo -R -l -i $iso | awk '/^Directory/ { path=$4 } /^-/ { print path$12  }' | while read file; do
-		[ "$(basename $file)" == ".." ] && continue
+		[ "$(basename $file)" = ".." ] && continue
 		[ "$file" = "/boot/isolinux/boot.cat" ] && continue
 		[ -d "$(dirname $TEMP_DIR/$file)" ] ||
 			mkdir -p "$(dirname $TEMP_DIR/$file)"

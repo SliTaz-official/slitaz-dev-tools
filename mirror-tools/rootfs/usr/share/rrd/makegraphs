@@ -144,7 +144,7 @@ END { print max }' | sed 's/,/./'
 
 updatediskgraph() {
 	period=$1
-	[ "$period" == "day" ] && maxdisk="$(getmax disk)"
+	[ "$period" = "day" ] && maxdisk="$(getmax disk)"
 	info=""
 	[ -r $2 ] &&
 	info="[ $(fdisk -l | grep "^Disk $2:" | \
@@ -198,7 +198,7 @@ updatediskdata() {
 updateifgraph() {
 	interface=$1
 	period=$2
-	[ "$period" == "day" ] && maxif="$(getmax $interface)"
+	[ "$period" = "day" ] && maxif="$(getmax $interface)"
 	rrdtool graph "$rrdgraph/$interface-$period.png" --start -1$period \
 		$rrdgraphargs -t "traffic on $interface graph per $period" \
 		--logarithmic -A -v "Bytes/second" --units=si \
@@ -260,7 +260,7 @@ getdisk()
 	local i
 	d=$(stat -c %D $1)
 	for i in /dev/* ; do 
-		[ $(stat -c "%02t%02T" $i) == $d ] || continue
+		[ $(stat -c "%02t%02T" $i) = $d ] || continue
 		echo $i
 		break
 	done

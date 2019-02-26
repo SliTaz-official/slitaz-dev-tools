@@ -28,7 +28,7 @@ status()
 # to select the correct one.
 search_form_option()
 {
-	if [ "$RELEASE" == "stable" ]; then
+	if [ "$RELEASE" = "stable" ]; then
 		cat << _EOT_
 			<option>stable</option>
 			<option>cooking</option>

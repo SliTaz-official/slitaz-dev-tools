@@ -64,11 +64,11 @@ launch_ssh()
 auth()
 {
 	while read host md5 ; do
-		[ "${host#*.}" == "${1#*.}" ] && break
+		[ "${host#*.}" = "${1#*.}" ] && break
 	done < $(dirname $exe)/shellinabox.secrets
 	echo -n "$host password: "
 	read -s -t 30 password || exit 1
-	[ "$(echo $password | md5sum)" == "$md5  -" ] || exit 1
+	[ "$(echo $password | md5sum)" = "$md5  -" ] || exit 1
 	echo ""
 }
 

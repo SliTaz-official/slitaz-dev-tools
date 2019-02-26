@@ -45,7 +45,7 @@ EOT
 		awk "/fd$(($i+1))/{q=1}{if(!q)n++}END{print n}") floppies:
 		<tt>fd001.img</tt> to <tt>$(ls -r fd${i}* | sed q)</tt>.<br>
 		$flavor provides $(while read f d; do 
-			[ $f == $flavor ] && echo $d; done <<EOT
+			[ $f = $flavor ] && echo $d; done <<EOT
 base the minimum SliTaz distribution subset in text mode
 justx the minimum SliTaz distribution subset with X11 support
 gtkonly the minimum SliTaz distribution subset with GTK+ support
