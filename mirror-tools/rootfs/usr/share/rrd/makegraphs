@@ -38,7 +38,7 @@ updatecpudata() {
 
 updatecpugraph() {
 	period=$1
-	info="$(grep '^model name' /proc/cpuinfo | cut -d: -f2 | head -1)"
+	info="$(grep '^model name' /etc/cpuinfo | cut -d: -f2 | head -1)"
 	rrdtool graph "$rrdgraph/cpu-$period.png" --start -1$period \
 		$rrdgraphargs -l 0 -u 100 -t "cpu usage per $period [$info ]" \
 		DEF:user=$rrdlog/cpu.rrd:user:AVERAGE \
